@@ -8,12 +8,7 @@
 class DotDetection
 {
 public:
-    DotDetection();
-
     static void detectDots(const cv::Mat& greyImage, std::vector<cv::Point2f>& centers, std::vector<cv::Rect>& boundingRects);
-
-private:
-    static std::vector<cv::Rect> getBoundingrects(const cv::Mat& bluredGreyImg, const std::vector<cv::Point2f>& points);
 };
 
 #endif // DOTDETECTION_H

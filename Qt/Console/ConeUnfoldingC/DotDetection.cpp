@@ -2,11 +2,6 @@
 
 const bool isDebug = true;
 
-DotDetection::DotDetection()
-{
-
-}
-
 void DotDetection::detectDots(const cv::Mat& greyImage, std::vector<cv::Point2f>& centers, std::vector<cv::Rect>& boundingRects)
 {
     cv::Mat blured;
@@ -40,8 +35,6 @@ void DotDetection::detectDots(const cv::Mat& greyImage, std::vector<cv::Point2f>
 
     cv::KeyPoint::convert(keyPoints, centers);
 
-    boundingRects = getBoundingrects(blured, centers);
-
     if(isDebug)
     {
         cv::Mat imKeypoints;
@@ -50,35 +43,3 @@ void DotDetection::detectDots(const cv::Mat& greyImage, std::vector<cv::Point2f>
     }
 
 }
-
-
-std::vector<cv::Rect> DotDetection::getBoundingrects(const cv::Mat& bluredGreyImg, const std::vector<cv::Point2f>& points)
-{
-    std::vector<cv::Rect> boundingRects;
-    boundingRects.reserve(points.size());
-
-    cv::Mat img = bluredGreyImg.clone();
-
-    for(const auto& keyPt : points)
-        cv::floodFill(img, keyPt, cv::Scalar(255), nullptr, cv::Scalar(10), cv::Scalar(10), 8);
-
-    cv::threshold(img, img, 254, 255, cv::THRESH_BINARY);
-
-    std::vector<std::vector<cv::Point>> contours;
-    std::vector<cv::Vec4i> hierarchy;
-    cv::findContours(img, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
-    for (size_t i = 0; i < contours.size(); i++)
-    {
-        cv::Scalar color = cv::Scalar(255);
-        cv::Rect bounding = cv::minAreaRect(cv::Mat(contours[i])).boundingRect();
-        cv::rectangle(img, bounding, color, 2);
-
-        boundingRects.push_back(bounding);
-    }
-
-    if(isDebug)
-        cv::imshow("bounding rects keypoint", img);
-
-    return boundingRects;
-}
-

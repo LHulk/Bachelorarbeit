@@ -375,15 +375,21 @@ void Transformation::getWorldCoordinatesInt(const std::vector<Ellipse>& ellipses
 				cv::Point2d lateral = coneCoordinatesToLateral(res);
 				//blas.push_back(lateral);
 				lateral += cv::Point2d(1000, 500);
-                if(lateral.x >= 2 && lateral.y >= 2 && lateral.x < resImg.cols - 2 && lateral.y < resImg.rows - 2)
+                if(lateral.x >= 5 && lateral.y >= 5 && lateral.x < resImg.cols - 5 && lateral.y < resImg.rows - 5)
 				{
 					cv::Point rounded = cv::Point(static_cast<int>(std::lround(lateral.x)),static_cast<int>(std::lround(lateral.y)));
-					cv::Mat gauss = cv::getGaussianKernel(5, 0.5, CV_32F) * cv::getGaussianKernel(5, 0.5, CV_32F).t();
-					cv::Mat gaussP = cv::Mat::zeros(5, 5, CV_8U);
-					gaussP.at<uchar>(2, 2) = 255;//imgBk.at<uchar>(pt);
-					gauss = 1 / gauss.at<float>(2, 2) * gauss;
-					gaussP = gaussP.mul(gauss);
-					resImg.at<uchar>(lateral) = imgBk.at<uchar>(pt);
+					cv::Mat gauss = cv::getGaussianKernel(3, 0.1, CV_32F) * cv::getGaussianKernel(3, 0.1, CV_32F).t();
+					cv::Mat gaussP = cv::Mat::zeros(3, 3, CV_8U);
+					gauss = 1 / gauss.at<float>(1, 1) * gauss;
+					
+					//for(int s = 0; s < 5; s++)
+					//	for(int t = 0; t < 5; t++)
+					//		gaussP.at<uchar>(s, t) = imgBk.at<uchar>(pt) * gauss.at<float>(s, t);
+
+					//for(int s = -1; s < 2; s++)
+					//	for(int t = -1; t < 2; t++)
+					//		resImg.at<uchar>(rounded.y + s, rounded.x + t) += imgBk.at<uchar>(pt) * gauss.at<float>(s + 1, t + 1);
+					resImg.at<uchar>(rounded) = imgBk.at<uchar>(pt);
 					//src.push_back(lateral);
 					//locate_point(resImg, subdiv, lateral, cv::Scalar(0,0,255));
 					//subdiv.insert(cv::Point2f(lateral));

@@ -13,7 +13,7 @@ ConeUnfolding::ConeUnfolding()
     //Mat grey = cv::imread("../../../img/v5_pattern/pattern2.png", CV_LOAD_IMAGE_GRAYSCALE);
     //cv::Mat grey = cv::imread("../../../img/v5_pattern/pattern3.png", CV_LOAD_IMAGE_GRAYSCALE);
 	//cv::Mat grey = cv::imread("../../../img/v5_pattern/test.png", CV_LOAD_IMAGE_GRAYSCALE);
-	cv::Mat grey = cv::imread("../../../img/v5_pattern/blender_15deg2.png", CV_LOAD_IMAGE_GRAYSCALE);
+	cv::Mat grey = cv::imread("../../../img/v5_pattern/blender_perfectCenter.png", CV_LOAD_IMAGE_GRAYSCALE);
 
     cv::resize(grey, grey, cv::Size(1000, 1000)); //performance
 	Config::usedResHeight = 1000;
@@ -111,9 +111,9 @@ ConeUnfolding::ConeUnfolding()
 	}
 
 	cv::imshow("vis", vis);
-	Transformation::reverseWarp(grey, proj);
+	/*Transformation::reverseWarp(grey, proj);
 
-	return;
+	return;*/
 
 	
 	Transformation::getWorldCoordinatesInt(ellipses, lines, pointsPerEllipse, worldCoords, grey);
