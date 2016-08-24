@@ -159,17 +159,9 @@ cv::Mat Transformation::getProjectiveMatrix(const std::vector<std::vector<cv::Po
 }
 
 
-//TODO: floodfill god idea?
+//TODO: floodfill good idea?
 void Transformation::reverseWarp(const cv::Mat& greyImg, const cv::Mat& proj)
 {
-	cv::Mat mapx = cv::Mat::zeros(Config::usedResHeight, Config::usedResWidth, CV_32F);
-	cv::Mat mapy = cv::Mat::zeros(Config::usedResHeight, Config::usedResWidth, CV_32F);
-
-	cv::Mat mask = cv::Mat::zeros(Config::usedResHeight, Config::usedResWidth, CV_8U);
-	cv::Mat resImg = cv::Mat::zeros(Config::usedResHeight, Config::usedResWidth, CV_8U);
-
-	cv::Point origin = cv::Point(Config::usedResWidth - 2, Config::usedResHeight / 2);
-
 	double H = Config::lambda * Config::height;
 	double R = Config::lambda * Config::radiusOuter;
 	double r = Config::lambda * Config::radiusInner;
@@ -179,25 +171,39 @@ void Transformation::reverseWarp(const cv::Mat& greyImg, const cv::Mat& proj)
 	double s = std::sqrt((H*H*r*r / (R*R)) + r*r);
 	double maxAngle = 360 * R / S;
 
+	double scale = (1 / S) * Config::resSlantHeight;
+	S *= scale;
+	s *= scale;
+
+	int width = static_cast<int>(std::ceil(S));
+	int height = static_cast<int>(std::ceil(S + S*std::cos((180 - maxAngle)*CV_PI/180)));
+
+	cv::Point origin = cv::Point(width, std::ceil(height - S));
+
+	cv::Mat mask = cv::Mat::zeros(height, width, CV_8U);
+	cv::Mat resImg = cv::Mat::zeros(height, width, CV_8U);
+	cv::Mat mapx = cv::Mat::zeros(height, width, CV_32F);
+	cv::Mat mapy = cv::Mat::zeros(height, width, CV_32F);
+
 	cv::ellipse(mask, origin, cv::Size(S, S), 0, 90, 90 + maxAngle, cv::Scalar(255), 3);
 	cv::ellipse(mask, origin, cv::Size(s, s), 0, 90, 90 + maxAngle, cv::Scalar(255), 3);
 	cv::line(mask, cv::Point(origin.x, origin.y + s), cv::Point(origin.x, origin.y + S), cv::Scalar(255), 3);
-	double angleStd = (90 + maxAngle);
+	double angleStd = (90 + maxAngle) - 0.5; //0.5 for rounding errors
 	cv::line(mask, cv::Point2f(origin) + s*cv::Point2f(std::cos(angleStd * CV_PI / 180), std::sin(angleStd * CV_PI / 180)), cv::Point2f(origin) + S*cv::Point2f(std::cos(angleStd * CV_PI / 180), std::sin(angleStd * CV_PI / 180)), cv::Scalar(255), 3);
 	cv::floodFill(mask, cv::Point2f(origin) + S / 2 * cv::Point2f(-1, -1), cv::Scalar(255), nullptr, cv::Scalar(10), cv::Scalar(10));
 
 
 	std::vector<cv::Point3f> test;
 	std::vector<cv::Point2f> test2;
-	for(int r = 0; r < greyImg.rows; r++)
+	for(int r = 0; r < height; r++)
 	{
-		for(int c = 0; c < greyImg.cols; c++)
+		for(int c = 0; c < width; c++)
 		{
 			if(mask.at<uchar>(r, c) != 0)
 			{
-				test2.push_back(cv::Point2d(c, r) - cv::Point2d(origin));
-				cv::Point3f coneCoords = lateralToConeCoordinates(cv::Point2d(c, r) - cv::Point2d(origin));
-				test.push_back(coneCoords);
+				//test2.push_back(cv::Point2d(c, r) - cv::Point2d(origin));
+				cv::Point3f coneCoords = lateralToConeCoordinates(1/scale*cv::Point2d((cv::Point2d(c, r) - cv::Point2d(origin))));
+				//test.push_back(coneCoords);
 				cv::Mat coneCoordsMat = cv::Mat(coneCoords);
 				cv::Mat homogenous = cv::Mat::ones(1, 1, CV_32F);
 				coneCoordsMat.push_back(homogenous);
@@ -375,7 +381,7 @@ void Transformation::getWorldCoordinatesInt(const std::vector<Ellipse>& ellipses
 				cv::Point2d lateral = coneCoordinatesToLateral(res);
 				//blas.push_back(lateral);
 				lateral += cv::Point2d(1000, 500);
-                if(lateral.x >= 5 && lateral.y >= 5 && lateral.x < resImg.cols - 5 && lateral.y < resImg.rows - 5)
+                if(lateral.x >= 200 && lateral.y >= 200 && lateral.x < resImg.cols - 5 && lateral.y < resImg.rows - 5)
 				{
 					cv::Point rounded = cv::Point(static_cast<int>(std::lround(lateral.x)),static_cast<int>(std::lround(lateral.y)));
 					cv::Mat gauss = cv::getGaussianKernel(3, 0.1, CV_32F) * cv::getGaussianKernel(3, 0.1, CV_32F).t();
@@ -390,7 +396,7 @@ void Transformation::getWorldCoordinatesInt(const std::vector<Ellipse>& ellipses
 					//	for(int t = -1; t < 2; t++)
 					//		resImg.at<uchar>(rounded.y + s, rounded.x + t) += imgBk.at<uchar>(pt) * gauss.at<float>(s + 1, t + 1);
 					resImg.at<uchar>(rounded) = imgBk.at<uchar>(pt);
-					//src.push_back(lateral);
+					dst.push_back(cv::Point3f(lateral.x, lateral.y, imgBk.at<uchar>(pt)));
 					//locate_point(resImg, subdiv, lateral, cv::Scalar(0,0,255));
 					//subdiv.insert(cv::Point2f(lateral));
 					//resImg = cv::Scalar::all(0);
@@ -408,10 +414,17 @@ void Transformation::getWorldCoordinatesInt(const std::vector<Ellipse>& ellipses
 		}
 	}
 
+	//writeToFile(dst, "3dgriddedData.txt");
+	//exit(0);
+
+	for(const auto& pt : dst)
+	{
+		subdiv.insert(cv::Point2f(pt.x, pt.y));
+	}
+
 	cv::imshow("resImg", resImg);
 
-	//writeToFile(dst, "3dInterpol.txt");
-	//exit(0);
+
 
 }
 

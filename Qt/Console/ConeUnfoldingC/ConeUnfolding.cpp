@@ -81,39 +81,35 @@ ConeUnfolding::ConeUnfolding()
     cv::imshow("ellipses", canny);
 
 	Transformation::determineScaleFactor(lines);
+	Config::lambda = 1.0;
 	std::vector<std::vector<cv::Point3f>> worldCoords = Transformation::getWorldCoordinatesForSamples();
 
-	cv::Mat proj = Transformation::getProjectiveMatrix(pointsPerEllipse, worldCoords);
+	//cv::Mat proj = Transformation::getProjectiveMatrix(pointsPerEllipse, worldCoords);
 
-	cv::Mat vis;
-	cv::cvtColor(grey, vis, CV_GRAY2BGR);
-	for(size_t i = 0; i < worldCoords.size(); i++)
-	{
-		for(size_t j = 0; j < worldCoords[i].size(); j++)
-		{
-			cv::Point3f currentWorld = worldCoords[i][j];
-			cv::Point2f currImg = pointsPerEllipse[i][j];
+	//cv::Mat vis;
+	//cv::cvtColor(grey, vis, CV_GRAY2BGR);
+	//for(size_t i = 0; i < worldCoords.size(); i++)
+	//{
+	//	for(size_t j = 0; j < worldCoords[i].size(); j++)
+	//	{
+	//		cv::Point3f currentWorld = worldCoords[i][j];
+	//		cv::Point2f currImg = pointsPerEllipse[i][j];
 
-			cv::Mat currentWorldMat = cv::Mat::zeros(4, 1, CV_32F);
-			currentWorldMat.at<float>(0, 0) = currentWorld.x; currentWorldMat.at<float>(1, 0) = currentWorld.y; currentWorldMat.at<float>(2, 0) = currentWorld.z; currentWorldMat.at<float>(3, 0) = 1;
-			cv::Mat homImg = proj*currentWorldMat;
+	//		cv::Mat currentWorldMat = cv::Mat::zeros(4, 1, CV_32F);
+	//		currentWorldMat.at<float>(0, 0) = currentWorld.x; currentWorldMat.at<float>(1, 0) = currentWorld.y; currentWorldMat.at<float>(2, 0) = currentWorld.z; currentWorldMat.at<float>(3, 0) = 1;
+	//		cv::Mat homImg = proj*currentWorldMat;
 
-			float w = homImg.at<float>(2, 0);
-			cv::Point2f reprojected = cv::Point2f(homImg.at<float>(0, 0) / w, homImg.at<float>(1, 0) / w);
+	//		float w = homImg.at<float>(2, 0);
+	//		cv::Point2f reprojected = cv::Point2f(homImg.at<float>(0, 0) / w, homImg.at<float>(1, 0) / w);
 
-			cv::circle(vis, currImg, 4, cv::Scalar(0, 255, 0), -1);
-			cv::circle(vis, reprojected, 4, cv::Scalar(0, 0, 255), -1);
+	//		cv::circle(vis, currImg, 4, cv::Scalar(0, 255, 0), -1);
+	//		cv::circle(vis, reprojected, 4, cv::Scalar(0, 0, 255), -1);
+	//	}
+	//}
+	//cv::imshow("vis", vis);
 
-
-
-
-		}
-	}
-
-	cv::imshow("vis", vis);
-	/*Transformation::reverseWarp(grey, proj);
-
-	return;*/
+	//Transformation::reverseWarp(grey, proj);
+	//return;
 
 	
 	Transformation::getWorldCoordinatesInt(ellipses, lines, pointsPerEllipse, worldCoords, grey);

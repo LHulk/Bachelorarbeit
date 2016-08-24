@@ -13,6 +13,8 @@ namespace Config
 	extern int usedResWidth;
 	extern int usedResHeight;
 
+	extern int resSlantHeight;
+
 	//3D structure settings in mm
 	extern float radiusInner;
 	extern float radiusOuter;

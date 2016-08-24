@@ -12,9 +12,11 @@ namespace Config
 	int usedResWidth = 1000;
 	int usedResHeight = 1000;
 
+	int resSlantHeight = 500;
+
 	//3D structure settings in mm
 	float radiusInner = 13;
 	float radiusOuter = 60;
-	float height = 110; //from center to center
+	float height = 110; //from center of big radius to cone tip
     float lambda = 1.0f;
 }
