@@ -471,28 +471,6 @@ double Ellipse::findRoot(double r0, double z0, double z1, double g)
 }
 
 
-double Ellipse::acos2(double x, double y)
-{
-	if(y >= 0) //first and second quadrant
-		return std::acos(x);
-	else //third and fourth quadrant
-		return 2 * CV_PI - std::acos(x);
-}
-
-double Ellipse::approxDist(const Ellipse& ellipse, const cv::Point& pt)
-{
-
-    //angle center ellipse point with x-axis
-	cv::Point2d dirPt = cv::Point2d(pt.x, pt.y) - ellipse.getCenter();
-    dirPt = 1 / cv::norm(dirPt) * dirPt;
-    double angle = acos2(dirPt.x, dirPt.y);
-    angle -= ellipse.getTheta();
-    cv::Point2d projection = ellipse.evalAtPhi(angle);
-	double distPt = std::fabs(cv::norm(projection - ellipse.getCenter()) - cv::norm(cv::Point2d(pt.x, pt.y) - ellipse.getCenter()));
-
-    return distPt;
-}
-
 cv::Point2d Ellipse::transformToOrigin(const Ellipse& ellipse, const cv::Point2d& point)
 {
 	cv::Point2d transformed = point - ellipse.getCenter();
@@ -565,7 +543,7 @@ void Ellipse::reestimateEllipses(const std::vector<std::vector<cv::Point2f>>& po
 		cv::imshow("debug reestimate", debug);
 }
 
-void Ellipse::ellipseLineIntersection(const Ellipse& ellipse, const Line& line, cv::Point2d &intersect)
+cv::Point2d Ellipse::ellipseLineIntersection(const Ellipse& ellipse, const Line& line)
 {
 	cv::Point2d start = transformToOrigin(ellipse, line.getStart());
 	cv::Point2d end = transformToOrigin(ellipse, line.getEnd());
@@ -600,7 +578,8 @@ void Ellipse::ellipseLineIntersection(const Ellipse& ellipse, const Line& line, 
 			pt = start + t*(end - start);
 	}
 
-	intersect = invTransformToOrigin(ellipse, pt);
+	cv::Point2d intersect = invTransformToOrigin(ellipse, pt);
+	return intersect;
 }
 
 double Ellipse::getAngleAt(const Ellipse& ellipse, const cv::Point2d &pt)

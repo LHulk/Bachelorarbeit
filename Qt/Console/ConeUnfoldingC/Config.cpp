@@ -18,5 +18,4 @@ namespace Config
 	float radiusInner = 13;
 	float radiusOuter = 60;
 	float height = 110; //from center of big radius to cone tip
-    float lambda = 1.0f;
 }

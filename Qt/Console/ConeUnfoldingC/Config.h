@@ -19,7 +19,6 @@ namespace Config
 	extern float radiusInner;
 	extern float radiusOuter;
 	extern float height; //from center to center
-    extern float lambda; //scale factor for R,r,h
 }
 
 #endif //CONFIG_H

@@ -5,11 +5,6 @@ static bool isDebug = false;
 
 ConeUnfolding::ConeUnfolding()
 {
-    //Mat img = cv::imread("../../../img/side1RedGreen.png", CV_LOAD_IMAGE_GRAYSCALE);
-    //Mat img = cv::imread("../../../img/topGreySmall2.png", CV_LOAD_IMAGE_GRAYSCALE);
-    //Mat img = cv::imread("../../../img/sideOnlyLines.png", CV_LOAD_IMAGE_GRAYSCALE);
-    //Mat img = cv::imread("../../../img/topOnlyLines.png", CV_LOAD_IMAGE_GRAYSCALE);
-    //Mat grey = cv::imread("../../../img/v4_pattern/xytilt.png", CV_LOAD_IMAGE_GRAYSCALE);
     //Mat grey = cv::imread("../../../img/v5_pattern/pattern2.png", CV_LOAD_IMAGE_GRAYSCALE);
     //cv::Mat grey = cv::imread("../../../img/v5_pattern/pattern3.png", CV_LOAD_IMAGE_GRAYSCALE);
 	//cv::Mat grey = cv::imread("../../../img/v5_pattern/test.png", CV_LOAD_IMAGE_GRAYSCALE);
@@ -49,12 +44,11 @@ ConeUnfolding::ConeUnfolding()
     cv::imshow("canny", canny);
 
 
-    std::vector<cv::Point2f> keyPointCenters;
-    std::vector<cv::Rect> keyPointBoundingRects;
-    DotDetection::detectDots(grey, keyPointCenters, keyPointBoundingRects);
+    std::vector<cv::Point2f> keyPoints;
+	keyPoints = DotDetection::detectDots(grey);
     std::vector<Ellipse> ellipses = Ellipse::detectEllipses(canny);
 
-    std::vector<std::vector<cv::Point2f>> pointsPerEllipse = Ellipse::getEllipsePointMappings(ellipses, keyPointCenters);
+	std::vector<std::vector<cv::Point2f>> pointsPerEllipse = Ellipse::getEllipsePointMappings(ellipses, keyPoints);
     sort(pointsPerEllipse, ellipses);
 	Ellipse::reestimateEllipses(pointsPerEllipse, ellipses);
 
@@ -80,8 +74,6 @@ ConeUnfolding::ConeUnfolding()
 
     cv::imshow("ellipses", canny);
 
-	Transformation::determineScaleFactor(lines);
-	Config::lambda = 1.0;
 	std::vector<std::vector<cv::Point3f>> worldCoords = Transformation::getWorldCoordinatesForSamples();
 
 	//cv::Mat proj = Transformation::getProjectiveMatrix(pointsPerEllipse, worldCoords);
@@ -150,20 +142,12 @@ void ConeUnfolding::sort(std::vector<std::vector<cv::Point2f>>& pointsPerEllipse
 
 }
 
-double ConeUnfolding::acos2(double x, double y)
-{
-	if (y >= 0) //first and second quadrant
-		return std::acos(x);
-	else //third and fourth quadrant
-		return 2 * CV_PI - std::acos(x);
-}
-
 double ConeUnfolding::angleWithX(const cv::Point2d& pt1, const cv::Point2d& pt2)
 {
 	cv::Point2d dirPt = pt1 - pt2;
 	dirPt = 1 / cv::norm(dirPt) * dirPt;
 	double angle =  atan2(dirPt.y, dirPt.x);
-	angle = std::fmod(std::fmod(angle, 2 * CV_PI) + 2 * CV_PI, 2 * CV_PI);
+	angle = Misc::mod(angle, 2 * CV_PI);
 	return angle;
 }
 

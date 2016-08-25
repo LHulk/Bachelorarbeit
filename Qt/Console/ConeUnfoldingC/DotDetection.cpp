@@ -2,12 +2,14 @@
 
 const bool isDebug = true;
 
-void DotDetection::detectDots(const cv::Mat& greyImage, std::vector<cv::Point2f>& centers, std::vector<cv::Rect>& boundingRects)
+std::vector<cv::Point2f> DotDetection::detectDots(const cv::Mat& greyImage)
 {
+	std::vector<cv::Point2f> centers;
+
     cv::Mat blured;
     cv::GaussianBlur(greyImage, blured, cv::Size(3,3), 2.0, 2.0);
 
-    // Setup SimpleBlobDetector parameters.
+
     cv::SimpleBlobDetector::Params params;
     params.minThreshold = 50;
     params.maxThreshold = 800;
@@ -35,11 +37,15 @@ void DotDetection::detectDots(const cv::Mat& greyImage, std::vector<cv::Point2f>
 
     cv::KeyPoint::convert(keyPoints, centers);
 
+
+
+	cv::Mat imKeypoints;
+	cv::drawKeypoints(blured, keyPoints, imKeypoints, cv::Scalar(0, 0, 255), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
     if(isDebug)
     {
-        cv::Mat imKeypoints;
-        cv::drawKeypoints( blured, keyPoints, imKeypoints, cv::Scalar(0,0,255), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS );
         cv::imshow("keypoints", imKeypoints);
     }
+
+	return centers;
 
 }

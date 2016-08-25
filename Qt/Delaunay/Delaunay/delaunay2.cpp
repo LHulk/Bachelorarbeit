@@ -98,7 +98,7 @@ int main( int, char** )
         Point2f fp( (float)(rand()%(rect.width-10)+5),
                     (float)(rand()%(rect.height-10)+5));
 
-        locate_point( img, subdiv, fp, active_facet_color );
+        /*locate_point( img, subdiv, fp, active_facet_color );
         imshow( win, img );
 
         waitKey(0);
@@ -106,7 +106,7 @@ int main( int, char** )
         subdiv.insert(fp);
 
         img = Scalar::all(0);
-        draw_subdiv( img, subdiv, delaunay_color );
+        draw_subdiv( img, subdiv, delaunay_color );*/
         imshow( win, img );
 
         waitKey(0);

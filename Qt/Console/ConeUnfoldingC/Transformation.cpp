@@ -7,22 +7,8 @@ Transformation::Transformation()
 {
 }
 
-void permute(int offset, int k, int n, std::vector<cv::Point2f>& combination, const std::vector<cv::Point2f>& points, std::vector<std::vector<cv::Point2f>>& all)
-{
-	if(k == 0)
-	{
-		all.push_back(combination);
-		return;
-	}
-	for(int i = offset; i <= n - k; ++i)
-	{
-		combination.push_back(points[i]);
-		permute(i + 1, k - 1, n, combination, points, all);
-		combination.pop_back();
-	}
-}
-
 //TODO: maybe ransac?
+//TODO user solvePnP or solvePnPRansac after determining intrinsic paramters through regular camera calibration (calibrateCamera)
 //minimize reprojection error
 cv::Mat Transformation::getProjectiveMatrixBrute(const std::vector<std::vector<cv::Point2f>>& pointsPerEllipse, const std::vector<std::vector<cv::Point3f>>& worldCoords)
 {
@@ -110,7 +96,6 @@ cv::Mat Transformation::getProjectiveMatrixBrute(const std::vector<std::vector<c
 
 	}
 
-			
 
 	cv::Size imageSize(1000, 1000);
 	cv::Mat cameraMatrix;//= cv::Mat::zeros(3, 3, CV_32F);
@@ -127,7 +112,6 @@ cv::Mat Transformation::getProjectiveMatrixBrute(const std::vector<std::vector<c
 //TODO: 30 points 
 cv::Mat Transformation::getProjectiveMatrix(const std::vector<std::vector<cv::Point2f>>& pointsPerEllipse, const std::vector<std::vector<cv::Point3f>>& worldCoords)
 {
-	int n = Config::numCircleSamples;
 	int m = Config::numLineSamples;
 	int l = Config::numCircleSamples * Config::numLineSamples;
 	cv::Mat A = cv::Mat::zeros(2 * l, 11, CV_32F);
@@ -159,12 +143,11 @@ cv::Mat Transformation::getProjectiveMatrix(const std::vector<std::vector<cv::Po
 }
 
 
-//TODO: floodfill good idea?
 void Transformation::reverseWarp(const cv::Mat& greyImg, const cv::Mat& proj)
 {
-	double H = Config::lambda * Config::height;
-	double R = Config::lambda * Config::radiusOuter;
-	double r = Config::lambda * Config::radiusInner;
+	double H = Config::height;
+	double R = Config::radiusOuter;
+	double r = Config::radiusInner;
 	double h = H - H / R*r;
 
 	double S = std::sqrt(H*H + R*R);
@@ -178,19 +161,19 @@ void Transformation::reverseWarp(const cv::Mat& greyImg, const cv::Mat& proj)
 	int width = static_cast<int>(std::ceil(S));
 	int height = static_cast<int>(std::ceil(S + S*std::cos((180 - maxAngle)*CV_PI/180)));
 
-	cv::Point origin = cv::Point(width, std::ceil(height - S));
+	cv::Point origin = cv::Point(width, Misc::round(std::ceil(height - S)));
 
 	cv::Mat mask = cv::Mat::zeros(height, width, CV_8U);
 	cv::Mat resImg = cv::Mat::zeros(height, width, CV_8U);
 	cv::Mat mapx = cv::Mat::zeros(height, width, CV_32F);
 	cv::Mat mapy = cv::Mat::zeros(height, width, CV_32F);
 
-	cv::ellipse(mask, origin, cv::Size(S, S), 0, 90, 90 + maxAngle, cv::Scalar(255), 3);
-	cv::ellipse(mask, origin, cv::Size(s, s), 0, 90, 90 + maxAngle, cv::Scalar(255), 3);
-	cv::line(mask, cv::Point(origin.x, origin.y + s), cv::Point(origin.x, origin.y + S), cv::Scalar(255), 3);
+	cv::ellipse(mask, origin, cv::Size2d(S, S), 0, 90, Misc::round(90 + maxAngle), cv::Scalar(255), 3);
+	cv::ellipse(mask, origin, cv::Size2d(s, s), 0, 90, 90 + maxAngle, cv::Scalar(255), 3);
+	cv::line(mask, cv::Point(origin.x, Misc::round(origin.y + s)), cv::Point(origin.x, Misc::round(origin.y + S)), cv::Scalar(255), 3);
 	double angleStd = (90 + maxAngle) - 0.5; //0.5 for rounding errors
-	cv::line(mask, cv::Point2f(origin) + s*cv::Point2f(std::cos(angleStd * CV_PI / 180), std::sin(angleStd * CV_PI / 180)), cv::Point2f(origin) + S*cv::Point2f(std::cos(angleStd * CV_PI / 180), std::sin(angleStd * CV_PI / 180)), cv::Scalar(255), 3);
-	cv::floodFill(mask, cv::Point2f(origin) + S / 2 * cv::Point2f(-1, -1), cv::Scalar(255), nullptr, cv::Scalar(10), cv::Scalar(10));
+	cv::line(mask, cv::Point2f(origin.x, origin.y) + s*cv::Point2f(std::cos(angleStd * CV_PI / 180), std::sin(angleStd * CV_PI / 180)), cv::Point2f(origin) + S*cv::Point2f(std::cos(angleStd * CV_PI / 180), std::sin(angleStd * CV_PI / 180)), cv::Scalar(255), 3);
+	cv::floodFill(mask, cv::Point2f(origin.x, origin.y) + S / 2 * cv::Point2f(-1, -1), cv::Scalar(255), nullptr, cv::Scalar(10), cv::Scalar(10));
 
 
 	std::vector<cv::Point3f> test;
@@ -266,9 +249,9 @@ std::vector<std::vector<cv::Point3f>> Transformation::getWorldCoordinatesForSamp
 {
 	int n = Config::numCircleSamples;
 	int m = Config::numLineSamples;
-	float H = Config::lambda * Config::height;
-	float r = Config::lambda * Config::radiusInner;
-	float R = Config::lambda * Config::radiusOuter;
+	float H = Config::height;
+	float r = Config::radiusInner;
+	float R = Config::radiusOuter;
 	float h = H - H / R*r;
 
 	std::vector<std::vector<cv::Point3f>> worldCoordinates = std::vector<std::vector<cv::Point3f>>(n, std::vector<cv::Point3f>(0));
@@ -355,48 +338,50 @@ void Transformation::getWorldCoordinatesInt(const std::vector<Ellipse>& ellipses
 	cv::bitwise_and(imgBk, mask, imgBk);
 	cv::imshow("img mask", imgBk);
 
-	cv::Mat remapMatx = cv::Mat::zeros(1000, 1000, CV_32FC1);
-	cv::Mat remapMaty = cv::Mat::zeros(1000, 1000, CV_32FC1);
+	double H = Config::height;
+	double R = Config::radiusOuter;
+	double r = Config::radiusInner;
+	double h = H - H / R*r;
 
-	cv::Mat resImg = cv::Mat::zeros(1000, 1000, CV_8U);
-	cv::Subdiv2D subdiv(cv::Rect(0, 0, 1000, 1000));
+	double S = std::sqrt(H*H + R*R);
+	double s = std::sqrt((H*H*r*r / (R*R)) + r*r);
+	double maxAngle = 360 * R / S;
 
-	std::vector<cv::Point2f> src;
-	std::vector<cv::Point3f> dst;
+	double scale = (1 / S) * Config::resSlantHeight;
+	S *= scale;
+	s *= scale;
+
+	int width = static_cast<int>(std::ceil(S));
+	int height = static_cast<int>(std::ceil(S + S*std::cos((180 - maxAngle)*CV_PI / 180)));
+
+	cv::Point origin = cv::Point(width, Misc::round(std::ceil(height - S)));
+
+
+	cv::Mat resImg = cv::Mat::zeros(height, width, CV_8U);
+
+	//cv::Subdiv2D subdiv(cv::Rect(0, 0, 1000, 1000));
+
+	std::vector<cv::Point2f> lateralDebug;
+	std::vector<cv::Point3f> coneDebug;
 	for(int r = 0; r < segments.rows; r+=1)
 	{
 		for(int c = 0; c < segments.cols; c+=1)
 		{
-			//std::cout << "(" << r << ", " << c << ")" << std::endl;
 			int val = segments.at<uchar>(r, c);
 			if(val != 0)
 			{
 				cv::Point pt(c, r);
 
 				cv::Point3f res = interPolateRadial(pt, val, ellipses, lines, pointsPerEllipse, worldCoords);
-				dst.push_back(res);
-				//blas.push_back(res);
-				//continue;
+				//coneDebug.push_back(res);
 
-				cv::Point2d lateral = coneCoordinatesToLateral(res);
-				//blas.push_back(lateral);
-				lateral += cv::Point2d(1000, 500);
-                if(lateral.x >= 200 && lateral.y >= 200 && lateral.x < resImg.cols - 5 && lateral.y < resImg.rows - 5)
+				cv::Point2d lateral = scale * coneCoordinatesToLateral(res);
+				//lateralDebug.push_back(lateral);
+				cv::Point rounded = cv::Point(static_cast<int>(std::lround(lateral.x)), static_cast<int>(std::lround(lateral.y))) + origin;
+				if(rounded.x > 0 && rounded.y > 0 && rounded.x < resImg.cols && rounded.y < resImg.rows)
 				{
-					cv::Point rounded = cv::Point(static_cast<int>(std::lround(lateral.x)),static_cast<int>(std::lround(lateral.y)));
-					cv::Mat gauss = cv::getGaussianKernel(3, 0.1, CV_32F) * cv::getGaussianKernel(3, 0.1, CV_32F).t();
-					cv::Mat gaussP = cv::Mat::zeros(3, 3, CV_8U);
-					gauss = 1 / gauss.at<float>(1, 1) * gauss;
 					
-					//for(int s = 0; s < 5; s++)
-					//	for(int t = 0; t < 5; t++)
-					//		gaussP.at<uchar>(s, t) = imgBk.at<uchar>(pt) * gauss.at<float>(s, t);
-
-					//for(int s = -1; s < 2; s++)
-					//	for(int t = -1; t < 2; t++)
-					//		resImg.at<uchar>(rounded.y + s, rounded.x + t) += imgBk.at<uchar>(pt) * gauss.at<float>(s + 1, t + 1);
 					resImg.at<uchar>(rounded) = imgBk.at<uchar>(pt);
-					dst.push_back(cv::Point3f(lateral.x, lateral.y, imgBk.at<uchar>(pt)));
 					//locate_point(resImg, subdiv, lateral, cv::Scalar(0,0,255));
 					//subdiv.insert(cv::Point2f(lateral));
 					//resImg = cv::Scalar::all(0);
@@ -414,13 +399,10 @@ void Transformation::getWorldCoordinatesInt(const std::vector<Ellipse>& ellipses
 		}
 	}
 
-	//writeToFile(dst, "3dgriddedData.txt");
-	//exit(0);
-
-	for(const auto& pt : dst)
+	/*for(const auto& pt : lateralDebug)
 	{
 		subdiv.insert(cv::Point2f(pt.x, pt.y));
-	}
+	}*/
 
 	cv::imshow("resImg", resImg);
 
@@ -440,10 +422,8 @@ cv::Point3f Transformation::interPolateRadial(const cv::Point& pt, int val, cons
 	double dist2 = Ellipse::realDistTrans(e2, pt);
 	Ellipse interEllipse = (dist1 / (dist1 + dist2) * e2) + (dist2 / (dist1 + dist2) * e1);
 
-	cv::Point2d int1;
-	Ellipse::ellipseLineIntersection(interEllipse, lines[j], int1);
-	cv::Point2d int2;
-	Ellipse::ellipseLineIntersection(interEllipse, lines[(j + 1) % Config::numLineSamples], int2);
+	cv::Point2d int1 = Ellipse::ellipseLineIntersection(interEllipse, lines[j]);
+	cv::Point2d int2 = Ellipse::ellipseLineIntersection(interEllipse, lines[(j + 1) % Config::numLineSamples]);
 
 
 	cv::Point2d tl = pointsPerEllipse[i + 1][j];
@@ -475,9 +455,9 @@ cv::Point2d Transformation::coneCoordinatesToLateral(const cv::Point3d& pt)
 {
 	cv::Point2d lateralPoint;
 
-	double H = Config::lambda * Config::height;
-	double R = Config::lambda * Config::radiusOuter;
-	double r = Config::lambda * Config::radiusInner;
+	double H = Config::height;
+	double R = Config::radiusOuter;
+	double r = Config::radiusInner;
 	double h = H - H / R*r;
 
 	double S = std::sqrt(H*H + R*R);
@@ -506,9 +486,9 @@ cv::Point3d Transformation::lateralToConeCoordinates(const cv::Point2d& pt)
 {
 	cv::Point3d conePoint;
 
-	double H = Config::lambda * Config::height;
-	double R = Config::lambda * Config::radiusOuter;
-	double r = Config::lambda * Config::radiusInner;
+	double H = Config::height;
+	double R = Config::radiusOuter;
+	double r = Config::radiusInner;
 	double h = H - H / R*r;
 
 	double S = std::sqrt(H*H + R*R);
@@ -580,20 +560,3 @@ void Transformation::fillSegments(cv::Mat& img, const std::vector<Ellipse>& elli
 		cv::imshow("floodfill segments", img);
 
 }
-
-
-void Transformation::determineScaleFactor(const std::vector<Line>& lines)
-{
-	cv::Mat debug = cv::Mat::zeros(1000, 1000, CV_8U);
-	cv::Point intersect;
-	Line::intersect(lines[0].expand(), lines[1].expand(), intersect);
-
-	//auto minElementIt = std::min_element(lines.begin(), lines.end(), [intersect](const Line& l1, const Line&l2) { return cv::norm(l1.getEnd() - intersect) < cv::norm(l2.getEnd() - intersect); });
-	//cv::line(debug, (*minElementIt).getStart(), (*minElementIt).getEnd(), cv::Scalar(255), 2);
-	//double dist = cv::norm((*minElementIt).getEnd() - intersect);
-
-	double dist = std::accumulate(lines.begin(), lines.end(), 0.0, [intersect](double d, const Line& l) { return cv::norm(l.getEnd() - intersect) + d; });
-	dist /= lines.size();
-	Config::lambda = std::sqrt(dist*dist / (Config::height*Config::height + Config::radiusOuter*Config::radiusOuter));
-}
-

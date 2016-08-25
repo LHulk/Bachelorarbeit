@@ -40,7 +40,7 @@ public:
 	static double realDistTrans(const Ellipse& ellipse, const cv::Point& pt, cv::Point& intersect);
     static std::vector<std::vector<cv::Point2f>> getEllipsePointMappings(const std::vector<Ellipse>& ellipses, const std::vector<cv::Point2f>& points);
 	static void reestimateEllipses(const std::vector<std::vector<cv::Point2f>>& pointsPerEllipse, std::vector<Ellipse>& ellipses);
-	static void ellipseLineIntersection(const Ellipse& ellipse, const Line& line, cv::Point2d &intersect);
+	static cv::Point2d ellipseLineIntersection(const Ellipse& ellipse, const Line& line);
 	static double getAngleAt(const Ellipse& ellipse, const cv::Point2d &pt);
 
 
@@ -70,8 +70,6 @@ private:
     static Ellipse solveEllipseEquation(const std::vector<cv::Point> &points);
     static bool checkBoundaries(const Ellipse& e, const cv::Size& sz, float maxAToBRatio);
 
-	static double acos2(double x, double y);
-    static double approxDist(const Ellipse& ellipse, const cv::Point& pt);
     static double realDist(const Ellipse& ellipse, const cv::Point2d& pt, cv::Point2d& intersect);
     static double findRoot(double r0, double z0, double z1, double g);
 
@@ -80,11 +78,5 @@ private:
     static cv::Point2d rotatePoint(const cv::Point2d pt, double angle);
 };
 
-struct VoteEllipse
-{
-	Ellipse e;
-	int numVotes;
-	VoteEllipse(Ellipse e, int numVotes) : e(e), numVotes(numVotes) {}
-};
 
 #endif // ELLIPSE_H
