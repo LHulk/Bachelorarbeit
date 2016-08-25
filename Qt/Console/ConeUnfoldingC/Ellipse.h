@@ -24,8 +24,8 @@ public:
     Ellipse(cv::Point2d center, cv::Size2d semiAxes, double theta);
     Ellipse(cv::Mat params);
     Ellipse(cv::RotatedRect rect);
-    Ellipse(const Ellipse& other);
-    Ellipse& operator=(const Ellipse& other);
+    //Ellipse(const Ellipse& other);
+    //Ellipse& operator=(const Ellipse& other);
 
 
     cv::Point2d evalAtPhi(double phi) const;

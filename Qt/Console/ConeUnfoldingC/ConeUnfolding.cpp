@@ -14,6 +14,8 @@ ConeUnfolding::ConeUnfolding()
 	Config::usedResHeight = 1000;
 	Config::usedResHeight = 1000;
 
+	Cone cone = Cone(13, 60, 110, HEIGHT::CENTER_TO_CENTER);
+
 	/*grey = cv::Mat::zeros(grey.size(), CV_8UC3);
 
 	Ellipse e = Ellipse(400, 600, 400, 200, CV_PI / 5);

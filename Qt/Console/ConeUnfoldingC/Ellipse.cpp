@@ -103,23 +103,23 @@ Ellipse::Ellipse(cv::RotatedRect rect)
     }
 }
 
-Ellipse::Ellipse(const Ellipse& other) : _x0(other.getX()), _y0(other.getY()), _a(other.getSemiMajor()), _b(other.getSemiMinor()), _theta(other.getTheta())
-{
-
-}
-
-Ellipse& Ellipse::operator=(const Ellipse& other)
-{
-    if(this != &other)
-    {
-        _x0 = other.getX();
-        _y0 = other.getY();
-        _a = other.getSemiMajor();
-        _b = other.getSemiMinor();
-        _theta = other.getTheta();
-    }
-    return *this;
-}
+//Ellipse::Ellipse(const Ellipse& other) : _x0(other.getX()), _y0(other.getY()), _a(other.getSemiMajor()), _b(other.getSemiMinor()), _theta(other.getTheta())
+//{
+//
+//}
+//
+//Ellipse& Ellipse::operator=(const Ellipse& other)
+//{
+//    if(this != &other)
+//    {
+//        _x0 = other.getX();
+//        _y0 = other.getY();
+//        _a = other.getSemiMajor();
+//        _b = other.getSemiMinor();
+//        _theta = other.getTheta();
+//    }
+//    return *this;
+//}
 
 
 cv::Point2d Ellipse::evalAtPhi(double phi) const

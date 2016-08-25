@@ -14,6 +14,7 @@
 #include "DotDetection.h"
 #include "Config.h"
 #include "Transformation.h"
+#include "Cone.h"
 
 
 class ConeUnfolding
