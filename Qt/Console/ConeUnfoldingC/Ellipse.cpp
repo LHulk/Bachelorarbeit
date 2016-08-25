@@ -170,7 +170,7 @@ std::vector<Ellipse> Ellipse::detectEllipses(const cv::Mat& edgeImage)
     cv::Mat currentEdge = edgeImage.clone();
 
     cv::Point currentCenter = weightedCenter;
-    while(ellipses.size() < Config::numCircleSamples)
+    while(ellipses.size() < static_cast<size_t>(Config::numCircleSamples))
     {
         std::vector<cv::Point> collisonPoints = rayCast(currentEdge, currentCenter, 200);
         //Ellipse e = Ellipse(cv::fitEllipse(collisonPoints));
@@ -223,7 +223,7 @@ std::vector<cv::Point> Ellipse::rayCast(const cv::Mat& edgeImage, cv::Point cast
 
             }
             t += 0.1;
-			p = caster + cv::Point(t*d.x, t*d.y);
+			p = caster + cv::Point(Misc::round(t*d.x), Misc::round(t*d.y));
         }
     }
 

@@ -24,14 +24,12 @@
 class Transformation
 {
 public:
-	static cv::Mat Transformation::getProjectiveMatrix(Cone cone);
+	static cv::Mat Transformation::getProjectiveMatrix(const Cone& cone);
 	static cv::Mat getProjectiveMatrixBrute(const std::vector<std::vector<cv::Point2f>>& pointsPerEllipse, const std::vector<std::vector<cv::Point3f>>& worldCoords);
 
 	static void forwardWarp(const cv::Mat& img, const Cone& cone);
 	static void reverseWarp(const cv::Mat& greyImg, const cv::Mat& proj, const Cone& cone);
 private:
-	Transformation();
-
 	static void fillSegments(cv::Mat& img, const std::vector<Ellipse>& ellipses, const std::vector<Line>& lines, const std::vector <std::vector<cv::Point2f>>& pointsPerEllipse);
 	
 	static void writeToFile(std::vector<cv::Point2f> point2f, const std::string& filename);

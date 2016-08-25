@@ -12,6 +12,8 @@
 //USER
 #include "Ellipse.h"
 
+class Ellipse; //forward declaration
+
 class Misc
 {
 public:

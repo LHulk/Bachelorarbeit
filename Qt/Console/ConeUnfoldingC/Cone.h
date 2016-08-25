@@ -19,7 +19,7 @@ class Cone
 public:
 	Cone();
 
-	std::vector<std::vector<cv::Point3f>> getWorldCoordinatesForSamples();
+	std::vector<std::vector<cv::Point3f>> calculateWorldCoordinatesForSamples() const;
 	cv::Point3f interPolateRadial(const cv::Point& pt, int val) const;
 
 	cv::Point2f coneCoordinatesToLateral(const cv::Point3f& pt) const;
@@ -52,6 +52,7 @@ public:
 	void setLines(std::vector<Line> lines) { _lines = lines; }
 	void setEllipses(std::vector<Ellipse> ellipses) { _ellipses = ellipses; }
 	void setSampleCoordsImage(std::vector<std::vector<cv::Point2f>> sampleCoords) { _sampleImg = sampleCoords; }
+	void setSampleCoordsWorld(std::vector<std::vector<cv::Point3f>> sampleCoords) { _sampleWorld = sampleCoords; }
 
 	std::vector<Line> lines() const { return _lines; }
 	std::vector<Ellipse> ellipses() const { return _ellipses; }

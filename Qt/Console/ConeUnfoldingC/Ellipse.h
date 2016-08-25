@@ -18,6 +18,7 @@
 //USER
 #include "Line.h"
 #include "Config.h"
+#include "Misc.h"
 
 
 class Ellipse

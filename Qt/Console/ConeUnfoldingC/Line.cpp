@@ -113,7 +113,7 @@ std::vector<Line> Line::fitLines(const std::vector<std::vector<cv::Point2f>>& po
 {
 	cv::Mat debug = cv::Mat::zeros(Config::usedResHeight, Config::usedResWidth, CV_8UC3);
 	std::vector<Line> lines;
-	for(size_t i = 0; i < Config::numLineSamples; i++)
+	for(size_t i = 0; i < static_cast<size_t>(Config::numLineSamples); i++)
 	{
 		cv::Point start = pointsPerEllipse[0].at(i); //ith point of innermost Ellipse
 		cv::Point end = pointsPerEllipse[Config::numCircleSamples - 1].at(i); //ith point of outermostEllipse

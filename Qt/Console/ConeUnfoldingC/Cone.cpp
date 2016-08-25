@@ -26,12 +26,8 @@ Cone::Cone() : _r(Config::radiusInner), _R(Config::radiusOuter)
 
 //center is (0,0)
 //right hand coordinate system (x,y,z) z is depth directed out of screen plane
-std::vector<std::vector<cv::Point3f>> Cone::getWorldCoordinatesForSamples()
+std::vector<std::vector<cv::Point3f>> Cone::calculateWorldCoordinatesForSamples() const
 {
-	//check if already calculated
-	if(_sampleWorld.size() != 0)
-		return _sampleWorld;
-
 	int n = Config::numCircleSamples;
 	int m = Config::numLineSamples;
 
@@ -54,7 +50,6 @@ std::vector<std::vector<cv::Point3f>> Cone::getWorldCoordinatesForSamples()
 		}
 	}
 
-	_sampleWorld = worldCoordinates;
 	return worldCoordinates;
 
 }

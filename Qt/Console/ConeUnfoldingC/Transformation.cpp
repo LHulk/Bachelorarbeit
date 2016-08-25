@@ -3,18 +3,15 @@
 
 static bool isDebug = true;
 
-Transformation::Transformation()
-{
-}
 
 //TODO: maybe ransac?
 //TODO user solvePnP or solvePnPRansac after determining intrinsic paramters through regular camera calibration (calibrateCamera)
 //minimize reprojection error
 cv::Mat Transformation::getProjectiveMatrixBrute(const std::vector<std::vector<cv::Point2f>>& pointsPerEllipse, const std::vector<std::vector<cv::Point3f>>& worldCoords)
 {
-	int n = Config::numCircleSamples;
+	/*int n = Config::numCircleSamples;
 	int m = Config::numLineSamples;
-	int l = Config::numCircleSamples * Config::numLineSamples; //number of total samples
+	int l = Config::numCircleSamples * Config::numLineSamples; *///number of total samples
 
 	/*std::vector<cv::Point2f> allPoints;
 	for(const auto& ptList : pointsPerEllipse)
@@ -110,7 +107,7 @@ cv::Mat Transformation::getProjectiveMatrixBrute(const std::vector<std::vector<c
 
 
 //TODO: 30 points 
-cv::Mat Transformation::getProjectiveMatrix(Cone cone)
+cv::Mat Transformation::getProjectiveMatrix(const Cone& cone)
 {
 	int m = Config::numLineSamples;
 	int l = Config::numCircleSamples * Config::numLineSamples;
@@ -161,6 +158,7 @@ void Transformation::reverseWarp(const cv::Mat& greyImg, const cv::Mat& proj, co
 	int height = static_cast<int>(std::ceil(S + S*std::cos(Misc::degToRad(180 - maxAngle))));
 
 	cv::Point origin = cv::Point(width, Misc::round(std::ceil(height - S)));
+	cv::Point2f origin2f = cv::Point2f(static_cast<float>(origin.x), static_cast<float>(origin.y));
 
 	cv::Mat mask = cv::Mat::zeros(height, width, CV_8U);
 	cv::Mat resImg = cv::Mat::zeros(height, width, CV_8U);
@@ -171,10 +169,10 @@ void Transformation::reverseWarp(const cv::Mat& greyImg, const cv::Mat& proj, co
 	cv::ellipse(mask, origin, cv::Size2d(s, s), 0, 90, 90 + maxAngle, cv::Scalar(255), 3);
 	cv::line(mask, cv::Point(origin.x, Misc::round(origin.y + s)), cv::Point(origin.x, Misc::round(origin.y + S)), cv::Scalar(255), 3);
 
-	double angleStd = Misc::degToRad((90 + maxAngle) - 0.5); //0.5 for rounding errors
-	cv::line(mask, cv::Point2f(origin.x, origin.y) + s*cv::Point2f(std::cos(angleStd), std::sin(angleStd)), cv::Point2f(origin) + S*cv::Point2f(std::cos(angleStd), std::sin(angleStd)), cv::Scalar(255), 3);
+	float angleStd = static_cast<float>(Misc::degToRad((90 + maxAngle) - 0.5)); //0.5 for rounding errors
+	cv::line(mask, origin2f + s *cv::Point2f(std::cos(angleStd), std::sin(angleStd)), origin2f + S * cv::Point2f(std::cos(angleStd), std::sin(angleStd)), cv::Scalar(255), 3);
 
-	cv::floodFill(mask, cv::Point2f(origin.x, origin.y) + S / 2 * cv::Point2f(-1, -1), cv::Scalar(255), nullptr, cv::Scalar(10), cv::Scalar(10));
+	cv::floodFill(mask, origin2f + S / 2 * cv::Point2f(-1, -1), cv::Scalar(255), nullptr, cv::Scalar(10), cv::Scalar(10));
 
 	//std::vector<cv::Point3f> test;
 	//std::vector<cv::Point2f> test2;
