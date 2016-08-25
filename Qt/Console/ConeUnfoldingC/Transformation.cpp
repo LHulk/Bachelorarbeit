@@ -106,7 +106,6 @@ cv::Mat Transformation::getProjectiveMatrixBrute(const std::vector<std::vector<c
 }
 
 
-//TODO: 30 points 
 cv::Mat Transformation::getProjectiveMatrix(const Cone& cone)
 {
 	int m = Config::numLineSamples;
@@ -142,106 +141,6 @@ cv::Mat Transformation::getProjectiveMatrix(const Cone& cone)
 
 	return proj;
 }
-
-
-void Transformation::reverseWarp(const cv::Mat& greyImg, const cv::Mat& proj, const Cone& cone)
-{
-	double S = cone.S();
-	double s = cone.s();
-	double maxAngle = Misc::radToDeg(cone.maxAngle());
-
-	double scale = (1 / S) * Config::resSlantHeight;
-	S *= scale;
-	s *= scale;
-
-	int width = static_cast<int>(std::ceil(S));
-	int height = static_cast<int>(std::ceil(S + S*std::cos(Misc::degToRad(180 - maxAngle))));
-
-	cv::Point origin = cv::Point(width, Misc::round(std::ceil(height - S)));
-	cv::Point2f origin2f = cv::Point2f(static_cast<float>(origin.x), static_cast<float>(origin.y));
-
-	cv::Mat mask = cv::Mat::zeros(height, width, CV_8U);
-	cv::Mat resImg = cv::Mat::zeros(height, width, CV_8U);
-	cv::Mat mapx = cv::Mat::zeros(height, width, CV_32F);
-	cv::Mat mapy = cv::Mat::zeros(height, width, CV_32F);
-
-	cv::ellipse(mask, origin, cv::Size2d(S, S), 0, 90, Misc::round(90 + maxAngle), cv::Scalar(255), 3);
-	cv::ellipse(mask, origin, cv::Size2d(s, s), 0, 90, 90 + maxAngle, cv::Scalar(255), 3);
-	cv::line(mask, cv::Point(origin.x, Misc::round(origin.y + s)), cv::Point(origin.x, Misc::round(origin.y + S)), cv::Scalar(255), 3);
-
-	float angleStd = static_cast<float>(Misc::degToRad((90 + maxAngle) - 0.5)); //0.5 for rounding errors
-	cv::line(mask, origin2f + s *cv::Point2f(std::cos(angleStd), std::sin(angleStd)), origin2f + S * cv::Point2f(std::cos(angleStd), std::sin(angleStd)), cv::Scalar(255), 3);
-
-	cv::floodFill(mask, origin2f + S / 2 * cv::Point2f(-1, -1), cv::Scalar(255), nullptr, cv::Scalar(10), cv::Scalar(10));
-
-	//std::vector<cv::Point3f> test;
-	//std::vector<cv::Point2f> test2;
-	for(int r = 0; r < height; r++)
-	{
-		for(int c = 0; c < width; c++)
-		{
-			if(mask.at<uchar>(r, c) != 0)
-			{
-				//test2.push_back(cv::Point2d(c, r) - cv::Point2d(origin));
-				cv::Point3f coneCoords = cone.lateralToConeCoordinates(1/scale*cv::Point2d((cv::Point2d(c, r) - cv::Point2d(origin))));
-				//test.push_back(coneCoords);
-				cv::Mat coneCoordsMat = cv::Mat(coneCoords);
-				cv::Mat homogenous = cv::Mat::ones(1, 1, CV_32F);
-				coneCoordsMat.push_back(homogenous);
-
-				cv::Mat homImage = proj * coneCoordsMat;
-
-				float w = homImage.at<float>(2, 0);
-				cv::Point2f image = cv::Point2f(homImage.at<float>(0, 0) / w, homImage.at<float>(1, 0) / w);
-				mapx.at<float>(r, c) = image.x;
-				mapy.at<float>(r, c) = image.y;
-			}
-		}
-	}
-
-	//writeToFile(test, "reverseCone.txt");
-	//writeToFile(test2, "reverseLateral.txt");
-	//exit(0);
-
-	cv::remap(greyImg, resImg, mapx, mapy, cv::INTER_CUBIC);
-	cv::imshow("res", resImg);
-
-}
-
-void Transformation::writeToFile(std::vector<cv::Point2f> point2f, const std::string& filename)
-{
-	std::string x = ""; std::string y = "";
-	for(const cv::Point2f& pt : point2f)
-	{
-		x += std::to_string(pt.x) + " ";
-		y += std::to_string(pt.y) + " ";
-	}
-
-	std::ofstream file;
-	file.open(filename);
-	file << x << "\n";
-	file << y << "\n";
-	file.close();
-}
-
-void Transformation::writeToFile(std::vector<cv::Point3f> point3f, const std::string& filename)
-{
-	std::string x = ""; std::string y = ""; std::string z = "";
-	for(const cv::Point3f& pt : point3f)
-	{
-		x += std::to_string(pt.x) + " ";
-		y += std::to_string(pt.y) + " ";
-		z += std::to_string(pt.z) + " ";
-	}
-
-	std::ofstream file;
-	file.open(filename);
-	file << x << "\n";
-	file << y << "\n";
-	file << z << "\n";
-	file.close();
-}
-
 
 static void draw_subdiv_point(cv::Mat& img, cv::Point2f fp, cv::Scalar color)
 {
@@ -324,9 +223,9 @@ void Transformation::forwardWarp(const cv::Mat& img, const Cone& cone)
 
 	std::vector<cv::Point2f> lateralDebug;
 	std::vector<cv::Point3f> coneDebug;
-	for(int r = 0; r < segments.rows; r+=1)
+	for(int r = 0; r < segments.rows; r += 1)
 	{
-		for(int c = 0; c < segments.cols; c+=1)
+		for(int c = 0; c < segments.cols; c += 1)
 		{
 			int val = segments.at<uchar>(r, c);
 			if(val != 0)
@@ -342,13 +241,12 @@ void Transformation::forwardWarp(const cv::Mat& img, const Cone& cone)
 				cv::Point rounded = cv::Point(static_cast<int>(std::lround(lateral.x)), static_cast<int>(std::lround(lateral.y))) + origin;
 				if(rounded.x > 0 && rounded.y > 0 && rounded.x < resImg.cols && rounded.y < resImg.rows)
 				{
-					
+
 					resImg.at<uchar>(rounded) = imgBk.at<uchar>(pt);
 					//locate_point(resImg, subdiv, lateral, cv::Scalar(0,0,255));
 					//subdiv.insert(cv::Point2f(lateral));
 					//resImg = cv::Scalar::all(0);
 					//draw_subdiv(resImg, subdiv, cv::Scalar(255, 255, 255));
-					
 
 				}
 				else //do nothing --> identiy
@@ -371,6 +269,8 @@ void Transformation::forwardWarp(const cv::Mat& img, const Cone& cone)
 
 
 }
+
+
 
 //ONLY WORKS FOR n*m < 127
 //TODO BETTER SEED
@@ -409,4 +309,127 @@ void Transformation::fillSegments(cv::Mat& img, const std::vector<Ellipse>& elli
 	if(isDebug)
 		cv::imshow("floodfill segments", img);
 
+}
+
+
+
+
+
+void Transformation::reverseWarp(const cv::Mat& greyImg, const cv::Mat& proj, const Cone& cone)
+{
+	double S = cone.S();
+	double s = cone.s();
+	double maxAngle = Misc::radToDeg(cone.maxAngle());
+
+	double scale = (1 / S) * Config::resSlantHeight;
+	S *= scale;
+	s *= scale;
+
+	int width = static_cast<int>(std::ceil(S));
+	int height = static_cast<int>(std::ceil(S + S*std::cos(Misc::degToRad(180 - maxAngle))));
+
+	cv::Point origin = cv::Point(width, Misc::round(std::ceil(height - S)));
+	cv::Point2f origin2f = cv::Point2f(static_cast<float>(origin.x), static_cast<float>(origin.y));
+
+	cv::Mat mask = cv::Mat::zeros(height, width, CV_8U);
+	cv::Mat resImg = cv::Mat::zeros(height, width, CV_8U);
+	cv::Mat mapx = cv::Mat::zeros(height, width, CV_32F);
+	cv::Mat mapy = cv::Mat::zeros(height, width, CV_32F);
+
+	cv::ellipse(mask, origin, cv::Size2d(S, S), 0, 90, Misc::round(90 + maxAngle), cv::Scalar(255), 3);
+	cv::ellipse(mask, origin, cv::Size2d(s, s), 0, 90, 90 + maxAngle, cv::Scalar(255), 3);
+	cv::line(mask, cv::Point(origin.x, Misc::round(origin.y + s)), cv::Point(origin.x, Misc::round(origin.y + S)), cv::Scalar(255), 3);
+
+	float angleStd = static_cast<float>(Misc::degToRad((90 + maxAngle) - 0.5)); //0.5 for rounding errors
+	cv::line(mask, origin2f + s *cv::Point2f(std::cos(angleStd), std::sin(angleStd)), origin2f + S * cv::Point2f(std::cos(angleStd), std::sin(angleStd)), cv::Scalar(255), 3);
+
+	cv::floodFill(mask, origin2f + S / 2 * cv::Point2f(-1, -1), cv::Scalar(255), nullptr, cv::Scalar(10), cv::Scalar(10));
+
+	//std::vector<cv::Point3f> test;
+	//std::vector<cv::Point2f> test2;
+	for(int r = 0; r < height; r++)
+	{
+		for(int c = 0; c < width; c++)
+		{
+			if(mask.at<uchar>(r, c) != 0)
+			{
+				//test2.push_back(cv::Point2d(c, r) - cv::Point2d(origin));
+				cv::Point3f coneCoords = cone.lateralToConeCoordinates(1/scale*cv::Point2d((cv::Point2d(c, r) - cv::Point2d(origin))));
+				//test.push_back(coneCoords);
+				cv::Mat coneCoordsMat = cv::Mat(coneCoords);
+				cv::Mat homogenous = cv::Mat::ones(1, 1, CV_32F);
+				coneCoordsMat.push_back(homogenous);
+
+				cv::Mat homImage = proj * coneCoordsMat;
+
+				float w = homImage.at<float>(2, 0);
+				cv::Point2f image = cv::Point2f(homImage.at<float>(0, 0) / w, homImage.at<float>(1, 0) / w);
+				mapx.at<float>(r, c) = image.x;
+				mapy.at<float>(r, c) = image.y;
+			}
+		}
+	}
+
+	//writeToFile(test, "reverseCone.txt");
+	//writeToFile(test2, "reverseLateral.txt");
+	//exit(0);
+
+	cv::remap(greyImg, resImg, mapx, mapy, cv::INTER_CUBIC);
+	cv::imshow("res", resImg);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void Transformation::writeToFile(std::vector<cv::Point2f> point2f, const std::string& filename)
+{
+	std::string x = ""; std::string y = "";
+	for(const cv::Point2f& pt : point2f)
+	{
+		x += std::to_string(pt.x) + " ";
+		y += std::to_string(pt.y) + " ";
+	}
+
+	std::ofstream file;
+	file.open(filename);
+	file << x << "\n";
+	file << y << "\n";
+	file.close();
+}
+
+void Transformation::writeToFile(std::vector<cv::Point3f> point3f, const std::string& filename)
+{
+	std::string x = ""; std::string y = ""; std::string z = "";
+	for(const cv::Point3f& pt : point3f)
+	{
+		x += std::to_string(pt.x) + " ";
+		y += std::to_string(pt.y) + " ";
+		z += std::to_string(pt.z) + " ";
+	}
+
+	std::ofstream file;
+	file.open(filename);
+	file << x << "\n";
+	file << y << "\n";
+	file << z << "\n";
+	file.close();
 }
