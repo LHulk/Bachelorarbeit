@@ -70,11 +70,13 @@ std::vector<Line> Line::getLines(const cv::Mat& edgeImage)
         Line l = Line(rho,theta);
         linesVec.push_back(l);
 
-        cv::line(debug, l.getStart(), l.getEnd(), cv::Scalar(0, 0, 255), 1);
+		if(isDebug)
+			cv::line(debug, l.getStart(), l.getEnd(), cv::Scalar(0, 0, 255), 1);
     }
 
     if (isDebug)
         cv::imshow("debug getLines", debug);
+
     return linesVec;
 }
 
@@ -123,18 +125,26 @@ std::vector<Line> Line::fitLines(const std::vector<std::vector<cv::Point2f>>& po
 		for(size_t i = 0; i < pointList.size(); i++)
 		{
 			float currentStep = (1.0f * i) / (pointList.size() - 1);
-			cv::circle(debug, pointList[i], 8, cv::Scalar(currentStep * 150, 255, 255), -1);
+
+			if(isDebug)
+				cv::circle(debug, pointList[i], 8, cv::Scalar(currentStep * 150, 255, 255), -1);
 		}
 	}
 
 	for(size_t i = 0; i < lines.size(); i++)
 	{
 		float currentStep = (1.0f * i) / (lines.size() - 1);
-		cv::line(debug, lines[i].getStart(), lines[i].getEnd(), cv::Scalar(currentStep * 150, 255, 255), 2);
+
+		if(isDebug)
+			cv::line(debug, lines[i].getStart(), lines[i].getEnd(), cv::Scalar(currentStep * 150, 255, 255), 2);
 	}
 
-	cv::cvtColor(debug, debug, CV_HSV2BGR);
-	cv::imshow("debug fitLines", debug);
+
+	if(isDebug)
+	{
+		cv::cvtColor(debug, debug, CV_HSV2BGR);
+		cv::imshow("debug fitLines", debug);
+	}
 
 	return lines;
 }
@@ -160,8 +170,11 @@ bool Line::operator!=(const Line& other) const
 
 
 Point Line::getStart() const { return _start; }
+
 Point Line::getEnd() const { return _end; }
+
 Point Line::getDir() const { return _end - _start; }
+
 cv::Point2d Line::getNormalizedDir() const
 {
 	cv::Point dir = this->getDir();

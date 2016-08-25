@@ -258,9 +258,10 @@ Ellipse Ellipse::robustEllipseFit(const std::vector<cv::Point>& points, cv::Size
 
         Ellipse currentEllipse = solveEllipseEquation(ellipsePoints);
 
-        //bool checkBoundaries(const Ellipse& e, const cv::Size& sz, float maxAToBRatio);
         bool passedCheck = checkBoundaries(currentEllipse, szImg, maxAtoBRatio);
-        if(passedCheck)
+		if(!passedCheck) continue;
+
+        if(isDebug)
         {
             cv::ellipse(debug, currentEllipse.getEllipseAsRotatedRect(), cv::Scalar(0,255,255),1);
             for(const auto& pt : ellipsePoints)
@@ -516,13 +517,19 @@ std::vector<std::vector<cv::Point2f>> Ellipse::getEllipsePointMappings(const std
 
 }
 
-void Ellipse::reestimateEllipses(const std::vector<std::vector<cv::Point2f>>& pointsPerEllipse, std::vector<Ellipse>& ellipses)
+std::vector<Ellipse> Ellipse::reestimateEllipses(const std::vector<std::vector<cv::Point2f>>& pointsPerEllipse, const std::vector<Ellipse>& ellipses)
 {
 	cv::Mat debug = cv::Mat::zeros(Config::usedResHeight, Config::usedResWidth, CV_8UC3);
+	
+	std::vector<Ellipse> reestimated;
+	reestimated.reserve(ellipses.size());
 
-	for(const Ellipse& e : ellipses)
+	if(isDebug)
 	{
-		cv::ellipse(debug, e.getEllipseAsRotatedRect(), cv::Scalar(0, 0, 255), 2);
+		for(const Ellipse& e : ellipses)
+		{
+			cv::ellipse(debug, e.getEllipseAsRotatedRect(), cv::Scalar(0, 0, 255), 2);
+		}
 	}
 
 	for(size_t i = 0; i < ellipses.size(); i++)
@@ -530,17 +537,22 @@ void Ellipse::reestimateEllipses(const std::vector<std::vector<cv::Point2f>>& po
 		cv::Mat pointMat = cv::Mat(pointsPerEllipse[i]);
 
 		cv::RotatedRect fittedEllipse = cv::fitEllipse(pointMat);
-		ellipses[i] = Ellipse(fittedEllipse);
-		cv::ellipse(debug, fittedEllipse, cv::Scalar(0, 255, 0), 2);
+		reestimated.push_back(Ellipse(fittedEllipse));
 
-		for(const auto& pt : pointsPerEllipse[i])
+		if(isDebug)
 		{
-			cv::circle(debug, pt, 3, cv::Scalar(0, 255, 0), 2);
+			cv::ellipse(debug, fittedEllipse, cv::Scalar(0, 255, 0), 2);
+			for(const auto& pt : pointsPerEllipse[i])
+			{
+				cv::circle(debug, pt, 3, cv::Scalar(0, 255, 0), 2);
+			}
 		}
 	}
 
 	if(isDebug)
 		cv::imshow("debug reestimate", debug);
+
+	return reestimated;
 }
 
 cv::Point2d Ellipse::ellipseLineIntersection(const Ellipse& ellipse, const Line& line)

@@ -20,11 +20,7 @@
 class ConeUnfolding
 {
 public:
-	ConeUnfolding();
-	static double angleWithX(const cv::Point2d& pt1, const cv::Point2d& pt2);
-private:
-	void sort(std::vector<std::vector<cv::Point2f>>& pointsPerEllipse, const std::vector<Ellipse>& ellipses);
-	
+	ConeUnfolding();	
 
 };
 

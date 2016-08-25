@@ -175,3 +175,23 @@ cv::RotatedRect ConeUnfolding::getEllipse(const Mat& hueImage, bool max)
 	return cv::fitEllipse(contours[index]);
 
 }
+
+
+
+	/*grey = cv::Mat::zeros(grey.size(), CV_8UC3);
+
+	Ellipse e = Ellipse(400, 600, 400, 200, CV_PI / 5);
+
+	cv::ellipse(grey, e.getEllipseAsRotatedRect(), cv::Scalar(255, 0, 0));
+	cv::circle(grey, e.getCenter(), 8, cv::Scalar(255, 0, 0), -1);
+
+	cv::Point pt(200, 200);
+	cv::Point intersect;
+
+	Ellipse::realDistTrans(e, pt, intersect);
+
+	cv::circle(grey, pt, 8, cv::Scalar(255, 255, 0), -1);
+	cv::circle(grey, intersect, 8, cv::Scalar(0, 255, 255), -1);
+
+    
+	return;*/

@@ -1,7 +1,13 @@
 #ifndef MISC_H
 #define MISC_H
 
-#include<algorithm>
+#include <algorithm>
+
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/features2d/features2d.hpp>
+
+#include "Ellipse.h"
 
 class Misc
 {
@@ -14,6 +20,10 @@ public:
 	static int round(double a) { return static_cast<int>(std::lround(a)); }
 
 	static float clamp(float n, float lower, float upper) { return std::max(lower, std::min(n, upper)); }
+
+	static double angleWithX(const cv::Point2d& pt1, const cv::Point2d& pt2);
+
+	static void sort(std::vector<std::vector<cv::Point2f>>& pointsPerEllipse, const std::vector<Ellipse>& ellipses);
 
 };
 

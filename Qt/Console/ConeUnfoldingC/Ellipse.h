@@ -39,7 +39,7 @@ public:
 	static double realDistTrans(const Ellipse& ellipse, const cv::Point& pt);
 	static double realDistTrans(const Ellipse& ellipse, const cv::Point& pt, cv::Point& intersect);
     static std::vector<std::vector<cv::Point2f>> getEllipsePointMappings(const std::vector<Ellipse>& ellipses, const std::vector<cv::Point2f>& points);
-	static void reestimateEllipses(const std::vector<std::vector<cv::Point2f>>& pointsPerEllipse, std::vector<Ellipse>& ellipses);
+	static std::vector<Ellipse> Ellipse::reestimateEllipses(const std::vector<std::vector<cv::Point2f>>& pointsPerEllipse, const std::vector<Ellipse>& ellipses);
 	static cv::Point2d ellipseLineIntersection(const Ellipse& ellipse, const Line& line);
 	static double getAngleAt(const Ellipse& ellipse, const cv::Point2d &pt);
 

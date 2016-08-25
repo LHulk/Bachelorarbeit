@@ -19,16 +19,16 @@
 #include "Misc.h"
 
 
-enum HEIGHT
-{
-	CENTER_TO_CENTER,
-	CENTER_TO_TIP
-};
+//enum
+//{
+//	CENTER_TO_CENTER,
+//	CENTER_TO_TIP
+//};
 
 class Cone
 {
 public:
-	Cone(float radiusInner, float radiusOuter, float height, int whichHeight);
+	Cone();
 	Cone(const Cone& Cone);
 	Cone& operator=(const Cone& other);
 
@@ -68,7 +68,6 @@ public:
 	std::vector<Ellipse> ellipses() { return _ellipses; }
 	std::vector<std::vector<cv::Point2f>> sampleCoordsImage() { return _sampleImg; }
 	std::vector<std::vector<cv::Point3f>> sampleCoordsWorld() { return _sampleWorld; }
-	
 };
 
 #endif //CONE_H

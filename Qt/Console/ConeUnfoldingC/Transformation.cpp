@@ -537,9 +537,9 @@ void Transformation::fillSegments(cv::Mat& img, const std::vector<Ellipse>& elli
 
 	int m = Config::numLineSamples;
 	int currentVal = 2;
-	for(size_t i = 0; i < Config::numCircleSamples - 1; i++)
+	for(int i = 0; i < Config::numCircleSamples - 1; i++)
 	{
-		for(size_t j = 0; j < Config::numLineSamples; j++)
+		for(int j = 0; j < Config::numLineSamples; j++)
 		{
 			cv::Point2f p1 = pointsPerEllipse[i][j]; cv::Point2f p2 = pointsPerEllipse[i + 1][j]; cv::Point2f p3 = pointsPerEllipse[i + 1][(j + 1) % m];
 			cv::Point2f middleLine = (p1 + 0.5*(p2 - p1));

@@ -1,15 +1,17 @@
 #include "Cone.h"
 
 
-Cone::Cone(float radiusInner, float radiusOuter, float height, int whichHeight) : _r(radiusInner), _R(radiusOuter)
+Cone::Cone() : _r(Config::radiusInner), _R(Config::radiusOuter)
 {
-	switch(whichHeight)
+	float height = Config::height;
+
+	switch(Config::whichHeight)
 	{
-		case HEIGHT::CENTER_TO_CENTER:
+		case CENTER_TO_CENTER:
 			_H = height / (1 - _r / _R);
 			_dh = height;
 			break;
-		case HEIGHT::CENTER_TO_TIP:
+		case CENTER_TO_TIP:
 		default:
 			_H = height;
 			_dh = _H - ((_H / _R) *_r);
