@@ -1,12 +1,14 @@
 #ifndef LINE_H
 #define LINE_H
 
-
+//CV
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
+//STD
 #include <cmath>
 
+//USER
 #include "Config.h"
 
 class Line

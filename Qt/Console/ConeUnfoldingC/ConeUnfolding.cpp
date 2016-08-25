@@ -39,6 +39,7 @@ ConeUnfolding::ConeUnfolding()
 
 	cone.setEllipses(ellipses);
 	cone.setLines(lines);
+	cone.setSampleCoordsImage(pointsPerEllipse);
 
 
     /*cv::Scalar colors[] = { cv::Scalar(0,0,255),  cv::Scalar(0,140,255), cv::Scalar(0,255,0), cv::Scalar(140,255,0), cv::Scalar(255,255,0)};
@@ -62,7 +63,7 @@ ConeUnfolding::ConeUnfolding()
 
 	std::vector<std::vector<cv::Point3f>> worldCoords = cone.getWorldCoordinatesForSamples();
 
-	cv::Mat proj = Transformation::getProjectiveMatrix(pointsPerEllipse, worldCoords);
+	cv::Mat proj = Transformation::getProjectiveMatrix(cone);
 
 	//cv::Mat vis;
 	//cv::cvtColor(grey, vis, CV_GRAY2BGR);
@@ -86,11 +87,11 @@ ConeUnfolding::ConeUnfolding()
 	//}
 	//cv::imshow("vis", vis);
 
-	Transformation::reverseWarp(grey, proj);
-	return;
+	//Transformation::reverseWarp(grey, proj, cone);
+	//return;
 
 	
-	Transformation::getWorldCoordinatesInt(ellipses, lines, pointsPerEllipse, worldCoords, grey);
+	Transformation::forwardWarp(grey, cone);
 
 
     return;

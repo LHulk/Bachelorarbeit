@@ -1,16 +1,21 @@
 #ifndef ELLIPSE_H
 #define ELLIPSE_H
 
+
+//CV
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-#include <iostream>
 
+//STD
+#include <iostream>
 #include <cmath>
 #include <vector>
 #include <random>
 #include <ctime>
 
+
+//USER
 #include "Line.h"
 #include "Config.h"
 

@@ -24,5 +24,5 @@ namespace Config
 	float radiusInner = 13;
 	float radiusOuter = 60;
 	float height = 110; //from center of big radius to cone tip
-	int whichHeight = CENTER_TO_CENTER;
+	int whichHeight = CENTER_TO_TIP;
 }

@@ -24,6 +24,8 @@ Cone::Cone() : _r(Config::radiusInner), _R(Config::radiusOuter)
 }
 
 
+//center is (0,0)
+//right hand coordinate system (x,y,z) z is depth directed out of screen plane
 std::vector<std::vector<cv::Point3f>> Cone::getWorldCoordinatesForSamples()
 {
 	//check if already calculated
@@ -58,7 +60,7 @@ std::vector<std::vector<cv::Point3f>> Cone::getWorldCoordinatesForSamples()
 }
 
 
-cv::Point3f Cone::interPolateRadial(const cv::Point& pt, int val)
+cv::Point3f Cone::interPolateRadial(const cv::Point& pt, int val) const
 {
 	val = (val - 2) / 2;
 	int i = val / Config::numLineSamples;
@@ -99,13 +101,13 @@ cv::Point3f Cone::interPolateRadial(const cv::Point& pt, int val)
 }
 
 
-cv::Point2f Cone::coneCoordinatesToLateral(const cv::Point3f& pt)
+cv::Point2f Cone::coneCoordinatesToLateral(const cv::Point3f& pt) const
 {
 	cv::Point2f lateralPoint;
 
 	float ri = _s + (pt.y / _dh) * (_S - _s);
 
-	ri = Misc::clamp(ri, _S, _s);
+	ri = Misc::clamp(ri, _s, _S);
 
 	float cosP = pt.x / (_r + (pt.y / _dh) * (_R - _r));
 	float sinP = pt.z / (_r + (pt.y / _dh) * (_R - _r));
@@ -119,10 +121,9 @@ cv::Point2f Cone::coneCoordinatesToLateral(const cv::Point3f& pt)
 	lateralPoint.y = ri * std::cos(angle);
 
 	return lateralPoint;
-
 }
 
-cv::Point3f Cone::lateralToConeCoordinates(const cv::Point2f& pt)
+cv::Point3f Cone::lateralToConeCoordinates(const cv::Point2f& pt) const
 {
 	cv::Point3f conePoint;
 

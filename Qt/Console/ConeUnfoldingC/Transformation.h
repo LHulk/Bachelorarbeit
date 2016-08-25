@@ -11,31 +11,28 @@
 #include <algorithm>
 #include <string>
 #include <numeric>
+#include <fstream>
 
 #include "Config.h"
 #include "Ellipse.h"
 #include "Line.h"
 #include "ConeUnfolding.h"
 #include "Misc.h"
-#include <fstream>
+#include "Cone.h"
+
 
 class Transformation
 {
 public:
-	static std::vector<std::vector<cv::Point3f>> getWorldCoordinatesForSamples();
-	static void getWorldCoordinatesInt(const std::vector<Ellipse>& ellipses, const std::vector<Line>& lines, const std::vector <std::vector<cv::Point2f>>& pointsPerEllipse, const std::vector<std::vector<cv::Point3f>>& worldCoords, const cv::Mat& img);
-	static cv::Mat Transformation::getProjectiveMatrix(const std::vector<std::vector<cv::Point2f>>& pointsPerEllipse, const std::vector<std::vector<cv::Point3f>>& worldCoords);
+	static cv::Mat Transformation::getProjectiveMatrix(Cone cone);
 	static cv::Mat getProjectiveMatrixBrute(const std::vector<std::vector<cv::Point2f>>& pointsPerEllipse, const std::vector<std::vector<cv::Point3f>>& worldCoords);
-	static void reverseWarp(const cv::Mat& greyImg, const cv::Mat& proj);
+
+	static void forwardWarp(const cv::Mat& img, const Cone& cone);
+	static void reverseWarp(const cv::Mat& greyImg, const cv::Mat& proj, const Cone& cone);
 private:
 	Transformation();
 
 	static void fillSegments(cv::Mat& img, const std::vector<Ellipse>& ellipses, const std::vector<Line>& lines, const std::vector <std::vector<cv::Point2f>>& pointsPerEllipse);
-
-	static cv::Point2d coneCoordinatesToLateral(const cv::Point3d& pt);
-	static cv::Point3d lateralToConeCoordinates(const cv::Point2d& pt);
-
-	static cv::Point3f interPolateRadial(const cv::Point& pt, int val, const std::vector<Ellipse>& ellipses, const std::vector<Line>& lines, const std::vector <std::vector<cv::Point2f>>& pointsPerEllipse, const std::vector<std::vector<cv::Point3f>>& worldCoords);
 	
 	static void writeToFile(std::vector<cv::Point2f> point2f, const std::string& filename);
 	static void writeToFile(std::vector<cv::Point3f> point3f, const std::string& filename);
