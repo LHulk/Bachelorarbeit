@@ -1,0 +1,57 @@
+%!TEX TS-program = pdflatex
+%!BIB program = biber
+% -- Author: Jannes Bantje, j.bantje@wwu.de
+\input{preamble.tex}
+
+%Informationen zur Arbeit
+\newcommand{\printname}{Lars Haalck}
+\newcommand{\printmatrickel}{407 846}
+\newcommand{\printtitel}{bla bla}
+\newcommand{\printort}{Münster}
+\newcommand{\printartderarbeit}{Bachelorarbeit}
+\newcommand{\printstudiengang}{BSc. Informatik}
+\newcommand{\printstudiengrad}{Bachelor of Science}
+\newcommand{\printsbetreuer}{bla}
+\newcommand{\printweitererbetreuer}{bla}
+\newcommand{\printinstitut}{Institut für Informatik}
+
+%\hyphenation{Be"-tween"-ness"--Zen"-tra"-li"-tät}
+%\hyphenation{Be-tween-ness Zen-tra-li-tät On-line"=Ver-sand-händ-ler}
+\begin{document}
+\pagenumbering{Roman} % Seitennummerierung auf römische Zahlen setzen
+
+\listoftodos
+\begin{titlepage}
+	\input{chapter/titelseite.tex}	
+\end{titlepage}
+
+\input{chapter/abstract.tex}
+\cleardoubleoddemptypage
+\tableofcontents
+\cleardoubleoddemptypage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\cleardoubleoddemptypage
+\input{chapter/einleitung.tex}
+\cleardoubleoddemptypage
+\input{chapter/theorie.tex}
+\cleardoubleoddemptypage
+\input{chapter/implementierung.tex}
+\cleardoubleoddemptypage
+\input{chapter/analyse.tex}
+\cleardoubleoddemptypage
+\input{chapter/fazit.tex}
+\cleardoubleoddemptypage
+\appendix % hier beginnt der Anhang
+\listoffigures
+\cleardoubleoddemptypage
+\listoftables
+%\cleardoubleoddemptypage
+%\listof{algorithm}{Algorithmenverzeichnis}
+%\cleardoubleoddemptypage
+%\listoflistings
+\cleardoubleoddemptypage
+\printbibliography
+\cleardoubleoddemptypage
+\input{chapter/eidesstattliche.tex}
+\end{document}
