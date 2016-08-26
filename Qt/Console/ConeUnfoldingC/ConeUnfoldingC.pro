@@ -16,7 +16,9 @@ SOURCES += main.cpp \
     EdgeDetection.cpp \
     DotDetection.cpp \
     Config.cpp \
-    Transformation.cpp
+    Transformation.cpp \
+    Cone.cpp \
+    Misc.cpp
 
 
 HEADERS += \
@@ -26,7 +28,9 @@ HEADERS += \
     EdgeDetection.h \
     DotDetection.h \
     Config.h \
-    Transformation.h
+    Transformation.h \
+    Cone.h \
+    Misc.h
 
 
 
