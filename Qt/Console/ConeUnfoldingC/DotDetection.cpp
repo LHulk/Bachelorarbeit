@@ -10,18 +10,18 @@ std::vector<cv::Point2f> DotDetection::detectDots(const cv::Mat& greyImage)
     cv::GaussianBlur(greyImage, blured, cv::Size(3,3), 2.0, 2.0);
 
     cv::SimpleBlobDetector::Params params;
-    params.minThreshold = 50;
+	params.minThreshold = 50;
     params.maxThreshold = 800;
 
     params.filterByArea = true;
-    params.minArea = 50;
+	params.minArea = 50;
 
     params.filterByCircularity = true;
     params.minCircularity = 0.4f;
 
     //elipse and cirles are convex, almost 1
     params.filterByConvexity = true;
-    params.minConvexity = 0.75f;
+	params.minConvexity = 0.75f;
 
     cv::SimpleBlobDetector detector(params);
 

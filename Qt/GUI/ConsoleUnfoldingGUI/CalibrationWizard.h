@@ -14,11 +14,13 @@
 #include <QGraphicsPixmapItem>
 #include <QWheelEvent>
 #include <QScrollBar>
+#include <QDebug>
 
 //STD
 #include <vector>
 
 //USER
+#include "CustomGraphicsView.h"
 #include "QtOpencvCore.hpp"
 #include "CustomWizardPage.h"
 #include "EdgeDetection.h"
@@ -43,20 +45,32 @@ public:
     ~CalibrationWizard();
 
 
+private:
+	void drawKeyPoints();
+
 private slots:
     void on_buttonLoadIntrinsic_clicked();
     void on_buttonStartIntrinsic_clicked();
 
-	//void on_buttonZoomPIntrinsic_clicked();
-	//void on_buttonZoomMIntrinsic_clicked();
+	void on_buttonZoomPBlob_clicked();
+	void on_buttonZoomMBlob_clicked();
+
+	void on_buttonLoadCone_clicked();
+
+	void on_buttonFindBlobs_clicked();
+	void clickedInBlobView(QPointF point, int button);
 
 private:
     Ui::CalibrationWizard *ui;
-    QStringList fileNames;
+	QStringList fileNamesCamCalib;
+	QString fileNameConeCalib;
 	QGraphicsScene* scene;
 
 	cv::Mat cameraMatrix;
 	cv::Mat distCoeffs;
+
+	cv::Mat grey;
+	std::vector<cv::Point2f> keyPoints;
 
 };
 

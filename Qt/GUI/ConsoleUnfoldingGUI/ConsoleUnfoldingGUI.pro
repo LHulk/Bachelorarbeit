@@ -27,7 +27,8 @@ SOURCES += main.cpp \
     ../../Console/ConeUnfoldingC/Transformation.cpp \
     ../../Console/ConeUnfoldingC/Calibration.cpp \
     CustomWizardPage.cpp \
-    QtOpencvCore.cpp
+    QtOpencvCore.cpp \
+    CustomGraphicsView.cpp
 
 HEADERS  += mainwindow.h \
     CalibrationWizard.h \
@@ -41,7 +42,8 @@ HEADERS  += mainwindow.h \
     ../../Console/ConeUnfoldingC/Transformation.h \
     ../../Console/ConeUnfoldingC/Calibration.h \
     CustomWizardPage.h \
-    QtOpencvCore.hpp
+    QtOpencvCore.hpp \
+    CustomGraphicsView.h
 
 
 FORMS    += mainwindow.ui \

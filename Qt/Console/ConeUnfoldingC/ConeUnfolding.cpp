@@ -8,15 +8,15 @@ ConeUnfolding::ConeUnfolding()
     //Mat grey = cv::imread("../../../img/v5_pattern/pattern2.png", CV_LOAD_IMAGE_GRAYSCALE);
     //cv::Mat grey = cv::imread("../../../img/v5_pattern/pattern3.png", CV_LOAD_IMAGE_GRAYSCALE);
 	//cv::Mat grey = cv::imread("../../../img/v5_pattern/test.png", CV_LOAD_IMAGE_GRAYSCALE);
-	cv::Mat grey = cv::imread("../../../img/v5_pattern/blender_perfectCenter.png", CV_LOAD_IMAGE_GRAYSCALE);
+	cv::Mat grey = cv::imread("../../../img/v5_pattern/blender_15deg2.png", CV_LOAD_IMAGE_GRAYSCALE);
 
-	cv::Mat calib = cv::imread("../../../img/calibration/chessboard/25-08_21-47-35.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	/*cv::Mat calib = cv::imread("../../../img/calibration/chessboard/25-08_21-47-35.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 	cv::resize(calib, calib, cv::Size(1000, 1000 * calib.rows / calib.cols));
 
     cv::Mat debug;
     Calibration::getCorners(calib, debug);
     cv::imshow("corners", debug);
-	return;
+	return;*/
 
 
 	cv::resize(grey, grey, cv::Size(1000, 1000)); //performance
@@ -37,13 +37,14 @@ ConeUnfolding::ConeUnfolding()
 
     std::vector<cv::Point2f> keyPoints;
 	keyPoints = DotDetection::detectDots(grey);
+	return;
 
 	//TODO: HERE CHECK IF POINTS HAVE BEEN DETECTED
 
     std::vector<Ellipse> ellipses = Ellipse::detectEllipses(canny);
 
 	std::vector<std::vector<cv::Point2f>> pointsPerEllipse = Ellipse::getEllipsePointMappings(ellipses, keyPoints);
-    Misc::sort(pointsPerEllipse, ellipses);
+  Misc::sort(pointsPerEllipse, ellipses);
 
 	ellipses = Ellipse::reestimateEllipses(pointsPerEllipse, ellipses);
 	std::vector<Line> lines = Line::fitLines(pointsPerEllipse);

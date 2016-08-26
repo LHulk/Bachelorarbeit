@@ -7,7 +7,8 @@ CustomWizardPage::CustomWizardPage(QWidget *parent) : QWizardPage(parent), _comp
 
 bool CustomWizardPage::isComplete() const
 {
-	return _complete;
+	//return _complete;
+	return true;
 }
 
 
