@@ -14,7 +14,7 @@ TARGET = ConsoleUnfoldingGUI
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
+SOURCES += main.cpp \
         mainwindow.cpp \
     CalibrationWizard.cpp \
     ../../Console/ConeUnfoldingC/Cone.cpp \
@@ -25,7 +25,9 @@ SOURCES += main.cpp\
     ../../Console/ConeUnfoldingC/Line.cpp \
     ../../Console/ConeUnfoldingC/Misc.cpp \
     ../../Console/ConeUnfoldingC/Transformation.cpp \
-    CustomWizardPage.cpp
+    ../../Console/ConeUnfoldingC/Calibration.cpp \
+    CustomWizardPage.cpp \
+    QtOpencvCore.cpp
 
 HEADERS  += mainwindow.h \
     CalibrationWizard.h \
@@ -37,7 +39,10 @@ HEADERS  += mainwindow.h \
     ../../Console/ConeUnfoldingC/Line.h \
     ../../Console/ConeUnfoldingC/Misc.h \
     ../../Console/ConeUnfoldingC/Transformation.h \
-    CustomWizardPage.h
+    ../../Console/ConeUnfoldingC/Calibration.h \
+    CustomWizardPage.h \
+    QtOpencvCore.hpp
+
 
 FORMS    += mainwindow.ui \
     CalibrationWizard.ui

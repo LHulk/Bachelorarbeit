@@ -11,7 +11,11 @@ class CustomWizardPage : public QWizardPage
 public:
     explicit CustomWizardPage(QWidget *parent = 0);
     ~CustomWizardPage();
+	void setComplete(bool complete) { if(_complete != complete) { _complete = complete; emit completeChanged(); } }
     bool CustomWizardPage::isComplete() const;
+private:
+	bool _complete;
+
 
 };
 

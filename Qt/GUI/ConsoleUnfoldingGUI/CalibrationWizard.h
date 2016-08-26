@@ -9,11 +9,17 @@
 //QT
 #include <QWizard>
 #include <QFileDialog>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QGraphicsPixmapItem>
+#include <QWheelEvent>
+#include <QScrollBar>
 
 //STD
 #include <vector>
 
 //USER
+#include "QtOpencvCore.hpp"
 #include "CustomWizardPage.h"
 #include "EdgeDetection.h"
 #include "Ellipse.h"
@@ -22,6 +28,7 @@
 #include "Config.h"
 #include "Transformation.h"
 #include "Cone.h"
+#include "Calibration.h"
 
 namespace Ui {
 class CalibrationWizard;
@@ -35,14 +42,21 @@ public:
     explicit CalibrationWizard(QWidget *parent = 0);
     ~CalibrationWizard();
 
+
 private slots:
     void on_buttonLoadIntrinsic_clicked();
-
     void on_buttonStartIntrinsic_clicked();
+
+	//void on_buttonZoomPIntrinsic_clicked();
+	//void on_buttonZoomMIntrinsic_clicked();
 
 private:
     Ui::CalibrationWizard *ui;
     QStringList fileNames;
+	QGraphicsScene* scene;
+
+	cv::Mat cameraMatrix;
+	cv::Mat distCoeffs;
 
 };
 

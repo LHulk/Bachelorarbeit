@@ -105,7 +105,7 @@ p, li { white-space: pre-wrap; }
       <item>
        <widget class="QSpinBox" name="spinPatternRows">
         <property name="value">
-         <number>6</number>
+         <number>0</number>
         </property>
        </widget>
       </item>
@@ -119,7 +119,7 @@ p, li { white-space: pre-wrap; }
       <item>
        <widget class="QSpinBox" name="spinPatternCols">
         <property name="value">
-         <number>9</number>
+         <number>0</number>
         </property>
        </widget>
       </item>
@@ -139,7 +139,7 @@ p, li { white-space: pre-wrap; }
       <item>
        <widget class="QSpinBox" name="spinPatternSquareSize">
         <property name="value">
-         <number>51</number>
+         <number>0</number>
         </property>
        </widget>
       </item>
@@ -166,54 +166,7 @@ p, li { white-space: pre-wrap; }
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="QGraphicsView" name="viewIntrinsic"/>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_intrinsic_status">
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">color: red</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_7">
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QPushButton" name="buttonLoadIntrinsic">
-            <property name="text">
-             <string>load Images</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="buttonStartIntrinsic">
-            <property name="text">
-             <string>start calibration</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </item>
+     <layout class="QVBoxLayout" name="verticalLayout_4">
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <property name="leftMargin">
@@ -228,7 +181,7 @@ p, li { white-space: pre-wrap; }
            </font>
           </property>
           <property name="text">
-           <string>Camera Matrix:</string>
+           <string>Camera Matrix and distortion coefficients:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -250,6 +203,50 @@ p, li { white-space: pre-wrap; }
            <enum>QFrame::Plain</enum>
           </property>
          </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QLabel" name="labelIntrinsicStatus">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: red</string>
+        </property>
+        <property name="text">
+         <string>Status</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_7">
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QPushButton" name="buttonLoadIntrinsic">
+            <property name="text">
+             <string>load Images</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="buttonStartIntrinsic">
+            <property name="text">
+             <string>start calibration</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
@@ -344,7 +341,7 @@ p, li { white-space: pre-wrap; }
          <number>999</number>
         </property>
         <property name="value">
-         <number>13</number>
+         <number>0</number>
         </property>
        </widget>
       </item>
@@ -356,12 +353,12 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="spineConeR">
+       <widget class="QSpinBox" name="spinConeR">
         <property name="maximum">
          <number>999</number>
         </property>
         <property name="value">
-         <number>60</number>
+         <number>0</number>
         </property>
        </widget>
       </item>
@@ -378,7 +375,7 @@ p, li { white-space: pre-wrap; }
          <number>999</number>
         </property>
         <property name="value">
-         <number>110</number>
+         <number>0</number>
         </property>
        </widget>
       </item>
@@ -388,7 +385,7 @@ p, li { white-space: pre-wrap; }
          <string>center to tip?</string>
         </property>
         <property name="checked">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -431,7 +428,7 @@ p, li { white-space: pre-wrap; }
          <number>10</number>
         </property>
         <property name="value">
-         <number>6</number>
+         <number>0</number>
         </property>
        </widget>
       </item>
@@ -448,7 +445,7 @@ p, li { white-space: pre-wrap; }
          <number>10</number>
         </property>
         <property name="value">
-         <number>5</number>
+         <number>0</number>
         </property>
        </widget>
       </item>
@@ -569,7 +566,7 @@ p, li { white-space: pre-wrap; }
          <number>9999</number>
         </property>
         <property name="value">
-         <number>500</number>
+         <number>0</number>
         </property>
        </widget>
       </item>
