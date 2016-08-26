@@ -31,6 +31,7 @@
 #include "Transformation.h"
 #include "Cone.h"
 #include "Calibration.h"
+#include <thread>
 
 namespace Ui {
 class CalibrationWizard;
@@ -38,19 +39,19 @@ class CalibrationWizard;
 
 class CalibrationWizard : public QWizard
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit CalibrationWizard(QWidget *parent = 0);
-    ~CalibrationWizard();
+	explicit CalibrationWizard(QWidget *parent = 0);
+	~CalibrationWizard();
 
 
 private:
 	void drawKeyPoints();
 
 private slots:
-    void on_buttonLoadIntrinsic_clicked();
-    void on_buttonStartIntrinsic_clicked();
+	void on_buttonLoadIntrinsic_clicked();
+	void on_buttonStartIntrinsic_clicked();
 
 	void on_buttonZoomPBlob_clicked();
 	void on_buttonZoomMBlob_clicked();
@@ -60,17 +61,25 @@ private slots:
 	void on_buttonFindBlobs_clicked();
 	void clickedInBlobView(QPointF point, int button);
 
+	void on_buttonGetMappings_clicked();
+
 private:
-    Ui::CalibrationWizard *ui;
+	Ui::CalibrationWizard *ui;
 	QStringList fileNamesCamCalib;
 	QString fileNameConeCalib;
 	QGraphicsScene* scene;
 
 	cv::Mat cameraMatrix;
 	cv::Mat distCoeffs;
+	cv::Mat remapXCam;
+	cv::Mat remapYCam;
 
 	cv::Mat grey;
 	std::vector<cv::Point2f> keyPoints;
+
+	cv::Mat canny;
+
+	Cone cone;
 
 };
 

@@ -173,6 +173,22 @@ p, li { white-space: pre-wrap; }
          <number>0</number>
         </property>
         <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
          <widget class="QLabel" name="label_5">
           <property name="font">
            <font>
@@ -235,14 +251,14 @@ p, li { white-space: pre-wrap; }
           <item>
            <widget class="QPushButton" name="buttonLoadIntrinsic">
             <property name="text">
-             <string>load Images</string>
+             <string>1. load Images</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="buttonStartIntrinsic">
             <property name="text">
-             <string>start calibration</string>
+             <string>2. start calibration</string>
             </property>
            </widget>
           </item>
@@ -519,18 +535,25 @@ p, li { white-space: pre-wrap; }
           <item>
            <widget class="QPushButton" name="buttonLoadCone">
             <property name="text">
-             <string>load Image</string>
+             <string>1. load Image</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="buttonFindBlobs">
             <property name="text">
-             <string>find blobs</string>
+             <string>2. find blobs</string>
             </property>
            </widget>
           </item>
          </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonGetMappings">
+          <property name="text">
+           <string>3. get Mappings</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -574,16 +597,6 @@ p, li { white-space: pre-wrap; }
        </layout>
       </item>
      </layout>
-    </item>
-    <item>
-     <widget class="QLabel" name="label_16">
-      <property name="text">
-       <string>Status</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-     </widget>
     </item>
    </layout>
   </widget>

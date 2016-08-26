@@ -25,6 +25,7 @@ CalibrationWizard::CalibrationWizard(QWidget *parent) :
 
 	ui->buttonStartIntrinsic->setEnabled(false);
 	ui->buttonFindBlobs->setEnabled(false);
+	ui->buttonGetMappings->setEnabled(false);
 
 
 	ui->labelIntrinsicStatus->setText("");
@@ -34,7 +35,6 @@ CalibrationWizard::CalibrationWizard(QWidget *parent) :
 	scene = new QGraphicsScene();
 
 	connect(ui->viewBlob, SIGNAL(mousePressedInView(QPointF, int)), this, SLOT(clickedInBlobView(QPointF, int)));
-
 }
 
 CalibrationWizard::~CalibrationWizard()
@@ -79,6 +79,8 @@ void CalibrationWizard::on_buttonStartIntrinsic_clicked()
 
 	std::vector<cv::Point3f> currentobjectPoints = Calibration::getObjectPoints();
 	cv::Size size;
+
+	cv::Mat test;
 	for(int i = 0; i < fileNamesCamCalib.size(); i++)
 	{
 		std::string fileName = fileNamesCamCalib.at(i).toStdString();
@@ -90,17 +92,16 @@ void CalibrationWizard::on_buttonStartIntrinsic_clicked()
 		cv::Mat imgWithCorners;
 		std::vector<cv::Point2f> currentImagePoints = Calibration::getCorners(img, imgWithCorners);
 
-		/*scene->addPixmap(QtOpencvCore::img2qpix(imgWithCorners));
-		ui->viewIntrinsic->setScene(scene);
-		ui->viewIntrinsic->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
-		ui->viewIntrinsic->show();*/
-
 		imagePoints.push_back(currentImagePoints);
 		objectPoints.push_back(currentobjectPoints);
 		ui->progressIntrinsic->setValue(i);
+
+		test = img;
 	}
 
 	Calibration::getIntrinsicParamters(imagePoints, objectPoints, this->cameraMatrix, this->distCoeffs, size);
+
+	cv::initUndistortRectifyMap(this->cameraMatrix, this->distCoeffs, cv::Mat(), this->cameraMatrix, size, CV_32FC1, remapXCam, remapYCam);
 
 	std::ostringstream stream;
 	stream << "Camera Matrix: \n" << cameraMatrix << "\n\n" << "Distortion coefficients: \n" << distCoeffs;
@@ -126,12 +127,12 @@ void CalibrationWizard::drawKeyPoints()
 	{
 		ui->labelBlobStatus->setText(QtOpencvCore::str2qstr(std::string("") + "not the right amount blobs detected. needed: " + std::to_string(Config::numCircleSamples * Config::numLineSamples) +
 									 ", found: " + std::to_string(keyPoints.size())));
-		ui->wizPage2->setComplete(false);
+		ui->buttonGetMappings->setEnabled(false);
 	}
 	else
 	{
 		ui->labelBlobStatus->setText("");
-		ui->wizPage2->setComplete(true);
+		ui->buttonGetMappings->setEnabled(true);
 	}
 
 	std::ostringstream stream;
@@ -139,16 +140,23 @@ void CalibrationWizard::drawKeyPoints()
 		stream << pt << "\n";
 
 	ui->textFoundBlobs->setText(QtOpencvCore::str2qstr(stream.str()));
-
 }
 
 void CalibrationWizard::on_buttonFindBlobs_clicked()
 {
 	std::string fileName = fileNameConeCalib.toStdString();
 	grey = cv::imread(fileName, CV_LOAD_IMAGE_GRAYSCALE);
+
 	cv::resize(grey, grey, cv::Size(1000, 1000 * grey.rows / grey.cols));
 	Config::usedResWidth = 1000;
 	Config::usedResHeight = 1000 * grey.rows / grey.cols;
+
+	if(!remapXCam.empty()) //if calibration was skipped
+	{
+		cv::Mat greyWarped;
+		cv::remap(grey, greyWarped, remapXCam, remapYCam, cv::INTER_LINEAR);
+		greyWarped.copyTo(grey);
+	}
 
 	keyPoints = DotDetection::detectDots(grey);
 
@@ -179,11 +187,35 @@ void CalibrationWizard::clickedInBlobView(QPointF point, int button)
 		drawKeyPoints();
 	}
 
-
 }
 
+/*bool CalibrationWizard::eventFilter(QObject *object, QEvent *event)
+{
+	if(object == this->button(WizardButton::NextButton) && event->type() == QEvent::MouseButtonRelease && this->currentPage() == ui->wizPage2)
+	{
+		qDebug() << "event filter, next released";
 
+		cone = Cone();
+		cv::Mat orientation;
+		EdgeDetection::canny(grey, canny, orientation, Config::cannyLow, Config::cannyHigh, Config::cannyKernel, Config::cannySigma);
 
+		std::vector<Ellipse> ellipses = Ellipse::detectEllipses(canny);
+		std::vector<std::vector<cv::Point2f>> pointsPerEllipse = Ellipse::getEllipsePointMappings(ellipses, keyPoints);
+		Misc::sort(pointsPerEllipse, ellipses);
+
+		ellipses = Ellipse::reestimateEllipses(pointsPerEllipse, ellipses);
+		std::vector<Line> lines = Line::fitLines(pointsPerEllipse);
+
+		std::vector<std::vector<cv::Point3f>> worldCoords = cone.calculateWorldCoordinatesForSamples();
+
+		cone.setEllipses(ellipses);
+		cone.setLines(lines);
+		cone.setSampleCoordsImage(pointsPerEllipse);
+		cone.setSampleCoordsWorld(worldCoords);
+	}
+
+	return false;
+}*/
 
 
 void CalibrationWizard::on_buttonZoomPBlob_clicked()
@@ -197,4 +229,23 @@ void CalibrationWizard::on_buttonZoomMBlob_clicked()
 }
 
 
+void CalibrationWizard::on_buttonGetMappings_clicked()
+{
+	cone = Cone();
+	cv::Mat orientation;
+	EdgeDetection::canny(grey, canny, orientation, Config::cannyLow, Config::cannyHigh, Config::cannyKernel, Config::cannySigma);
 
+	std::vector<Ellipse> ellipses = Ellipse::detectEllipses(canny);
+	std::vector<std::vector<cv::Point2f>> pointsPerEllipse = Ellipse::getEllipsePointMappings(ellipses, keyPoints);
+	Misc::sort(pointsPerEllipse, ellipses);
+	ellipses = Ellipse::reestimateEllipses(pointsPerEllipse, ellipses);
+	std::vector<Line> lines = Line::fitLines(pointsPerEllipse);
+	std::vector<std::vector<cv::Point3f>> worldCoords = cone.calculateWorldCoordinatesForSamples();
+
+	cone.setEllipses(ellipses);
+	cone.setLines(lines);
+	cone.setSampleCoordsImage(pointsPerEllipse);
+	cone.setSampleCoordsWorld(worldCoords);
+
+	ui->wizPage2->setComplete(true);
+}

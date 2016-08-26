@@ -8,8 +8,12 @@ std::vector<cv::Point2f> Calibration::getCorners(const cv::Mat& greyImg, cv::Mat
 
     bool patternFound = cv::findChessboardCorners(greyImg, patternSize, centers);
 
+	cv::cornerSubPix(greyImg, centers, cv::Size(5, 5), cv::Size(-1, -1), cv::TermCriteria( CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1 ));
+
     cv::cvtColor(greyImg, imgWithCorners, CV_GRAY2BGR);
     cv::drawChessboardCorners(imgWithCorners, patternSize, cv::Mat(centers), patternFound);
+
+
 
     if(patternFound)
         return centers;
