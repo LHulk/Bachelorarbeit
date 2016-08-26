@@ -11,47 +11,14 @@ ConeUnfolding::ConeUnfolding()
 	cv::Mat grey = cv::imread("../../../img/v5_pattern/blender_perfectCenter.png", CV_LOAD_IMAGE_GRAYSCALE);
 
 	cv::Mat calib = cv::imread("../../../img/calibration/chessboard/25-08_21-47-35.jpg", CV_LOAD_IMAGE_GRAYSCALE);
-
 	cv::resize(calib, calib, cv::Size(1000, 1000 * calib.rows / calib.cols));
-	//cv::Size patternSize(4, 11);
-	cv::Size patternSize(6, 9);
-	std::vector<cv::Point2f> centers;
 
-	//bool patternFound = cv::findCirclesGrid(calib, patternSize, centers, cv::CALIB_CB_ASYMMETRIC_GRID);
-	bool patternFound = cv::findChessboardCorners(calib, patternSize, centers);
-
-	cv::cvtColor(calib, calib, CV_GRAY2BGR);
-	cv::drawChessboardCorners(calib, patternSize, cv::Mat(centers), patternFound);
-
-	cv::imshow("calib", calib);
+    cv::Mat debug;
+    Calibration::getCorners(calib, debug);
+    cv::imshow("corners", debug);
 	return;
 
-	//if found put in one big vector
-	int squareSize = 18; //mm
-	std::vector<std::vector<cv::Point3f>> objectPoints = std::vector<std::vector<cv::Point3f>>(1, std::vector<cv::Point3f>());
-	for(int i = 0; i < 11; i++)
-		for(int j = 0; j < 4; j++)
-			objectPoints[0].push_back(cv::Point3f(float((2 * j + i % 2)*squareSize), float(i*squareSize), 0));
 
-	std::vector<std::vector<cv::Point2f>> imagePoints;
-	imagePoints.push_back(centers);
-
-	cv::Mat cameraMatrix;
-	cv::Mat distCoeffs;
-	std::vector<cv::Mat> rvecs;
-	std::vector<cv::Mat> tvecs;
-	cv::calibrateCamera(objectPoints, imagePoints, cv::Size(calib.cols, calib.rows), cameraMatrix, distCoeffs, rvecs, tvecs);
-	
-	std::cout << cameraMatrix << std::endl;
-	std::cout << distCoeffs << std::endl;
-
-
-	return;
-	
-	
-	
-	
-	
 	cv::resize(grey, grey, cv::Size(1000, 1000)); //performance
 	Config::usedResHeight = 1000;
 	Config::usedResHeight = 1000;
@@ -61,7 +28,7 @@ ConeUnfolding::ConeUnfolding()
 	cv::imshow("grey", grey);
 
 
-	
+
 
     //canny
     cv::Mat canny, orientation;
@@ -136,14 +103,10 @@ ConeUnfolding::ConeUnfolding()
 	Transformation::reverseWarp(grey, proj, cone);
 	return;
 
-	
+
 	Transformation::forwardWarp(grey, cone);
 
 
     return;
-    
+
 }
-
-
-
-

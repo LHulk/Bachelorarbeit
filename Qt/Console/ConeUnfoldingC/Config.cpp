@@ -3,9 +3,14 @@
 //default values
 namespace Config
 {
-	//pattern settings
+    //cone pattern settings
 	int numLineSamples = 6;
 	int numCircleSamples = 5;
+
+    //calibration pattern settings
+    int patternPointsPerRow = 6;
+    int patternPointsPerCol = 9;
+    int patternSquareSize = 25; //square center to square center distance in mm
 
 	//vis/performance settings
 	int usedResWidth = 1000;

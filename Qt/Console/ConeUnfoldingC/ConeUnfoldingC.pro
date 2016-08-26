@@ -18,7 +18,8 @@ SOURCES += main.cpp \
     Config.cpp \
     Transformation.cpp \
     Cone.cpp \
-    Misc.cpp
+    Misc.cpp \
+    Calibration.cpp
 
 
 HEADERS += \
@@ -30,7 +31,8 @@ HEADERS += \
     Config.h \
     Transformation.h \
     Cone.h \
-    Misc.h
+    Misc.h \
+    Calibration.h
 
 
 

@@ -163,7 +163,7 @@
     <property name="title">
      <string>Edit</string>
     </property>
-    <addaction name="actionSettings"/>
+    <addaction name="actionImport_Settings"/>
    </widget>
    <addaction name="menuEdit"/>
   </widget>
@@ -178,6 +178,11 @@
   <action name="actionSettings">
    <property name="text">
     <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionImport_Settings">
+   <property name="text">
+    <string>import Settings...</string>
    </property>
   </action>
  </widget>

@@ -9,9 +9,14 @@ enum
 
 namespace Config
 {
-	//pattern settings
+    //cone pattern settings
 	extern int numLineSamples;
 	extern int numCircleSamples;
+
+    //calibration pattern settings
+    extern int patternPointsPerRow;
+    extern int patternPointsPerCol;
+    extern int patternSquareSize;
 
 	//vis/performance settings
 	extern int usedResWidth;

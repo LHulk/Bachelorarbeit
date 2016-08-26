@@ -15,6 +15,7 @@
 #include "Config.h"
 #include "Transformation.h"
 #include "Cone.h"
+#include "Calibration.h"
 
 
 class ConeUnfolding
