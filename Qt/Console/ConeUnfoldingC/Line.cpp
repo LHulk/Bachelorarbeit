@@ -97,15 +97,28 @@ cv::Point Line::getWeightedCenter(const std::vector<Line>& lines)
         }
     }
 
-    cv::Point sumP = cv::Point(0,0);
+	std::nth_element(intersectPoints.begin(), intersectPoints.begin() + intersectPoints.size() / 2, intersectPoints.end(), [](const cv::Point& p1, const cv::Point& p2)
+	{
+		return p1.x < p2.x;
+	});
+	int x = intersectPoints[intersectPoints.size() / 2].x;
+
+	std::nth_element(intersectPoints.begin(), intersectPoints.begin() + intersectPoints.size() / 2, intersectPoints.end(), [](const cv::Point& p1, const cv::Point& p2)
+	{
+		return p1.y < p2.y;
+	});
+	int y = intersectPoints[intersectPoints.size() / 2].y;
+
+    /*cv::Point sumP = cv::Point(0,0);
     for(const cv::Point& p : intersectPoints)
     {
         sumP += p;
     }
 
-    sumP = 1.0/intersectPoints.size() * sumP;
+    sumP = 1.0/intersectPoints.size() * sumP;*/
 
-    return sumP;
+    //return sumP;
+	return cv::Point(x, y);
 }
 
 
@@ -130,6 +143,7 @@ std::vector<Line> Line::fitLines(const std::vector<std::vector<cv::Point2f>>& po
 				cv::circle(debug, pointList[i], 8, cv::Scalar(currentStep * 150, 255, 255), -1);
 		}
 	}
+
 
 	for(size_t i = 0; i < lines.size(); i++)
 	{

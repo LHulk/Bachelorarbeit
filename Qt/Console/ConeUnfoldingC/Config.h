@@ -36,6 +36,10 @@ namespace Config
 	extern float radiusOuter;
 	extern float height; //from center to center
 	extern int whichHeight;
+
+
+	//TODO: delete
+	extern float scaleFactor;
 }
 
 #endif //CONFIG_H

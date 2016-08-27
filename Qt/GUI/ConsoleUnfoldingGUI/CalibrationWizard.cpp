@@ -31,8 +31,19 @@ CalibrationWizard::CalibrationWizard(QWidget *parent) :
 	ui->labelIntrinsicStatus->setText("");
 	ui->labelBlobStatus->setText("");
 
+	this->cameraMatrix = cv::Mat::eye(3, 3, CV_32F);
+	this->distCoeffs = cv::Mat::zeros(5, 1, CV_32F);
+	std::ostringstream stream;
+	stream << "Camera Matrix: \n" << cameraMatrix << "\n\n" << "Distortion coefficients: \n" << distCoeffs;
+	ui->textCameraMatrix->setText(QtOpencvCore::str2qstr(stream.str()));
 
-	scene = new QGraphicsScene();
+
+	scene1 = new QGraphicsScene();
+	scene2 = new QGraphicsScene();
+
+	//calibration is skippable
+	ui->wizPage1->setComplete(true);
+
 
 	connect(ui->viewBlob, SIGNAL(mousePressedInView(QPointF, int)), this, SLOT(clickedInBlobView(QPointF, int)));
 }
@@ -101,14 +112,10 @@ void CalibrationWizard::on_buttonStartIntrinsic_clicked()
 
 	Calibration::getIntrinsicParamters(imagePoints, objectPoints, this->cameraMatrix, this->distCoeffs, size);
 
-	cv::initUndistortRectifyMap(this->cameraMatrix, this->distCoeffs, cv::Mat(), this->cameraMatrix, size, CV_32FC1, remapXCam, remapYCam);
 
 	std::ostringstream stream;
 	stream << "Camera Matrix: \n" << cameraMatrix << "\n\n" << "Distortion coefficients: \n" << distCoeffs;
-
 	ui->textCameraMatrix->setText(QtOpencvCore::str2qstr(stream.str()));
-
-	ui->wizPage1->setComplete(true);
 }
 
 void CalibrationWizard::drawKeyPoints()
@@ -119,8 +126,8 @@ void CalibrationWizard::drawKeyPoints()
 	for(const auto& pt : keyPoints)
 		cv::circle(imgKey, pt, 4, cv::Scalar(0,255,0), 2);
 
-	scene->addPixmap(QtOpencvCore::img2qpix(imgKey));
-	ui->viewBlob->setScene(scene);
+	scene1->addPixmap(QtOpencvCore::img2qpix(imgKey));
+	ui->viewBlob->setScene(scene1);
 	ui->viewBlob->show();
 
 	if(keyPoints.size() != Config::numCircleSamples * Config::numLineSamples)
@@ -144,12 +151,15 @@ void CalibrationWizard::drawKeyPoints()
 
 void CalibrationWizard::on_buttonFindBlobs_clicked()
 {
+
 	std::string fileName = fileNameConeCalib.toStdString();
 	grey = cv::imread(fileName, CV_LOAD_IMAGE_GRAYSCALE);
 
 	cv::resize(grey, grey, cv::Size(1000, 1000 * grey.rows / grey.cols));
 	Config::usedResWidth = 1000;
 	Config::usedResHeight = 1000 * grey.rows / grey.cols;
+
+	cv::initUndistortRectifyMap(this->cameraMatrix, this->distCoeffs, cv::Mat(), this->cameraMatrix, grey.size(), CV_32FC1, remapXCam, remapYCam);
 
 	if(!remapXCam.empty()) //if calibration was skipped
 	{
@@ -161,7 +171,7 @@ void CalibrationWizard::on_buttonFindBlobs_clicked()
 	keyPoints = DotDetection::detectDots(grey);
 
 	drawKeyPoints();
-	ui->viewBlob->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
+	ui->viewBlob->fitInView(scene1->sceneRect(), Qt::KeepAspectRatio);
 }
 
 
@@ -189,35 +199,6 @@ void CalibrationWizard::clickedInBlobView(QPointF point, int button)
 
 }
 
-/*bool CalibrationWizard::eventFilter(QObject *object, QEvent *event)
-{
-	if(object == this->button(WizardButton::NextButton) && event->type() == QEvent::MouseButtonRelease && this->currentPage() == ui->wizPage2)
-	{
-		qDebug() << "event filter, next released";
-
-		cone = Cone();
-		cv::Mat orientation;
-		EdgeDetection::canny(grey, canny, orientation, Config::cannyLow, Config::cannyHigh, Config::cannyKernel, Config::cannySigma);
-
-		std::vector<Ellipse> ellipses = Ellipse::detectEllipses(canny);
-		std::vector<std::vector<cv::Point2f>> pointsPerEllipse = Ellipse::getEllipsePointMappings(ellipses, keyPoints);
-		Misc::sort(pointsPerEllipse, ellipses);
-
-		ellipses = Ellipse::reestimateEllipses(pointsPerEllipse, ellipses);
-		std::vector<Line> lines = Line::fitLines(pointsPerEllipse);
-
-		std::vector<std::vector<cv::Point3f>> worldCoords = cone.calculateWorldCoordinatesForSamples();
-
-		cone.setEllipses(ellipses);
-		cone.setLines(lines);
-		cone.setSampleCoordsImage(pointsPerEllipse);
-		cone.setSampleCoordsWorld(worldCoords);
-	}
-
-	return false;
-}*/
-
-
 void CalibrationWizard::on_buttonZoomPBlob_clicked()
 {
 	ui->viewBlob->scale(1.15, 1.15);
@@ -232,13 +213,18 @@ void CalibrationWizard::on_buttonZoomMBlob_clicked()
 void CalibrationWizard::on_buttonGetMappings_clicked()
 {
 	cone = Cone();
-	cv::Mat orientation;
+	cv::Mat orientation, canny;
 	EdgeDetection::canny(grey, canny, orientation, Config::cannyLow, Config::cannyHigh, Config::cannyKernel, Config::cannySigma);
 
+	ui->labelBlobStatus2->setText("ellipse detection..."); this->refresh();
 	std::vector<Ellipse> ellipses = Ellipse::detectEllipses(canny);
 	std::vector<std::vector<cv::Point2f>> pointsPerEllipse = Ellipse::getEllipsePointMappings(ellipses, keyPoints);
 	Misc::sort(pointsPerEllipse, ellipses);
+
+	ui->labelBlobStatus2->setText("reestimate ellipses.."); this->refresh();
 	ellipses = Ellipse::reestimateEllipses(pointsPerEllipse, ellipses);
+
+	ui->labelBlobStatus2->setText("fitting lines.."); this->refresh();
 	std::vector<Line> lines = Line::fitLines(pointsPerEllipse);
 	std::vector<std::vector<cv::Point3f>> worldCoords = cone.calculateWorldCoordinatesForSamples();
 
@@ -247,5 +233,126 @@ void CalibrationWizard::on_buttonGetMappings_clicked()
 	cone.setSampleCoordsImage(pointsPerEllipse);
 	cone.setSampleCoordsWorld(worldCoords);
 
+
+	std::vector<cv::Point2f> imagePoints;
+	std::vector<cv::Point3f> objectPoints;
+	std::ostringstream stream;
+	for(size_t i = 0; i < worldCoords.size(); i++)
+	{
+		for(size_t j = 0; j < worldCoords[i].size(); j++)
+		{
+			stream << pointsPerEllipse[i][j] << " --> " << worldCoords[i][j] << "\n";
+			imagePoints.push_back(pointsPerEllipse[i][j]);
+			objectPoints.push_back(worldCoords[i][j]);
+		}
+	}
+
+	ui->textFoundBlobs->setText(QtOpencvCore::str2qstr(stream.str()));
+
+	ui->labelBlobStatus2->setText("pose estimation..");
+	this->refresh();
+
+	cv::Mat proj = Transformation::getProjectiveMatrix(cone);
+	this->projectionMatrix = proj;
+	//use qr as init guess
+	/*cv::Mat rvec = projOld(cv::Range(0,3), cv::Range(0,3));
+	cv::Mat tvec = projOld(cv::Range(0,3), cv::Range(3,4));
+	std::cout << rvec << std::endl;
+	std::cout << tvec << std::endl;
+	rvec.convertTo(rvec, CV_64F);
+	tvec.convertTo(tvec, CV_64F);
+
+	cv::Rodrigues(rvec, rvec);
+	std::cout << rvec << std::endl;
+	cv::solvePnP(objectPoints, imagePoints, this->cameraMatrix, this->distCoeffs, rvec, tvec, true);
+	cv::Rodrigues(rvec, rvec);
+
+	std::cout << rvec << std::endl;
+	std::cout << tvec << std::endl;
+
+	cv::Mat projNew = cv::Mat::zeros(3, 4, rvec.type());
+	projNew(cv::Range(0,3), cv::Range(0,3)) = rvec * 1;
+	projNew(cv::Range(0,3), cv::Range(3,4)) = tvec * 1;
+
+
+	projNew.convertTo(projNew, CV_32F);
+	std::cout << projNew << std::endl;
+
+	cv::Mat vis;
+	cv::cvtColor(grey, vis, CV_GRAY2BGR);
+	for(size_t i = 0; i < worldCoords.size(); i++)
+	{
+		for(size_t j = 0; j < worldCoords[i].size(); j++)
+		{
+			cv::Point3f currentWorld = worldCoords[i][j];
+			cv::Point2f currImg = pointsPerEllipse[i][j];
+
+			cv::Mat currentWorldMat = cv::Mat::zeros(4, 1, CV_32F);
+			currentWorldMat.at<float>(0, 0) = currentWorld.x; currentWorldMat.at<float>(1, 0) = currentWorld.y; currentWorldMat.at<float>(2, 0) = currentWorld.z; currentWorldMat.at<float>(3, 0) = 1;
+			cv::Mat homImg1 = projOld * currentWorldMat;
+			//cv::Mat homImg2 = projNew * currentWorldMat;
+
+			float w1 = homImg1.at<float>(2, 0);
+			//float w2 = homImg2.at<float>(2, 0);
+			cv::Point2f reprojected1 = cv::Point2f(homImg1.at<float>(0, 0) / w1, homImg1.at<float>(1, 0) / w1);
+			//cv::Point2f reprojected2 = cv::Point2f(homImg2.at<float>(0, 0) / w2, homImg2.at<float>(1, 0) / w2);
+
+			cv::circle(vis, currImg, 5, cv::Scalar(0, 255, 0), -1);
+			cv::circle(vis, reprojected1, 4, cv::Scalar(0, 0, 255), -1);
+			//cv::circle(vis, reprojected2, 4, cv::Scalar(255, 0, 0), -1);
+		}
+	}
+	cv::imshow("vis", vis);*/
+
+
+
+
+
 	ui->wizPage2->setComplete(true);
 }
+
+
+void CalibrationWizard::refresh()
+{
+	QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+}
+
+void CalibrationWizard::on_buttonUnfold_clicked()
+{
+	cv::Mat showWarped;
+	if(ui->radioForward->isChecked())
+	{
+		Transformation::getForwardWarpMaps(cone, remapXWarp, remapYWarp, grey.size());
+		Transformation::inverseRemap(grey, showWarped, remapXWarp, remapYWarp);
+	}
+	else
+	{
+		Transformation::getReverseWarpMaps(cone, remapXWarp, remapYWarp, projectionMatrix);
+		cv::remap(grey, showWarped, remapXWarp, remapYWarp, cv::INTER_CUBIC);
+	}
+
+	cv::imshow("warped", showWarped);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

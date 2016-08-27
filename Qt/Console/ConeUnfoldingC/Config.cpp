@@ -23,11 +23,13 @@ namespace Config
 	double cannySigma = 0.5f;
 
 	//output settings
-	int resSlantHeight = 500;
+	int resSlantHeight = 300;
 
 	//3D structure settings in mm
 	float radiusInner = 13;
 	float radiusOuter = 60;
 	float height = 110; //from center of big radius to cone tip
 	int whichHeight = CENTER_TO_TIP;
+
+	float scaleFactor = 1;
 }

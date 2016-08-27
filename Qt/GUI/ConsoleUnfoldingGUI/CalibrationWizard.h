@@ -15,6 +15,7 @@
 #include <QWheelEvent>
 #include <QScrollBar>
 #include <QDebug>
+#include <QtAlgorithms>
 
 //STD
 #include <vector>
@@ -48,6 +49,7 @@ public:
 
 private:
 	void drawKeyPoints();
+	void refresh();
 
 private slots:
 	void on_buttonLoadIntrinsic_clicked();
@@ -63,11 +65,16 @@ private slots:
 
 	void on_buttonGetMappings_clicked();
 
+	void on_buttonUnfold_clicked();
+
 private:
 	Ui::CalibrationWizard *ui;
 	QStringList fileNamesCamCalib;
 	QString fileNameConeCalib;
-	QGraphicsScene* scene;
+	QGraphicsScene* scene1;
+	QGraphicsScene* scene2;
+
+	Cone cone;
 
 	cv::Mat cameraMatrix;
 	cv::Mat distCoeffs;
@@ -77,9 +84,14 @@ private:
 	cv::Mat grey;
 	std::vector<cv::Point2f> keyPoints;
 
-	cv::Mat canny;
+	cv::Mat projectionMatrix;
 
-	Cone cone;
+	cv::Mat remapXWarp;
+	cv::Mat remapYWarp;
+	bool isForward;
+
+
+
 
 };
 

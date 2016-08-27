@@ -201,6 +201,7 @@ std::vector<Ellipse> Ellipse::detectEllipses(const cv::Mat& edgeImage)
 std::vector<cv::Point> Ellipse::rayCast(const cv::Mat& edgeImage, cv::Point caster, int numSamples)
 {
     cv::Mat debug = cv::Mat::zeros(edgeImage.rows, edgeImage.cols, CV_8U);
+	cv::circle(debug, caster, 5, cv::Scalar(255), -1);
 
     std::vector<cv::Point> points;
     for(int i = 0; i < numSamples; i++)
@@ -598,7 +599,7 @@ double Ellipse::getAngleAt(const Ellipse& ellipse, const cv::Point2d &pt)
 {
 	cv::Point2d transformed = transformToOrigin(ellipse, pt);
 	double angle = std::atan2((transformed.y) / ellipse.getSemiMinor(), (transformed.x) / ellipse.getSemiMajor());
-	angle = std::fmod(std::fmod(angle, 2 * CV_PI) + 2 * CV_PI, 2 * CV_PI);
+	angle = Misc::mod(angle, 2 * CV_PI);
 	return angle;
 }
 

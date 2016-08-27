@@ -27,11 +27,13 @@ public:
 	static cv::Mat Transformation::getProjectiveMatrix(const Cone& cone);
 	static cv::Mat getProjectiveMatrixBrute(const std::vector<std::vector<cv::Point2f>>& pointsPerEllipse, const std::vector<std::vector<cv::Point3f>>& worldCoords);
 
-	static void forwardWarp(const cv::Mat& img, const Cone& cone);
-	static void reverseWarp(const cv::Mat& greyImg, const cv::Mat& proj, const Cone& cone);
+
+	static void getForwardWarpMaps(const Cone& cone, cv::Mat &remapX, cv::Mat &remapY, cv::Size imgSize, cv::Mat img = cv::Mat());
+	static void getReverseWarpMaps(const Cone& cone, cv::Mat &remapX, cv::Mat &remapY, const cv::Mat& proj);
+	static void inverseRemap(const cv::Mat& src, cv::Mat& dst, const cv::Mat &remapX, const cv::Mat& remapY);
 private:
 	static void fillSegments(cv::Mat& img, const std::vector<Ellipse>& ellipses, const std::vector<Line>& lines, const std::vector <std::vector<cv::Point2f>>& pointsPerEllipse);
-	
+
 	static void writeToFile(std::vector<cv::Point2f> point2f, const std::string& filename);
 	static void writeToFile(std::vector<cv::Point3f> point3f, const std::string& filename);
 };

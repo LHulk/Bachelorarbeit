@@ -1,7 +1,7 @@
 #include "Transformation.h"
 
 
-static bool isDebug = true;
+static bool isDebug = false;
 
 
 //TODO: maybe ransac?
@@ -34,7 +34,7 @@ cv::Mat Transformation::getProjectiveMatrixBrute(const std::vector<std::vector<c
 		{
 			//fill corresponding matrix
 			cv::Point2f currentImg = pt;
-			
+
 			size_t k, l;
 			for(size_t i = 0; i < pointsPerEllipse.size(); i++)
 			{
@@ -189,19 +189,11 @@ static void locate_point(cv::Mat& img, cv::Subdiv2D& subdiv, cv::Point2f fp, cv:
 
 
 //TODO: border interpolation
-void Transformation::forwardWarp(const cv::Mat& img, const Cone& cone)
+void Transformation::getForwardWarpMaps(const Cone& cone, cv::Mat& remapX, cv::Mat& remapY, cv::Size imgSize, cv::Mat img)
 {
-	cv::Mat imgBk = img.clone();
-
 	std::vector<Ellipse> ellipses = cone.ellipses();
 	cv::Mat segments;
 	fillSegments(segments, ellipses, cone.lines(), cone.sampleCoordsImage());
-
-	cv::Mat mask = cv::Mat::zeros(Config::usedResHeight, Config::usedResWidth, CV_8U);
-	cv::ellipse(mask, ellipses[Config::numCircleSamples - 1].getEllipseAsRotatedRect(), cv::Scalar(255), -1);
-
-	cv::bitwise_and(imgBk, mask, imgBk);
-	cv::imshow("img mask", imgBk);
 
 	double S = cone.S();
 	double s = cone.s();
@@ -214,12 +206,16 @@ void Transformation::forwardWarp(const cv::Mat& img, const Cone& cone)
 	int width = static_cast<int>(std::ceil(S));
 	int height = static_cast<int>(std::ceil(S + S*std::cos(Misc::degToRad(180 - maxAngle))));
 
+	cv::Mat debug = cv::Mat::zeros(height, width, CV_8U);
+
 	cv::Point origin = cv::Point(width, Misc::round(std::ceil(height - S)));
 
-
-	cv::Mat resImg = cv::Mat::zeros(height, width, CV_8U);
-
 	//cv::Subdiv2D subdiv(cv::Rect(0, 0, 1000, 1000));
+
+	cv::Mat mapx = cv::Mat::zeros(imgSize, CV_32F);
+	cv::Mat mapy = cv::Mat::zeros(imgSize, CV_32F);
+	mapx.at<float>(0, 0) = static_cast<float>(width);
+	mapy.at<float>(0, 0) = static_cast<float>(height);
 
 	std::vector<cv::Point2f> lateralDebug;
 	std::vector<cv::Point3f> coneDebug;
@@ -237,20 +233,18 @@ void Transformation::forwardWarp(const cv::Mat& img, const Cone& cone)
 				//coneDebug.push_back(res);
 
 				cv::Point2d lateral = scale * cone.coneCoordinatesToLateral(res);
+				cv::Point2d rounded = lateral + cv::Point2d(origin.x, origin.y);
 				//lateralDebug.push_back(lateral);
-				cv::Point rounded = cv::Point(static_cast<int>(std::lround(lateral.x)), static_cast<int>(std::lround(lateral.y))) + origin;
-				if(rounded.x > 0 && rounded.y > 0 && rounded.x < resImg.cols && rounded.y < resImg.rows)
+				if(rounded.x > 0 && rounded.y > 0 && rounded.x < width && rounded.y < height)
 				{
-
-					resImg.at<uchar>(rounded) = imgBk.at<uchar>(pt);
+					mapx.at<float>(r,c) = static_cast<float>(rounded.x);
+					mapy.at<float>(r,c) = static_cast<float>(rounded.y);
+					//uchar val = img.at<uchar>(r,c);
+					//debug.at<uchar>(rounded) = val;
 					//locate_point(resImg, subdiv, lateral, cv::Scalar(0,0,255));
 					//subdiv.insert(cv::Point2f(lateral));
 					//resImg = cv::Scalar::all(0);
 					//draw_subdiv(resImg, subdiv, cv::Scalar(255, 255, 255));
-
-				}
-				else //do nothing --> identiy
-				{
 
 				}
 
@@ -264,10 +258,27 @@ void Transformation::forwardWarp(const cv::Mat& img, const Cone& cone)
 	//	subdiv.insert(cv::Point2f(pt.x, pt.y));
 	//}
 
-	cv::imshow("resImg", resImg);
+	//cv::imshow("debug", debug);
 
+	mapx.copyTo(remapX);
+	mapy.copyTo(remapY);
+}
 
+void Transformation::inverseRemap(const cv::Mat& src, cv::Mat& dst, const cv::Mat &remapX, const cv::Mat& remapY)
+{
+	int width = static_cast<int>(remapX.at<float>(0,0));
+	int height = static_cast<int>(remapY.at<float>(0,0));
 
+	dst = cv::Mat::zeros(height, width, CV_8U);
+	for(int r = 0; r < src.rows; r++)
+	{
+		for(int c = 0; c < src.cols; c++)
+		{
+			cv::Point roundedPt = cv::Point(Misc::round(remapX.at<float>(r,c)), Misc::round(remapY.at<float>(r,c)));
+			if(roundedPt.x > 0 && roundedPt.x < width && roundedPt.y > 0 && roundedPt.y < height)
+				dst.at<uchar>(roundedPt) = src.at<uchar>(r, c);
+		}
+	}
 }
 
 
@@ -315,7 +326,7 @@ void Transformation::fillSegments(cv::Mat& img, const std::vector<Ellipse>& elli
 
 
 
-void Transformation::reverseWarp(const cv::Mat& greyImg, const cv::Mat& proj, const Cone& cone)
+void Transformation::getReverseWarpMaps(const Cone& cone, cv::Mat &remapX, cv::Mat &remapY, const cv::Mat& proj)
 {
 	double S = cone.S();
 	double s = cone.s();
@@ -370,12 +381,15 @@ void Transformation::reverseWarp(const cv::Mat& greyImg, const cv::Mat& proj, co
 		}
 	}
 
+	mapx.copyTo(remapX);
+	mapy.copyTo(remapY);
+
 	//writeToFile(test, "reverseCone.txt");
 	//writeToFile(test2, "reverseLateral.txt");
 	//exit(0);
 
-	cv::remap(greyImg, resImg, mapx, mapy, cv::INTER_CUBIC);
-	cv::imshow("res", resImg);
+	//cv::remap(greyImg, resImg, mapx, mapy, cv::INTER_CUBIC);
+	//cv::imshow("res", resImg);
 
 }
 
