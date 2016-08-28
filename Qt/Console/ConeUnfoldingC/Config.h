@@ -21,6 +21,7 @@ namespace Config
 	//vis/performance settings
 	extern int usedResWidth;
 	extern int usedResHeight;
+	extern float scaleFactor;
 
 	//algorithm settings
 	extern int cannyLow;
@@ -36,10 +37,6 @@ namespace Config
 	extern float radiusOuter;
 	extern float height; //from center to center
 	extern int whichHeight;
-
-
-	//TODO: delete
-	extern float scaleFactor;
 }
 
 #endif //CONFIG_H

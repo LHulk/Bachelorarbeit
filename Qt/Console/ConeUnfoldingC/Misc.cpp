@@ -19,14 +19,28 @@ void Misc::sort(std::vector<std::vector<cv::Point2f>>& pointsPerEllipse, const s
 
 	innerMostCenter = 1.0 / pointsPerEllipse[0].size() * innerMostCenter;
 
-	for(size_t i = 0; i < ellipses.size(); i++)
+	//sort first ellipse by angle
+	auto sortByAngle = [innerMostCenter](const cv::Point2f& pt1, const cv::Point2f& pt2)
 	{
-		auto sortByAngle = [innerMostCenter](const cv::Point2f& pt1, const cv::Point2f& pt2)
-		{
-			return angleWithX(cv::Point2d(pt1.x, pt1.y), innerMostCenter) < angleWithX(cv::Point2d(pt2.x, pt2.y), innerMostCenter);
-		};
+		return angleWithX(cv::Point2d(pt1.x, pt1.y), innerMostCenter) < angleWithX(cv::Point2d(pt2.x, pt2.y), innerMostCenter);
+	};
 
-		std::sort(pointsPerEllipse[i].begin(), pointsPerEllipse[i].end(), sortByAngle);
+	std::sort(pointsPerEllipse[0].begin(), pointsPerEllipse[0].end(), sortByAngle);
+
+	//sort rest by shortest distance
+	for(size_t i = 1; i < pointsPerEllipse.size(); i++)
+	{
+		std::vector<cv::Point2f> sorted;
+		sorted.resize(pointsPerEllipse[i].size());
+
+		for(const auto& pt : pointsPerEllipse[i])
+		{
+			auto minElementIt = std::min_element(pointsPerEllipse[0].begin(), pointsPerEllipse[0].end(), [pt](const cv::Point2f& pt1, const cv::Point2f& pt2) { return cv::norm(pt - pt1) < cv::norm(pt - pt2); });
+			int dist = std::distance(pointsPerEllipse[0].begin(), minElementIt);
+			sorted[dist] = pt;
+		}
+
+		pointsPerEllipse[i] = sorted;
 	}
 
 	/*cv::Mat debug = cv::Mat::zeros(726, 1000, CV_8UC3);
@@ -34,6 +48,9 @@ void Misc::sort(std::vector<std::vector<cv::Point2f>>& pointsPerEllipse, const s
 	for(const auto& ptList : pointsPerEllipse)
 	{
 		for(const auto& pt : ptList)
+		{
 			cv::circle(debug, pt, 4, cv::Scalar(255, 255, 255), -1);
+			//std::cout << angleWithX(cv::Point2d(pt.x, pt.y), innerMostCenter) << std::endl;
+		}
 	}*/
 }

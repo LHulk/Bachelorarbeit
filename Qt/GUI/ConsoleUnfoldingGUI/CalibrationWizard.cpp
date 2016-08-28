@@ -91,12 +91,11 @@ void CalibrationWizard::on_buttonStartIntrinsic_clicked()
 	std::vector<cv::Point3f> currentobjectPoints = Calibration::getObjectPoints();
 	cv::Size size;
 
-	cv::Mat test;
 	for(int i = 0; i < fileNamesCamCalib.size(); i++)
 	{
 		std::string fileName = fileNamesCamCalib.at(i).toStdString();
 		cv::Mat img = cv::imread(fileName, CV_LOAD_IMAGE_GRAYSCALE);
-		cv::resize(img, img, cv::Size(1000, 1000 * img.rows / img.cols));
+		//cv::resize(img, img, cv::Size(1000, 1000 * img.rows / img.cols));
 		if(i == 0)
 			size = img.size();
 
@@ -106,8 +105,6 @@ void CalibrationWizard::on_buttonStartIntrinsic_clicked()
 		imagePoints.push_back(currentImagePoints);
 		objectPoints.push_back(currentobjectPoints);
 		ui->progressIntrinsic->setValue(i);
-
-		test = img;
 	}
 
 	Calibration::getIntrinsicParamters(imagePoints, objectPoints, this->cameraMatrix, this->distCoeffs, size);
@@ -155,9 +152,11 @@ void CalibrationWizard::on_buttonFindBlobs_clicked()
 	std::string fileName = fileNameConeCalib.toStdString();
 	grey = cv::imread(fileName, CV_LOAD_IMAGE_GRAYSCALE);
 
-	cv::resize(grey, grey, cv::Size(1000, 1000 * grey.rows / grey.cols));
-	Config::usedResWidth = 1000;
-	Config::usedResHeight = 1000 * grey.rows / grey.cols;
+	greyOriginal = grey.clone();
+	Config::scaleFactor = 1000.0f / grey.cols;
+	cv::resize(grey, grey, cv::Size(1000, Misc::round(grey.rows * Config::scaleFactor)));
+	Config::usedResWidth = grey.cols;
+	Config::usedResHeight = grey.rows;
 
 	cv::initUndistortRectifyMap(this->cameraMatrix, this->distCoeffs, cv::Mat(), this->cameraMatrix, grey.size(), CV_32FC1, remapXCam, remapYCam);
 
@@ -319,16 +318,17 @@ void CalibrationWizard::refresh()
 
 void CalibrationWizard::on_buttonUnfold_clicked()
 {
+	Config::resSlantHeight = ui->spinSlantRes->value();
 	cv::Mat showWarped;
 	if(ui->radioForward->isChecked())
 	{
-		Transformation::getForwardWarpMaps(cone, remapXWarp, remapYWarp, grey.size());
-		Transformation::inverseRemap(grey, showWarped, remapXWarp, remapYWarp);
+		Transformation::getForwardWarpMaps(cone, remapXWarp, remapYWarp);
+		Transformation::inverseRemap(greyOriginal, showWarped, remapXWarp, remapYWarp);
 	}
 	else
 	{
 		Transformation::getReverseWarpMaps(cone, remapXWarp, remapYWarp, projectionMatrix);
-		cv::remap(grey, showWarped, remapXWarp, remapYWarp, cv::INTER_CUBIC);
+		cv::remap(greyOriginal, showWarped, remapXWarp, remapYWarp, cv::INTER_CUBIC);
 	}
 
 	cv::imshow("warped", showWarped);

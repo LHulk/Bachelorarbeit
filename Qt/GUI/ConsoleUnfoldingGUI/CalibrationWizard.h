@@ -82,6 +82,7 @@ private:
 	cv::Mat remapYCam;
 
 	cv::Mat grey;
+	cv::Mat greyOriginal;
 	std::vector<cv::Point2f> keyPoints;
 
 	cv::Mat projectionMatrix;

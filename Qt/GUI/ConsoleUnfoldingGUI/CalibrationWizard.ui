@@ -677,7 +677,7 @@ p, li { white-space: pre-wrap; }
           <string>forward</string>
          </property>
          <property name="checked">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -685,6 +685,9 @@ p, li { white-space: pre-wrap; }
         <widget class="QRadioButton" name="radioReverse">
          <property name="text">
           <string>reverse</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
         </widget>
        </item>

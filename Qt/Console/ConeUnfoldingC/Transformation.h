@@ -25,10 +25,8 @@ class Transformation
 {
 public:
 	static cv::Mat Transformation::getProjectiveMatrix(const Cone& cone);
-	static cv::Mat getProjectiveMatrixBrute(const std::vector<std::vector<cv::Point2f>>& pointsPerEllipse, const std::vector<std::vector<cv::Point3f>>& worldCoords);
 
-
-	static void getForwardWarpMaps(const Cone& cone, cv::Mat &remapX, cv::Mat &remapY, cv::Size imgSize, cv::Mat img = cv::Mat());
+	static void getForwardWarpMaps(const Cone& cone, cv::Mat &remapX, cv::Mat &remapY, cv::Mat img = cv::Mat());
 	static void getReverseWarpMaps(const Cone& cone, cv::Mat &remapX, cv::Mat &remapY, const cv::Mat& proj);
 	static void inverseRemap(const cv::Mat& src, cv::Mat& dst, const cv::Mat &remapX, const cv::Mat& remapY);
 private:

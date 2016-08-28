@@ -1,6 +1,6 @@
 #include "ConeUnfolding.h"
 
-static bool isDebug = false;
+static bool isDebug = true;
 
 
 ConeUnfolding::ConeUnfolding()
@@ -9,7 +9,7 @@ ConeUnfolding::ConeUnfolding()
 	//cv::Mat grey = cv::imread("../../../img/v5_pattern/pattern3.png", CV_LOAD_IMAGE_GRAYSCALE);
 	//cv::Mat grey = cv::imread("../../../img/v5_pattern/test.png", CV_LOAD_IMAGE_GRAYSCALE);
 	//cv::Mat grey = cv::imread("../../../img/v5_pattern/blender_perfectCenterDebug.png", CV_LOAD_IMAGE_GRAYSCALE);
-	cv::Mat grey = cv::imread("../../../img/v5_pattern/test4.png", CV_LOAD_IMAGE_GRAYSCALE);
+	cv::Mat grey = cv::imread("../../../img/v5_pattern/pattern3.png", CV_LOAD_IMAGE_GRAYSCALE);
 
 	/*cv::Mat calib = cv::imread("../../../img/calibration/chessboard/25-08_21-47-35.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 	cv::resize(calib, calib, cv::Size(1000, 1000 * calib.rows / calib.cols));
@@ -112,12 +112,12 @@ ConeUnfolding::ConeUnfolding()
 	if(isReverse)
 	{
 		Transformation::getReverseWarpMaps(cone, mapx, mapy, proj);
-		cv::remap(original, greyWarped, 1/Config::scaleFactor*mapx, 1/Config::scaleFactor*mapy, cv::INTER_CUBIC);
+		cv::remap(original, greyWarped, mapx, mapy, cv::INTER_CUBIC);
 	}
 	else
 	{
-		Transformation::getForwardWarpMaps(cone, mapx, mapy, grey.size(), grey);
-		Transformation::inverseRemap(grey, greyWarped, mapx, mapy);
+		Transformation::getForwardWarpMaps(cone, mapx, mapy);
+		Transformation::inverseRemap(original, greyWarped, mapx, mapy);
 
 	}
 

@@ -15,6 +15,7 @@ namespace Config
 	//vis/performance settings
 	int usedResWidth = 1000;
 	int usedResHeight = 1000;
+	float scaleFactor = 1;
 
 	//algorithm settings
 	int cannyLow = 100;
@@ -23,7 +24,7 @@ namespace Config
 	double cannySigma = 0.5f;
 
 	//output settings
-	int resSlantHeight = 300;
+	int resSlantHeight = 500;
 
 	//3D structure settings in mm
 	float radiusInner = 13;
@@ -31,5 +32,5 @@ namespace Config
 	float height = 110; //from center of big radius to cone tip
 	int whichHeight = CENTER_TO_TIP;
 
-	float scaleFactor = 1;
+
 }
