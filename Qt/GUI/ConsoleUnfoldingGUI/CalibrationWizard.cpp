@@ -44,6 +44,10 @@ CalibrationWizard::CalibrationWizard(QWidget *parent) :
 	//calibration is skippable
 	ui->wizPage1->setComplete(true);
 
+	//TODO: DELETE
+	//ui->wizPage2->setComplete(true);
+	//ui->buttonExport->setEnabled(true);
+
 
 	connect(ui->viewBlob, SIGNAL(mousePressedInView(QPointF, int)), this, SLOT(clickedInBlobView(QPointF, int)));
 }
@@ -132,6 +136,7 @@ void CalibrationWizard::drawKeyPoints()
 		ui->labelBlobStatus->setText(QtOpencvCore::str2qstr(std::string("") + "not the right amount blobs detected. needed: " + std::to_string(Config::numCircleSamples * Config::numLineSamples) +
 									 ", found: " + std::to_string(keyPoints.size())));
 		ui->buttonGetMappings->setEnabled(false);
+		ui->wizPage2->setComplete(false);
 	}
 	else
 	{
@@ -322,37 +327,52 @@ void CalibrationWizard::on_buttonUnfold_clicked()
 	cv::Mat showWarped;
 	if(ui->radioForward->isChecked())
 	{
+		this->isForward = true;
 		Transformation::getForwardWarpMaps(cone, remapXWarp, remapYWarp);
 		Transformation::inverseRemap(greyOriginal, showWarped, remapXWarp, remapYWarp);
 	}
 	else
 	{
+		this->isForward = false;
 		Transformation::getReverseWarpMaps(cone, remapXWarp, remapYWarp, projectionMatrix);
 		cv::remap(greyOriginal, showWarped, remapXWarp, remapYWarp, cv::INTER_CUBIC);
 	}
 
 	cv::imshow("warped", showWarped);
 
+	ui->buttonExport->setEnabled(true);
+	ui->wizPage3->setComplete(true);
+
 }
 
 
+void CalibrationWizard::on_buttonExport_clicked()
+{
+	QFileDialog dialog(this);
+	dialog.setFileMode(QFileDialog::AnyFile);
+	dialog.setNameFilter(tr("compressed XML (*.xml.gz)"));
+	dialog.setDefaultSuffix("xml.gz");
+
+	QStringList fileNames;
+	if(dialog.exec())
+		fileNames = dialog.selectedFiles();
+
+	QString file;
+	if(fileNames.size() > 0)
+		file = fileNames.at(0);
+
+	//open file for write
+	cv::FileStorage fs(QtOpencvCore::qstr2str(file), cv::FileStorage::WRITE);
 
 
+	fs << "cameraMatrix" << this->cameraMatrix; //not really needed
+	fs << "distCoeffs" << this->distCoeffs;		//same
 
+	fs << "remapXCam" << this->remapXCam;
+	fs << "remapYCam" << this->remapYCam;
+	fs << "isForward" << this->isForward;
+	fs << "remapXWarp" << this->remapXWarp;
+	fs << "remapYWarp" << this->remapYWarp;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	fs.release();
+}

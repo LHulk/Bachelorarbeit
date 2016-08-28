@@ -67,6 +67,8 @@ private slots:
 
 	void on_buttonUnfold_clicked();
 
+	void on_buttonExport_clicked();
+
 private:
 	Ui::CalibrationWizard *ui;
 	QStringList fileNamesCamCalib;
