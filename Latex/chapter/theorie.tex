@@ -263,11 +263,11 @@ Multipliziert man nun \ref{eq:PCARot} aus ergibt sich:
 \Leftrightarrow\quad &(\lambda_1v_1^2 + d'v_1)+ (\lambda_2v_2^2 + e'v_2) + f = 0\\
 \Leftrightarrow\quad &(\lambda_1v_1^2 + d'v_1) + (\frac{d'^2}{4\lambda_1} - \frac{d'^2}{4\lambda_1}) + (\lambda_2v_2^2 + e'v_2) + (\frac{e'^2}{4\lambda_2} - \frac{e'^2}{4\lambda_2}) + f = 0 \\
 \Leftrightarrow\quad &\left[\lambda_1\left(v_1^2 + \frac{2d'}{2\lambda_1}v_1 + \frac{d'^2}{4\lambda_1^2}\right) - \frac{d'^2}{4\lambda_1}\right] +\left[\lambda_2\left(v_2^2 + \frac{2e'}{2\lambda_2}v_2 + \frac{e'^2}{4\lambda_2^2}\right) - \frac{e'^2}{4\lambda_2}\right] + f = 0 \\
-\Leftrightarrow\quad &\lambda_1(v_1 + \underbrace{\frac{d'}{2\lambda_1}v_1}_{ = -x'_0})^2 +\lambda_2(v_2 + \underbrace{\frac{e'}{2\lambda_2}v_2}_{ = -y'_0})^2 - \underbrace{(\frac{d'^2}{4\lambda_1} + \frac{e'^2}{4\lambda_2} - f)}_{=:\sigma} = 0
+\Leftrightarrow\quad &\lambda_1(v_1 + \underbrace{\frac{d'}{2\lambda_1}v_1}_{ = -x'_0})^2 +\lambda_2(v_2 + \underbrace{\frac{e'}{2\lambda_2}v_2}_{ = -y'_0})^2 - \underbrace{(\frac{d'^2}{4\lambda_1} + \frac{e'^2}{4\lambda_2} - f)}_{=:\sigma} = 0,
 \end{aligned}
 \end{equation}
 
-, da $\lambda_1, \lambda_2 \neq 0$. 
+da $\lambda_1, \lambda_2 \neq 0$. 
 
 Das Zentrum der transformierten Ellipse kann nun aus \ref{eq:ellipseCenter} einfach abgelesen werden. Um das Zentrum der eigentlichen Ellipse zu bestimmen, muss mit der inversen Rotation $S^T$ multipliziert werden:
 \begin{equation*}
@@ -300,11 +300,74 @@ Es gilt wie erwartet $a \geq b$, da $\lambda_1 \leq \lambda_2$
 Das hier beschriebene Verfahren zur Bestimmung der kürzesten euklidischen Distanz eines Punktes zu einer Ellipse stammt aus der Arbeit von David Eberly \cite{Eberly2013}.
 Wir betrachten nur Ellipsen im Ursprung, die Achsen-ausgerichtet sind und darüber hinaus nur Punkte im ersten Quadranten. Ansonsten wir die Ellipse in den Ursprung verschoben und um ihren entgegengesetzten Drehwinkel rotiert. Da die Ellipse dann bezüglich der $X$- und $Y$- Achse symmetrisch ist, kann der Punkt einfach durch Spiegelung in den richtigen Quadranten transformiert werden. Der Abstand ändert sich dadurch nicht. 
 
+Wir bezeichnen von nun an $Q = (y_0, y_1)$ als eine Punkt, dessen Distanz zur Ellipse uns interessiert und $E = (x_0, x_1)$ als denjenigen eindeutigen Punkt, welcher auf der Ellipse liegt und die kürzeste euklidische Distanz vom Punkt $Q$ hat. 
+
+Aufgrund dieser Forderungen können wir ohne Beschränkung der Allgemeinheit folgende Aussagen treffen:
+\begin{itemize}
+	\item Die Ellipse kann stets durch die implizite Gleichung \[\frac{x_0^2}{a^2} + \frac{x_1^2}{b^2} = 1\] mit $a \geq b \geq 0$ beziehungsweise
+	in der parametrischen Form \[\mathcal{E}(\theta) = (a\cos\phi, b\sin\phi)  \tag*{$\phi \in [0, 2\pi)$}\] beschrieben werden.
+	\item Es gilt $y_0,y_1,x_0, x_1 \geq 0$
+\end{itemize}
+
+Für die quadrierte Distanz von einem beliebigen Punkt $Q$ zu einem Punkt $\mathcal{E}(\theta)$ auf der Ellipse gilt dann
+\begin{equation}
+	F(\theta) = \abs{\mathcal{E}(\theta) - Q}^2.
+\end{equation}
+
+Die Ableitung von $F$
+\begin{equation}
+F'(\theta) = 2\left(\mathcal{E}(\theta) - Q\right) \cdot \mathcal{E}'(\theta).
+\end{equation}
+
+wird null, wenn $\left(\mathcal{E}(\theta) - Q\right)$ und $ \mathcal{E}'(\theta)$ zu einander orthogonal sind. Daraus folgt, dass der Vektor von $Q$ zu $E$ senkrecht zur Ellipse steht (siehe Abbildung \ref{fig:ellipseDist}). 
+
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=.9]{images/ellipseQuery.eps}
+	\caption{Ellipsenausschnitt im ersten Quadranten mit Abfragepunkt $Q$ und eingezeichneter kürzester Distanz zur Ellipse}
+	\label{fig:ellipseDist}
+\end{figure}
+
+Betrachten wir also die Funktion:
+\[G(x_0,x_1) = \frac{x_0^2}{a^2} + \frac{x_1^2}{b^2} - 1\] 
+$(x_0,x_1)$ ist genau dann ein Punkt auf der Ellipse, wenn $G(x_0,x_1) = 0$. Der Gradient von $G$ in $(x_0,x_1)$ ist ein Normalenvektor auf der Ellipse, somit auch der halbe Gradient $\nabla G(x_0,x_1)/2$. Der Vektor von $E$ zu $Q$ muss dieselbe Richtung haben. Es gilt somit:
+
+\begin{equation}
+	(y_0,y_1) - (x_0, x_1) = t\frac{\nabla G(x_0,x_1)}{2} = t\left(\frac{x_0}{a^2},\frac{x_1}{b^2}\right)
+\end{equation}
+für ein $t\in\mathbb{R}$.
+
+Umgestellt nach $y_0$ und $y_1$, beziehungsweise nach $x_0$ und $x_1$ ergibt sich:
+
+\begin{equation}\label{eq:ellipseDistY}
+\begin{aligned}
+y_0 = x_0\left(1 + \frac{t}{a^2}\right), \quad &y_1 = x_1\left(1 + \frac{t}{b^2}\right) \\
+x_0 = \frac{a^2y_0}{t+a^2}, \quad & x_1 = \frac{b^2y_1}{t+b^2}
+\end{aligned}
+\end{equation}
+
+
+Man macht nun eine Fallunterscheidung:
+
+\begin{enumerate}
+	\item Der mit Sicherheit einfachste Fall ist, wenn sich der Punkt $Q$ auf der $Y$-Achse (außer $(0,0)$) befindet, wenn also gilt $y_0 = 0, y_1 > 0$.
+	Da die Hauptachse nach der $X-Achse$ ausgerichtet ist und $a >= b$ gilt, ist der Punkt auf der Ellipse mit der kürzesten Distanz zu $Q$ offenbar $E = (0, b)$ und für die Distanz gilt $d = \abs{y_1 - b}$.
+	\item Als nächstes betrachten wir ein $Q$ auf der $X$-Achse (einschließlich $(0,0)$), wenn also gilt  $y_0 \geq 0, y_1 = 0$.
+	\item Der letzte Fall, den wir betrachten müssen, ist der allgemeinste Fall. Es gilt $y_0 > 0$, sowie $y_1 > 0$
+\end{enumerate}
+
+
+
+
+
+
+
 \subsection{Schnittpunkt: Liniensegment und Ellipse}
 
 
 
-
+bla bla
 
 
 
