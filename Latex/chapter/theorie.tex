@@ -160,67 +160,81 @@ x \\ y
 
 
 
-\section{Ellipse}
+\section{Ellipsen}
+\subsection{allgemein}
+\todo{wie schreibt man Achsen-ausgerichtet?}
+Ellipsen sind deshalb für diese Arbeit interessant, als dass sie als perspektivische Verzerrung von Kreisen entstehen. Nimmt man das Kalibrierungsmuster nicht perfekt im Lot auf, entstehen zwangsläufig Ellipsen. 
 
 \begin{definition}[Ellipse]
+	Ellipsen entstehen durch 
 	Kegelschnitt und so bla bla. im weiteren bla bla meinen wir mit Hauptachsen immer die Semihauptachsen
 \end{definition}
+
+In ihrer einfachsten Form liegt die Ellipse im Zentrum des Koordinatensystems und ihre Haupt- und Nebenachse $a$ und $b$ sind Achsen-ausgerichtet, das heißt ihre Hauptachse liegt auf der $X$-Achse und ihre Nebenachse auf der $Y$-Achse. Sie kann dann in der impliziten Form
+
+\begin{equation} \label{eq:ellipseNoRotNoTrans}
+\frac{x^2}{a^2} + \frac{y^2}{b^2} = 1
+\end{equation} 
+
+beschrieben werden.
 
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=.7]{images/ellipse.eps}
-	\caption{Ellipse}
+	\caption{Ellipse mit Zentrum $(x_0, y_0)$, Hauptachse $a$, Nebenachse $b$, sowie Drehwinkel $\theta$}
 	\label{fig:ellipse}
 \end{figure}
 
-\begin{equation} \label{eq:ellipse1}
-ax^2 + by^2 + cxy + dx + ey + f = 0 \quad \text{mit}\quad c^2-4ab < 0
-\end{equation} 
-mit $a,b,c,d,e,f \in \mathbb{R}$ oder
+Befindet sich die Ellipse nicht im Ursprung so muss eine Verschiebung beziehungsweise bei einer Rotation ein Drehwinkel (siehe Abbildung \ref{fig:ellipse}) ergänzt werden. 
 
-\begin{equation} \label{eq:ellipse2}
+\begin{equation} \label{eq:ellipseNoRotTrans}
+\frac{\left(x-x_0\right)^2}{a^2} + \frac{\left(y-y_0\right)^2}{b^2} = 1
+\end{equation} 
+
+\begin{equation} \label{eq:ellipseRotTrans}
 \frac{((x - x_0)\cos\theta + (y - y_0)\sin\theta)^2}{a^2} + \frac{((x - x_0)\sin\theta - (y - y_0)\cos\theta)^2}{b^2} = 1
 \end{equation} 
 
-mit Ellipsenzentrum $(x_0,y_0)\in\mathbb{R}^2$, Hauptachsen $a,b\in\mathbb{R}^+$, sowie Drehwinkel $\theta \in [0,2\pi)$
+mit Ellipsenzentrum $(x_0,y_0)\in\mathbb{R}^2$, Hauptachsen $a,b\in\mathbb{R}^+$, sowie Drehwinkel $\theta \in [0,2\pi)$ oder parametrisiert
 
-\begin{equation} \label{eq:ellipse0}
-\frac{x^2}{a^2} + \frac{y^2}{b^2} = 1
-\end{equation} 
-
-beziehungsweise parametrisiert:
-
-\begin{equation} \label{eq:ellipse3}
+\begin{equation} \label{eq:ellipseRotTransParam}
 \begin{pmatrix}x \\ y\end{pmatrix} = \begin{pmatrix}x_0 + a\cos\phi\cos\theta - b\sin\phi\sin\theta \\ 
 y_0 + a\cos\phi\sin\theta + b\sin\phi\cos\theta\end{pmatrix}
 \end{equation}
 mit $\phi \in [0, 2\pi)$, $x_0, y_0, a,b, \theta$ wie oben.
 
-Diese beiden Formen sind ineinander umformbar. Da wir die Umformung von \ref{eq:ellipse1} nach \ref{eq:ellipse2} später brauchen, wird sie hier einmal exemplarisch vorgeführt. 
+In ihrer allgemeinsten Form lässt sich eine Ellipse durch ein implizites Polynom zweiten Grades charakterisieren
+\begin{equation} \label{eq:ellipseQuadratic}
+ax^2 + by^2 + cxy + dx + ey + f = 0 \quad \text{mit}\quad c^2-4ab < 0
+\end{equation} 
+mit $a,b,c,d,e,f \in \mathbb{R}$ oder
 
-Zunächst einmal fällt auf, dass der gemischten Term $cxy$ genau dann null ist wenn, die Ellipse nicht rotiert wurde. Im ersten Schritt versuchen wir also die Rotation der Ellipse rückgängig zu machen, um den Rotationswinkel bestimmen zu können.% und anschließend den Ellipsenmittelpunkt ermitteln zu können.
 
-Die Gleichung \ref{eq:ellipse1} kann umgeformt werden zu:
+Die beiden Formen \ref{eq:ellipseRotTrans} und \ref{eq:ellipseQuadratic} sind äquivalent, falls die Ellipse nicht degeneriert ist (ohne Beweis). Da wir die Umformung von \ref{eq:ellipseRotTrans} nach \ref{eq:ellipseQuadratic} später brauchen, wird sie hier einmal exemplarisch vorgeführt. 
+
+Zunächst einmal fällt auf, dass der gemischten Term $cxy$ genau dann null ist wenn, die Ellipse nicht rotiert wurde. Im ersten Schritt versuchen wir also die Rotation der Ellipse rückgängig zu machen, um den Rotationswinkel bestimmen zu können..
+
+Die Gleichung \ref{eq:ellipseQuadratic} kann umgeformt werden zu:
 \begin{equation*}
 \begin{aligned}
-\underbrace{\begin{pmatrix}x & y\end{pmatrix}}_{=:u^T}\begin{pmatrix}a & \frac{c}{2} \\ \frac{c}{2} & b\end{pmatrix}\underbrace{\begin{pmatrix}x \\ y\end{pmatrix}}_{=u} +\begin{pmatrix}d & e\end{pmatrix}\underbrace{\begin{pmatrix}x \\ y\end{pmatrix}}_{=u}+ f = 0 \\
+\underbrace{\begin{pmatrix}x & y\end{pmatrix}}_{=:u^T}\underbrace{\begin{pmatrix}a & \frac{c}{2} \\ \frac{c}{2} & b\end{pmatrix}}_{=: M}\underbrace{\begin{pmatrix}x \\ y\end{pmatrix}}_{=u} +\begin{pmatrix}d & e\end{pmatrix}\underbrace{\begin{pmatrix}x \\ y\end{pmatrix}}_{=u}+ f = 0 \\
 \Leftrightarrow u^TMu +\begin{pmatrix}d & e\end{pmatrix}u + f = 0 \\
 \end{aligned}
 \end{equation*} 
 Der gemischte Term wird alleine durch $M = \begin{pmatrix}a & \frac{c}{2} \\ \frac{c}{2} & b\end{pmatrix}$ bestimmt. Da die Matrix $M$ symmetrisch ist, ist sie orthogonal diagonalisierbar. Des Weiteren hat $M$ zwei von null verschiedene Eigenwerte, denn 
 \[
 \det M = ab - \dfrac{c^2}{4}
-\] ist nur dann gleich null, wenn $c^2 - 4ab = 0$, was ein Widerspruch zur Annahme in \ref{eq:ellipse1} ist. $M$ hat somit vollen Rang, hat also zwei von null verschiedene Eigenwerte. Insbesondere sind die Eigenvektoren von $M$ dann zueinander orthogonal.
+\] ist nur dann gleich null, wenn $c^2 - 4ab = 0$, was ein Widerspruch zur Annahme in \ref{eq:ellipseQuadratic} ist. $M$ ist somit eine von null verschiedene Determinante und somit vollen Rang, hat also zwei von null verschiedene Eigenwerte. Insbesondere gibt es also zwei Eigenvektoren von $M$, die zueinander orthogonal sind.
 
 Es gilt $M = S^TDS$, wobei $S\in\mathbb{R}^{2\times2}$ eine orthogonale Matrix mit den normierten Eigenvektoren als Zeilen und $D = \text{diag}(\lambda_1, \lambda_2)\in\mathbb{R}^{2\times2}$ eine Diagonalmatrix mit den beiden Eigenwerten von $M$ auf der Diagonalen ist. Ohne Beschränkung der Allgemeinheit gelte $\lambda_1 <= \lambda_2$, andernfalls vertausche die Eigenvektoren in $S$. 
 
-Sei nun $v := Su$
-Insgesamt gilt also:
+Sei nun $v := Su$.
+So gilt:
 
 \begin{equation} \label{eq:PCARot}
 \begin{aligned}
 &u^T(S^TDS)u +\begin{pmatrix}d & e\end{pmatrix}\underbrace{(S^TS)}_{=\ind}u + f = 0 \\
-\Leftrightarrow\quad &(u^TS^T)D(Su) +\begin{pmatrix}d & e\end{pmatrix}S^T(Su) + f = 0 \\
+\Leftrightarrow\quad &(Su)^TD(Su) +\begin{pmatrix}d & e\end{pmatrix}S^T(Su) + f = 0 \\
 \Leftrightarrow\quad &v^{T}Dv +\begin{pmatrix}d & e\end{pmatrix}S^Tv + f = 0 
 \end{aligned}
 \end{equation}
@@ -255,7 +269,12 @@ Multipliziert man nun \ref{eq:PCARot} aus ergibt sich:
 
 , da $\lambda_1, \lambda_2 \neq 0$. 
 
-Das Zentrum der transformierten Ellipse kann nun aus \ref{eq:ellipseCenter} einfach abgelesen werden. Um das Zentrum der eigentlichen Ellipse zu bestimmen, muss mit der inversen Rotation $S^T$ multipliziert werden. Obige Gleichung lässt sich anschließend weiter vereinfachen: 
+Das Zentrum der transformierten Ellipse kann nun aus \ref{eq:ellipseCenter} einfach abgelesen werden. Um das Zentrum der eigentlichen Ellipse zu bestimmen, muss mit der inversen Rotation $S^T$ multipliziert werden:
+\begin{equation*}
+(x_0, y_0)^T = S^T(x'_0, y'_0)^T
+\end{equation*}
+
+Obige Gleichung lässt sich anschließend weiter vereinfachen: 
 
 
 \begin{equation} \label{eq:PCAKoeff}
@@ -265,11 +284,24 @@ Das Zentrum der transformierten Ellipse kann nun aus \ref{eq:ellipseCenter} einf
 \end{aligned}
 \end{equation}
 
-Vergleicht man nun \ref{eq:PCAKoeff} mit \ref{eq:ellipse0} so sieht man das:
-bla bla 
-gelten muss
+wobei $\sigma \neq 0$, wenn die Ellipse nicht zum Punkt entartet ist \cite{Lawrence1972}. Vergleicht man nun \ref{eq:PCAKoeff} mit \ref{eq:ellipseNoRotTrans} so sieht man das
 
-\url{https://en.wikipedia.org/wiki/Matrix_representation_of_conic_sections}
+\begin{equation}
+\begin{aligned}
+&\frac{\lambda_1}{\sigma} = \frac{1}{a^2} &\text{und}\quad &\frac{\lambda_2}{\sigma} = \frac{1}{b^2}\\
+\Leftrightarrow\quad & \sqrt{\frac{\sigma}{\lambda_1}}  = a  &\text{und}\quad & \sqrt{\frac{\sigma}{\lambda_2}}  = b
+\end{aligned}
+\end{equation}
+
+Es gilt wie erwartet $a \geq b$, da $\lambda_1 \leq \lambda_2$
+
+
+\subsection{Abstand: Punkt zu Ellipse}
+Das hier beschriebene Verfahren zur Bestimmung der kürzesten euklidischen Distanz eines Punktes zu einer Ellipse stammt aus der Arbeit von David Eberly \cite{Eberly2013}.
+Wir betrachten nur Ellipsen im Ursprung, die Achsen-ausgerichtet sind und darüber hinaus nur Punkte im ersten Quadranten. Ansonsten wir die Ellipse in den Ursprung verschoben und um ihren entgegengesetzten Drehwinkel rotiert. Da die Ellipse dann bezüglich der $X$- und $Y$- Achse symmetrisch ist, kann der Punkt einfach durch Spiegelung in den richtigen Quadranten transformiert werden. Der Abstand ändert sich dadurch nicht. 
+
+\subsection{Schnittpunkt: Liniensegment und Ellipse}
+
 
 
 
@@ -279,7 +311,6 @@ gelten muss
 \newpage
 ellipse distanz mit transformationen die nötig sind
 
-Hauptachsentransformation
 
 schnittpunkt linie ellipse
 

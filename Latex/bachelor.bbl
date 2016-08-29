@@ -36,9 +36,29 @@
       \field{labeltitlesource}{title}
       \field{title}{{Distance from a Point to an Ellipse, an Ellipsoid, or a Hyperellipsoid}}
       \field{year}{2013}
-      \verb{file}
-      \verb :D$\backslash$:/lars/Documents/gitProjects/BA-Haalck-2016/Literatur/DistancePointEllipseEllipsoid.pdf:pdf
-      \endverb
+    \endentry
+    \entry{Lawrence1972}{book}{}
+      \name{author}{1}{}{%
+        {{hash=1f259912fb8b2065c10d68fbaf1a8634}{%
+           family={Lawrence},
+           family_i={L\bibinitperiod},
+           given={J\bibnamedelima D},
+           given_i={J\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Dover Publications}%
+      }
+      \strng{namehash}{1f259912fb8b2065c10d68fbaf1a8634}
+      \strng{fullhash}{1f259912fb8b2065c10d68fbaf1a8634}
+      \field{labelalpha}{Law72}
+      \field{sortinit}{L}
+      \field{sortinithash}{872351f18d0f736066eda0bf18bfa4f7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{A Catalog of Special Plane Curves}}
+      \field{year}{1972}
+      \field{pages}{62\bibrangedash 63}
+      \range{pages}{2}
     \endentry
   \endsortlist
 \endrefsection

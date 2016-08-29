@@ -8,13 +8,19 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {2.1}Kegel}{3}{section.2.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.2}Ellipse}{7}{section.2.2}
+\contentsline {section}{\numberline {2.2}Ellipsen}{7}{section.2.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.3}Parametersch\IeC {\"a}tzung}{11}{section.2.3}
+\contentsline {subsection}{\numberline {2.2.1}allgemein}{7}{subsection.2.2.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.4}Kamerakalibrierung}{11}{section.2.4}
+\contentsline {subsection}{\numberline {2.2.2}Abstand: Punkt zu Ellipse}{11}{subsection.2.2.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.5}Deformable Templates}{11}{section.2.5}
+\contentsline {subsection}{\numberline {2.2.3}Schnittpunkt: Liniensegment und Ellipse}{11}{subsection.2.2.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.3}Parametersch\IeC {\"a}tzung}{12}{section.2.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.4}Kamerakalibrierung}{12}{section.2.4}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.5}Deformable Templates}{12}{section.2.5}
 \defcounter {refsection}{0}\relax 
 \contentsline {chapter}{\numberline {3}Methodik}{13}{chapter.3}
 \defcounter {refsection}{0}\relax 
@@ -26,6 +32,6 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {chapter}{\numberline {6}Fazit und Ausblick}{19}{chapter.6}
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\nonumberline Abbildungsverzeichnis}{21}{chapter*.11}
+\contentsline {chapter}{\nonumberline Abbildungsverzeichnis}{21}{chapter*.12}
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\nonumberline Tabellenverzeichnis}{23}{chapter*.12}
+\contentsline {chapter}{\nonumberline Tabellenverzeichnis}{23}{chapter*.13}
