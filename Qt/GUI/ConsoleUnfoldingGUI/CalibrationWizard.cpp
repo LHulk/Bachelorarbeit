@@ -368,11 +368,11 @@ void CalibrationWizard::on_buttonExport_clicked()
 	cv::FileStorage fs(QtOpencvCore::qstr2str(file), cv::FileStorage::WRITE);
 
 
-	fs << "cameraMatrix" << this->cameraMatrix; //not really needed
-	fs << "distCoeffs" << this->distCoeffs;		//same
+	fs << "cameraMatrix" << this->cameraMatrix;
+	fs << "distCoeffs" << this->distCoeffs;
 
-	fs << "remapXCam" << this->remapXCam;
-	fs << "remapYCam" << this->remapYCam;
+	//fs << "remapXCam" << this->remapXCam; //can be calculated
+	//fs << "remapYCam" << this->remapYCam;
 	fs << "isForward" << this->isForward;
 	fs << "remapXWarp" << this->remapXWarp;
 	fs << "remapYWarp" << this->remapYWarp;

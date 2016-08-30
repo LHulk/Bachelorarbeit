@@ -78,10 +78,6 @@ private:
 
 	Cone cone;
 
-	cv::Mat cameraMatrix;
-	cv::Mat distCoeffs;
-	cv::Mat remapXCam;
-	cv::Mat remapYCam;
 
 	cv::Mat grey;
 	cv::Mat greyOriginal;
@@ -89,9 +85,16 @@ private:
 
 	cv::Mat projectionMatrix;
 
+	//stored
+	cv::Mat cameraMatrix;
+	cv::Mat distCoeffs;
+	cv::Mat remapXCam;
+	cv::Mat remapYCam;
+
+	bool isForward;
 	cv::Mat remapXWarp;
 	cv::Mat remapYWarp;
-	bool isForward;
+
 
 
 

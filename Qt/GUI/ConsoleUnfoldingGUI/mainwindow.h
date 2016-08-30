@@ -18,10 +18,21 @@ public:
 
 private slots:
     void on_buttonCalibrationWizard_clicked();
+	void triggeredImport(bool);
 
 private:
     Ui::MainWindow *ui;
     CalibrationWizard* wizard;
+
+	//stored
+	cv::Mat cameraMatrix;
+	cv::Mat distCoeffs;
+	cv::Mat remapXCam;
+	cv::Mat remapYCam;
+
+	bool isForward;
+	cv::Mat remapXWarp;
+	cv::Mat remapYWarp;
 };
 
 #endif // MAINWINDOW_H
