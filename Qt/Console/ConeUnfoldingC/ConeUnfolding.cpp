@@ -9,7 +9,8 @@ ConeUnfolding::ConeUnfolding()
 	//cv::Mat grey = cv::imread("../../../img/v5_pattern/pattern3.png", CV_LOAD_IMAGE_GRAYSCALE);
 	//cv::Mat grey = cv::imread("../../../img/v5_pattern/test.png", CV_LOAD_IMAGE_GRAYSCALE);
 	//cv::Mat grey = cv::imread("../../../img/v5_pattern/blender_perfectCenterDebug.png", CV_LOAD_IMAGE_GRAYSCALE);
-	cv::Mat grey = cv::imread("../../../img/v5_pattern/pattern3.png", CV_LOAD_IMAGE_GRAYSCALE);
+	//cv::Mat grey = cv::imread("../../../img/rasp/30-08_16-51-18.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	//cv::Mat grey = cv::imread("../../../img/rasp/30-08_16-27-48.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 
 	/*cv::Mat calib = cv::imread("../../../img/calibration/chessboard/25-08_21-47-35.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 	cv::resize(calib, calib, cv::Size(1000, 1000 * calib.rows / calib.cols));
@@ -37,6 +38,8 @@ ConeUnfolding::ConeUnfolding()
 	cv::Mat canny, orientation;
 	EdgeDetection::canny(grey, canny, orientation, Config::cannyLow, Config::cannyHigh, Config::cannyKernel, Config::cannySigma);
 
+	cv::imshow("canny", canny);
+	return;
 
 	std::vector<cv::Point2f> keyPoints;
 	keyPoints = DotDetection::detectDots(grey);

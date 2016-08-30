@@ -18,8 +18,13 @@ namespace Config
 	float scaleFactor = 1;
 
 	//algorithm settings
-	int cannyLow = 100;
+	/*int cannyLow = 100;
 	int cannyHigh = 254;
+	int cannyKernel = 3;
+	double cannySigma = 0.5f;*/
+
+	int cannyLow = 50;
+	int cannyHigh = 100;
 	int cannyKernel = 3;
 	double cannySigma = 0.5f;
 

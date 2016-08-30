@@ -1,6 +1,6 @@
 #include "Ellipse.h"
 
-static bool isDebug = false;
+static bool isDebug = true;
 
 
 Ellipse::Ellipse()

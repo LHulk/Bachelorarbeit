@@ -99,15 +99,17 @@ void CalibrationWizard::on_buttonStartIntrinsic_clicked()
 	{
 		std::string fileName = fileNamesCamCalib.at(i).toStdString();
 		cv::Mat img = cv::imread(fileName, CV_LOAD_IMAGE_GRAYSCALE);
-		//cv::resize(img, img, cv::Size(1000, 1000 * img.rows / img.cols));
 		if(i == 0)
 			size = img.size();
 
 		cv::Mat imgWithCorners;
 		std::vector<cv::Point2f> currentImagePoints = Calibration::getCorners(img, imgWithCorners);
 
-		imagePoints.push_back(currentImagePoints);
-		objectPoints.push_back(currentobjectPoints);
+		if(currentImagePoints.size() != 0)
+		{
+			imagePoints.push_back(currentImagePoints);
+			objectPoints.push_back(currentobjectPoints);
+		}
 		ui->progressIntrinsic->setValue(i);
 	}
 
@@ -153,15 +155,8 @@ void CalibrationWizard::drawKeyPoints()
 
 void CalibrationWizard::on_buttonFindBlobs_clicked()
 {
-
 	std::string fileName = fileNameConeCalib.toStdString();
 	grey = cv::imread(fileName, CV_LOAD_IMAGE_GRAYSCALE);
-
-	greyOriginal = grey.clone();
-	Config::scaleFactor = 1000.0f / grey.cols;
-	cv::resize(grey, grey, cv::Size(1000, Misc::round(grey.rows * Config::scaleFactor)));
-	Config::usedResWidth = grey.cols;
-	Config::usedResHeight = grey.rows;
 
 	cv::initUndistortRectifyMap(this->cameraMatrix, this->distCoeffs, cv::Mat(), this->cameraMatrix, grey.size(), CV_32FC1, remapXCam, remapYCam);
 
@@ -171,6 +166,14 @@ void CalibrationWizard::on_buttonFindBlobs_clicked()
 		cv::remap(grey, greyWarped, remapXCam, remapYCam, cv::INTER_LINEAR);
 		greyWarped.copyTo(grey);
 	}
+
+	greyOriginal = grey.clone();
+	Config::scaleFactor = 1000.0f / grey.cols;
+	cv::resize(grey, grey, cv::Size(1000, Misc::round(grey.rows * Config::scaleFactor)));
+	Config::usedResWidth = grey.cols;
+	Config::usedResHeight = grey.rows;
+
+
 
 	keyPoints = DotDetection::detectDots(grey);
 
