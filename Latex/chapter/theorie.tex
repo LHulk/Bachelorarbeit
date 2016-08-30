@@ -161,8 +161,12 @@ x \\ y
 
 
 \section{Ellipsen}
+\label{s:ellipse}
 \subsection{allgemein}
+\label{s:ellipseGeneral}
+
 \todo{wie schreibt man Achsen-ausgerichtet?}
+\todo{wie viele punkte braucht man zum definieren von Ellipsen}
 Ellipsen sind deshalb für diese Arbeit interessant, als dass sie als perspektivische Verzerrung von Kreisen entstehen. Nimmt man das Kalibrierungsmuster nicht perfekt im Lot auf, entstehen zwangsläufig Ellipsen. 
 
 \begin{definition}[Ellipse]
@@ -207,7 +211,7 @@ In ihrer allgemeinsten Form lässt sich eine Ellipse durch ein implizites Polyno
 \begin{equation} \label{eq:ellipseQuadratic}
 ax^2 + by^2 + cxy + dx + ey + f = 0 \quad \text{mit}\quad c^2-4ab < 0
 \end{equation} 
-mit $a,b,c,d,e,f \in \mathbb{R}$ oder
+mit $a,b,c,d,e,f \in \mathbb{R}$. Eine Ellipse lässt sich also durch sechs Punkte eindeutig beschrieben (fünf, wenn man $f$ auf eins skaliert).
 
 
 Die beiden Formen \ref{eq:ellipseRotTrans} und \ref{eq:ellipseQuadratic} sind äquivalent, falls die Ellipse nicht degeneriert ist (ohne Beweis). Da wir die Umformung von \ref{eq:ellipseRotTrans} nach \ref{eq:ellipseQuadratic} später brauchen, wird sie hier einmal exemplarisch vorgeführt. 
@@ -297,6 +301,7 @@ Es gilt wie erwartet $a \geq b$, da $\lambda_1 \leq \lambda_2$
 
 
 \subsection{Abstand: Punkt zu Ellipse}
+\label{sc:distPointEllipse}
 Das hier beschriebene Verfahren zur Bestimmung der kürzesten euklidischen Distanz eines Punktes zu einer Ellipse stammt aus der Arbeit von David Eberly \cite{Eberly2013}.
 Wir betrachten nur Ellipsen im Ursprung, die Achsen-ausgerichtet sind und darüber hinaus nur Punkte im ersten Quadranten. Ansonsten wir die Ellipse in den Ursprung verschoben und um ihren entgegengesetzten Drehwinkel rotiert. Da die Ellipse dann bezüglich der $X$- und $Y$- Achse symmetrisch ist, kann der Punkt einfach durch Spiegelung in den richtigen Quadranten transformiert werden. Der Abstand ändert sich dadurch nicht. 
 
@@ -319,7 +324,7 @@ Die Ableitung von $F$
 F'(\theta) = 2\left(\mathcal{E}(\theta) - Q\right) \cdot \mathcal{E}'(\theta).
 \end{equation}
 
-wird null, wenn $\left(\mathcal{E}(\theta) - Q\right)$ und $ \mathcal{E}'(\theta)$ zu einander orthogonal sind. Daraus folgt, dass der Vektor von $Q$ zu $E$ senkrecht zur Ellipse steht (siehe Abbildung \ref{fig:ellipseDist}). 
+wird null, wenn $\left(\mathcal{E}(\theta) - Q\right)$ und $ \mathcal{E}'(\theta)$ zu einander orthogonal sind. Daraus folgt, dass der Vektor von $Q$ zu $E$ senkrecht zur Ellipse stehen muss.  (siehe Abbildung \ref{fig:ellipseDist}). 
 
 
 \begin{figure}[!htb]
@@ -330,7 +335,9 @@ wird null, wenn $\left(\mathcal{E}(\theta) - Q\right)$ und $ \mathcal{E}'(\theta
 \end{figure}
 
 Betrachten wir also die Funktion:
-\[G(x_0,x_1) = \frac{x_0^2}{a^2} + \frac{x_1^2}{b^2} - 1\] 
+\begin{equation} \label{eq:ellipseDistEq}
+	G(x_0,x_1) = \frac{x_0^2}{a^2} + \frac{x_1^2}{b^2} - 1.
+\end{equation}
 $(x_0,x_1)$ ist genau dann ein Punkt auf der Ellipse, wenn $G(x_0,x_1) = 0$. Der Gradient von $G$ in $(x_0,x_1)$ ist ein Normalenvektor auf der Ellipse, somit auch der halbe Gradient $\nabla G(x_0,x_1)/2$. Der Vektor von $E$ zu $Q$ muss dieselbe Richtung haben. Es gilt somit:
 
 \begin{equation}
@@ -341,20 +348,50 @@ für ein $t\in\mathbb{R}$.
 Umgestellt nach $y_0$ und $y_1$, beziehungsweise nach $x_0$ und $x_1$ ergibt sich:
 
 \begin{equation}\label{eq:ellipseDistY}
-\begin{aligned}
-y_0 = x_0\left(1 + \frac{t}{a^2}\right), \quad &y_1 = x_1\left(1 + \frac{t}{b^2}\right) \\
-x_0 = \frac{a^2y_0}{t+a^2}, \quad & x_1 = \frac{b^2y_1}{t+b^2}
-\end{aligned}
+y_0 = x_0\left(1 + \frac{t}{a^2}\right), \quad y_1 = x_1\left(1 + \frac{t}{b^2}\right)
 \end{equation}
+
+\begin{equation}\label{eq:ellipseDistX}
+x_0 = \frac{a^2y_0}{t+a^2},\quad x_1 = \frac{b^2y_1}{t+b^2}
+\end{equation}
+
 
 
 Man macht nun eine Fallunterscheidung:
 
 \begin{enumerate}
-	\item Der mit Sicherheit einfachste Fall ist, wenn sich der Punkt $Q$ auf der $Y$-Achse (außer $(0,0)$) befindet, wenn also gilt $y_0 = 0, y_1 > 0$.
+	\item Der einfachste Fall ist, wenn sich der Punkt $Q$ auf der $Y$-Achse (außer $(0,0)$) befindet, wenn also gilt $y_0 = 0, y_1 > 0$.
 	Da die Hauptachse nach der $X-Achse$ ausgerichtet ist und $a >= b$ gilt, ist der Punkt auf der Ellipse mit der kürzesten Distanz zu $Q$ offenbar $E = (0, b)$ und für die Distanz gilt $d = \abs{y_1 - b}$.
 	\item Als nächstes betrachten wir ein $Q$ auf der $X$-Achse (einschließlich $(0,0)$), wenn also gilt  $y_0 \geq 0, y_1 = 0$.
-	\item Der letzte Fall, den wir betrachten müssen, ist der allgemeinste Fall. Es gilt $y_0 > 0$, sowie $y_1 > 0$
+	
+	\todo{den zweiten teil überarbeiten hier}
+	Es kann gezeigt werden, dass der Punkt auf der Ellipse mit der kürzesten Distanz zu $(y_0, 0)$ für $0 < y_0 < (a^2 - b^2)/a^2$, $E = (x_0,x_1)$ ist mit 
+	
+	Wenn $x_1 = 0$ gilt, muss $x_0 = a$ gelten, damit $E(x_0,x_1)$ auf der Ellipse ist. Es  gilt analog zum ersten Fall $E=(a,0)$ mit $d = \abs{y_0 - a}$ 
+	Einfach nur es kann gezeigt werden, dass bla? 
+	
+	Wenn $x_1 \neq 0$ kann gezeigt werden, dass für die Distanz gilt:
+	\[
+		d^2 = b^2\left(1 - \frac{y_0^2}{a^2 - b^2}\right)
+	\]
+	\item Der letzte Fall, den wir betrachten müssen, ist der allgemeinste Fall. Es gilt $y_0 > 0$, sowie $y_1 > 0$. Da wir uns nur im ersten Quadranten bewegen, gilt darüber hinaus $x_0, x_1 \geq 0$. Mit diesen Eigenschaften und \ref{eq:ellipseDistY} lässt sich folgende Einschränkung für $t$ herleiten:
+	\begin{equation}
+	\begin{aligned}
+	& 0 < y_0 = x_0\left(1 + \frac{t}{a^2}\right)\\
+	\Leftrightarrow\quad& -1\cdot a^2 < t.
+	\end{aligned}
+	\end{equation}
+	Analog ergibt sich mit $y_1\colon -b^2 < t$. Da $a\geq b$ gilt, reicht es, sich nur die zweite Ungleichung anzuschauen, dass sie die erste impliziert. Setzt man nun \ref{eq:ellipseDistX} in \ref{eq:ellipseDistEq} ein, erhält man:
+	
+	\begin{equation}
+		F(t) = \left(\frac{ay_0}{t+a^2}\right)^2 + \left(\frac{by_1}{t+b^2}\right)^2 - 1
+	\end{equation}
+	
+	Man kann nun zeigen, dass diese Funktion auf dem gesamten Intervall $[-b^2\infty)$ monoton fällt und links gekrümmt ist. Darüber hinaus gilt:
+	\[
+	\lim\limits_{t \searrow -b^2}{F(t)}	= +\infty, \quad\lim\limits_{t \rightarrow \infty}{F(t)}	= 1.
+	\]
+	Da $F$ stetig ist, muss es also eine Nullstelle geben, die aufgrund des Monotonie- und Krümmungsverhaltens sogar eindeutig ist. Die Nullstelle lässt sich beispielsweise durch Intervallschachtelung oder Newton-Verfahren bestimmen. 
 \end{enumerate}
 
 
@@ -364,29 +401,41 @@ Man macht nun eine Fallunterscheidung:
 
 
 \subsection{Schnittpunkt: Liniensegment und Ellipse}
+\todo{eigentlich ziemlich überflüssig}
+\begin{definition}[Liniensegment]
+	Ein Liniensegment ist definiert als die kürzeste Verbindungslinie zwischen zwei Punkte $(x_0, x_1), (y_0, y_1)$ und kann parametrisch beschrieben werden durch:
+	\[\begin{pmatrix}x_0 \\ x_1\end{pmatrix} + t \left(\begin{pmatrix}y_0 \\ y_1\end{pmatrix} - \begin{pmatrix}x_0 \\ x_1\end{pmatrix}\right) \tag*{$t \in [0,1]$}\]
+\end{definition}
 
 
 
-bla bla
+\section{RANSAC}
+\label{s:ransac}
+\textit{Random Sample Consensus} (RANSAC) \cite{Fischler1981} ist ein nicht-deterministisches robustes Verfahren zur Parameterschätzung eines Modells bei einer, möglicherweise durch starke Ausreißer, gestörten Messreihe. 
+Im Gegensatz zu Verfahren, wie der Methode der kleinsten Quadrate, die versuchen eine optimale Lösung für alle Messdaten zu bestimmen, nutzt RANSAC nur eine Teilmenge der Messreihe. 
+
+\todo{Modell wortwiederholungen}
+RANSAC wählt aus der Menge der Messdaten wiederholt zufällig die minimale Anzahl Messdaten aus, die nötig sind um das Modell eindeutig zu beschreiben und prüft dann, wie gut das geschätzte Modell die restlichen Messdaten beschreibt. 
+Die Güte des Modells wird im Allgemeinen durch ein Distanzmaß charakterisiert. 
+Hat ein Messdatum eine vorher definierte Maximaldistanz zum geschätzten Modell nicht überschritten, wird es ins sogenannte Consensus Set des Modells aufgenommen. 
+Das Modell mit dem größten Consensus Set wird schließlich ausgewählt. 
+
+Die Anzahl der Iterationen, die mindestens notwendig sind, um mit einer Wahrscheinlichkeit von $p \in [0,1)$, bei einem relativen Ausreißeranteil von $\epsilon \in[0,1)$ und einer Anzahl von $k$ Daten, um das Modell eindeutig zu beschreiben, lässt sich berechnen mit:
+
+\begin{equation}
+	\frac{\log{\left(1-p\right)}}{\log{\left(1-\left(1-\epsilon\right)^k\right)}}
+\end{equation}
 
 
 
-\newpage
-ellipse distanz mit transformationen die nötig sind
 
-
-schnittpunkt linie ellipse
-
-
-\section{Parameterschätzung}
-
-Hough?
-Paremterschätzung Ransac. anzahl interationen
-
-
+\section{Hough-Transformation}
+\label{s:hough}
 
 
 \section{Kamerakalibrierung}
+\label{s:calib}
+Lochkamera
 
 kamerakalibrierung
 
@@ -395,12 +444,8 @@ projektionsmatrix
 SVD, QR, LSQ?
 
 
+\section{Canny}
+
 
 Kantendetektion (canny sobel)
 
-\section{Deformable Templates}
-
-
-deformable templates
-
-evtl noch am ende delaunay
