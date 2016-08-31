@@ -29,11 +29,9 @@ void MainWindow::triggeredImport(bool checked)
 	cv::FileStorage fs(file, cv::FileStorage::READ);
 
 
-	fs["cameraMatrix"] >> this->cameraMatrix; //not really needed
-	fs["distCoeffs"] >> this->distCoeffs;		//same
+	fs["cameraMatrix"] >> this->cameraMatrix;
+	fs["distCoeffs"] >> this->distCoeffs;
 
-	fs["remapXCam"] >> this->remapXCam;
-	fs["remapYCam"] >> this->remapYCam;
 	fs["isForward"] >> this->isForward;
 	fs["remapXWarp"] >> this->remapXWarp;
 	fs["remapYWarp"] >> this->remapYWarp;

@@ -22,7 +22,7 @@ void Misc::sort(std::vector<std::vector<cv::Point2f>>& pointsPerEllipse, const s
 	//sort first ellipse by angle
 	auto sortByAngle = [innerMostCenter](const cv::Point2f& pt1, const cv::Point2f& pt2)
 	{
-		return angleWithX(cv::Point2d(pt1.x, pt1.y), innerMostCenter) < angleWithX(cv::Point2d(pt2.x, pt2.y), innerMostCenter);
+		return angleWithX(innerMostCenter, cv::Point2d(pt1.x, pt1.y)) < angleWithX(innerMostCenter, cv::Point2d(pt2.x, pt2.y));
 	};
 
 	std::sort(pointsPerEllipse[0].begin(), pointsPerEllipse[0].end(), sortByAngle);

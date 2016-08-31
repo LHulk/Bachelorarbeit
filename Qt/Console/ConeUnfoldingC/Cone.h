@@ -20,6 +20,7 @@ public:
 	Cone();
 
 	std::vector<std::vector<cv::Point3f>> calculateWorldCoordinatesForSamples() const;
+	std::vector<std::vector<cv::Point2f>> calculateLateralSamples() const;
 	cv::Point3f interPolateRadial(const cv::Point& pt, int val) const;
 
 	cv::Point2f coneCoordinatesToLateral(const cv::Point3f& pt) const;

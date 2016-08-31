@@ -169,6 +169,29 @@ void Transformation::getForwardWarpMaps(const Cone& cone, cv::Mat& remapX, cv::M
 	mapy.copyTo(remapY);
 }
 
+std::vector<std::vector<cv::Point2f>> Transformation::getForwardReprojects(const Cone& cone, const std::vector<std::vector<cv::Point2f>> pointsPerEllipse)
+{
+	/*double S = cone.S();
+	double s = cone.s();
+	double maxAngle = cone.maxAngle();
+	double angleOffset = CV_PI / 2;
+
+	int n = Config::numCircleSamples;
+	int m = Config::numLineSamples;*/
+
+	for(auto ptList : pointsPerEllipse)
+	{
+		for(auto pt : ptList)
+		{
+
+		}
+
+	}
+
+	return std::vector<std::vector<cv::Point2f>>();
+
+}
+
 void Transformation::inverseRemap(const cv::Mat& src, cv::Mat& dst, const cv::Mat &remapX, const cv::Mat& remapY)
 {
 	int width = static_cast<int>(remapX.at<float>(0,0));
@@ -306,19 +329,31 @@ void Transformation::getReverseWarpMaps(const Cone& cone, cv::Mat &remapX, cv::M
 
 
 
+std::vector<std::vector<cv::Point2f>> Transformation::getReverseReprojects(const Cone& cone, const cv::Mat& proj)
+{
+	std::vector<std::vector<cv::Point2f>> res;
+	std::vector<std::vector<cv::Point2f>> laterals = cone.calculateLateralSamples();; //res[0][j] = innermost ellipse 
 
+	for(auto ptList : laterals)
+	{
+		std::vector<cv::Point2f> currVec;
+		for(auto pt : ptList)
+		{
+			cv::Point3f ptCone = cone.lateralToConeCoordinates(pt);
 
+			cv::Mat currentWorldMat = cv::Mat::zeros(4, 1, CV_32F);
+			currentWorldMat.at<float>(0, 0) = ptCone.x; currentWorldMat.at<float>(1, 0) = ptCone.y; currentWorldMat.at<float>(2, 0) = ptCone.z; currentWorldMat.at<float>(3, 0) = 1;
+			cv::Mat homImg = proj*currentWorldMat;
 
+			float w = homImg.at<float>(2, 0);
+			cv::Point2f reprojected = cv::Point2f(homImg.at<float>(0, 0) / w, homImg.at<float>(1, 0) / w);
 
-
-
-
-
-
-
-
-
-
+			currVec.push_back(reprojected);
+		}
+		res.push_back(currVec);
+	}
+	return res;
+}
 
 
 

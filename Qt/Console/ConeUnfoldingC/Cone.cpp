@@ -55,6 +55,31 @@ std::vector<std::vector<cv::Point3f>> Cone::calculateWorldCoordinatesForSamples(
 }
 
 
+std::vector<std::vector<cv::Point2f>> Cone::calculateLateralSamples() const
+{
+	std::vector<std::vector<cv::Point2f>> laterals;
+	double angleOffset = CV_PI / 2;
+
+	int n = Config::numCircleSamples;
+	int m = Config::numLineSamples;
+
+	for(int i = 0; i < n; i++)
+	{
+		std::vector<cv::Point2f> currVec;
+		double currS = _s + static_cast<float>(i) / (n - 1) * (_S - _s);
+		for(int j = 0; j < m; j++)
+		{
+			double currAngle = static_cast<float>(j) / m * this->maxAngle() + angleOffset;
+			currVec.push_back(currS * cv::Point2f(std::cos(currAngle), std::sin(currAngle)));
+		}
+		laterals.push_back(currVec);
+	}
+
+	return laterals;
+
+}
+
+
 cv::Point3f Cone::interPolateRadial(const cv::Point& pt, int val) const
 {
 	val = (val - 2) / 2;

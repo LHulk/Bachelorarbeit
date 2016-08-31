@@ -27,7 +27,9 @@ public:
 	static cv::Mat Transformation::getProjectiveMatrix(const Cone& cone);
 
 	static void getForwardWarpMaps(const Cone& cone, cv::Mat &remapX, cv::Mat &remapY, cv::Mat img = cv::Mat());
+	static std::vector<std::vector<cv::Point2f>> getForwardReprojects(const Cone& cone, std::vector<std::vector<cv::Point2f>> pointsPerEllipse);
 	static void getReverseWarpMaps(const Cone& cone, cv::Mat &remapX, cv::Mat &remapY, const cv::Mat& proj);
+	static std::vector<std::vector<cv::Point2f>> getReverseReprojects(const Cone& cone, const cv::Mat& proj);
 	static void inverseRemap(const cv::Mat& src, cv::Mat& dst, const cv::Mat &remapX, const cv::Mat& remapY);
 private:
 	static void fillSegments(cv::Mat& img, const std::vector<Ellipse>& ellipses, const std::vector<Line>& lines, const std::vector <std::vector<cv::Point2f>>& pointsPerEllipse);

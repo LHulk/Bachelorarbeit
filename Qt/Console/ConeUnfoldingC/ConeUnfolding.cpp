@@ -6,8 +6,9 @@ static bool isDebug = true;
 ConeUnfolding::ConeUnfolding()
 {
 	//Mat grey = cv::imread("../../../img/v5_pattern/pattern2.png", CV_LOAD_IMAGE_GRAYSCALE);
-	//cv::Mat grey = cv::imread("../../../img/v5_pattern/pattern3.png", CV_LOAD_IMAGE_GRAYSCALE);
+	cv::Mat grey = cv::imread("../../../img/v5_pattern/pattern3.png", CV_LOAD_IMAGE_GRAYSCALE);
 	//cv::Mat grey = cv::imread("../../../img/v5_pattern/test.png", CV_LOAD_IMAGE_GRAYSCALE);
+	//cv::Mat grey = cv::imread("../../../img/v5_pattern/blender_perfectCenterDebug.png", CV_LOAD_IMAGE_GRAYSCALE);
 	//cv::Mat grey = cv::imread("../../../img/v5_pattern/blender_perfectCenterDebug.png", CV_LOAD_IMAGE_GRAYSCALE);
 	//cv::Mat grey = cv::imread("../../../img/rasp/30-08_16-51-18.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 	//cv::Mat grey = cv::imread("../../../img/rasp/30-08_16-27-48.jpg", CV_LOAD_IMAGE_GRAYSCALE);
@@ -30,8 +31,7 @@ ConeUnfolding::ConeUnfolding()
 	Cone cone = Cone();
 
 	cv::imshow("grey", grey);
-
-
+	//cv::imwrite("grey.png", grey);
 
 
 	//canny
@@ -39,7 +39,8 @@ ConeUnfolding::ConeUnfolding()
 	EdgeDetection::canny(grey, canny, orientation, Config::cannyLow, Config::cannyHigh, Config::cannyKernel, Config::cannySigma);
 
 	cv::imshow("canny", canny);
-	return;
+	//cv::imwrite("canny.png", canny);
+
 
 	std::vector<cv::Point2f> keyPoints;
 	keyPoints = DotDetection::detectDots(grey);
@@ -86,27 +87,60 @@ ConeUnfolding::ConeUnfolding()
 
 	cv::Mat proj = Transformation::getProjectiveMatrix(cone);
 
-	//cv::Mat vis;
-	//cv::cvtColor(grey, vis, CV_GRAY2BGR);
-	//for(size_t i = 0; i < worldCoords.size(); i++)
-	//{
-	//	for(size_t j = 0; j < worldCoords[i].size(); j++)
-	//	{
-	//		cv::Point3f currentWorld = worldCoords[i][j];
-	//		cv::Point2f currImg = pointsPerEllipse[i][j];
+	cv::Mat vis;
+	cv::cvtColor(grey, vis, CV_GRAY2BGR);
+	for(size_t i = 0; i < worldCoords.size(); i++)
+	{
+		for(size_t j = 0; j < worldCoords[i].size(); j++)
+		{
+			cv::Point3f currentWorld = worldCoords[i][j];
+			cv::Point2f currImg = pointsPerEllipse[i][j];
 
-	//		cv::Mat currentWorldMat = cv::Mat::zeros(4, 1, CV_32F);
-	//		currentWorldMat.at<float>(0, 0) = currentWorld.x; currentWorldMat.at<float>(1, 0) = currentWorld.y; currentWorldMat.at<float>(2, 0) = currentWorld.z; currentWorldMat.at<float>(3, 0) = 1;
-	//		cv::Mat homImg = proj*currentWorldMat;
+			cv::Mat currentWorldMat = cv::Mat::zeros(4, 1, CV_32F);
+			currentWorldMat.at<float>(0, 0) = currentWorld.x; currentWorldMat.at<float>(1, 0) = currentWorld.y; currentWorldMat.at<float>(2, 0) = currentWorld.z; currentWorldMat.at<float>(3, 0) = 1;
+			cv::Mat homImg = proj*currentWorldMat;
 
-	//		float w = homImg.at<float>(2, 0);
-	//		cv::Point2f reprojected = cv::Point2f(homImg.at<float>(0, 0) / w, homImg.at<float>(1, 0) / w);
+			float w = homImg.at<float>(2, 0);
+			cv::Point2f reprojected = cv::Point2f(homImg.at<float>(0, 0) / w, homImg.at<float>(1, 0) / w);
 
-	//		cv::circle(vis, currImg, 4, cv::Scalar(0, 255, 0), -1);
-	//		cv::circle(vis, reprojected, 4, cv::Scalar(0, 0, 255), -1);
-	//	}
-	//}
-	//cv::imshow("vis", vis);
+			cv::circle(vis, currImg, 2, cv::Scalar(0, 255, 0), -1);
+			cv::circle(vis, reprojected, 2, cv::Scalar(0, 0, 255), -1);
+		}
+	}
+	cv::imshow("repro projection", vis);
+
+
+
+	std::vector<std::vector<cv::Point2f>> rerveseReprojects = Transformation::getReverseReprojects(cone, proj);
+	cv::cvtColor(grey, vis, CV_GRAY2BGR);
+	for(size_t i = 0; i < worldCoords.size(); i++)
+	{
+		for(size_t j = 0; j < worldCoords[i].size(); j++)
+		{
+			cv::Point2f currImg = pointsPerEllipse[i][j];
+			cv::Point2f currReproject = rerveseReprojects[i][j];
+
+			cv::circle(vis, currImg, 2, cv::Scalar(0, 255, 0), -1);
+			cv::circle(vis, currReproject, 2, cv::Scalar(0, 0, 255), -1);
+		}
+	}
+	cv::imshow("repro reverseWarp", vis);
+
+
+	std::vector<std::vector<cv::Point2f>> rerveseReprojects2 = Transformation::getForwardReprojects(cone, pointsPerEllipse);
+	cv::cvtColor(grey, vis, CV_GRAY2BGR);
+	for(size_t i = 0; i < worldCoords.size(); i++)
+	{
+		for(size_t j = 0; j < worldCoords[i].size(); j++)
+		{
+			cv::Point2f currImg = pointsPerEllipse[i][j];
+			cv::Point2f currReproject = rerveseReprojects2[i][j];
+
+			cv::circle(vis, currImg, 2, cv::Scalar(0, 255, 0), -1);
+			cv::circle(vis, currReproject, 2, cv::Scalar(0, 0, 255), -1);
+		}
+	}
+	cv::imshow("repro forwardWarp", vis);
 
 	cv::Mat mapx, mapy;
 	bool isReverse = false;
@@ -127,5 +161,8 @@ ConeUnfolding::ConeUnfolding()
 
 
 	cv::imshow("grey warped", greyWarped);
+
+
+
 
 }
