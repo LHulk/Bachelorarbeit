@@ -206,15 +206,69 @@ Aus dem vorherigen Kapitel wissen wir nun für jedes Sample den Ort auf dem Kege
 
 Ohne Beschränkung der Allgemeinheit, seien die Ellipsen $i = 0,\dotsc,n - 1$ aufsteigend nach ihrer "`Größe"'\footnote{Etwas formaler, könnte man die Ellipsen hier nach ihrem Flächeninhalt sortieren. Für Ellipsen $E_0(x_0,y_0,a_0, b_0, \theta_0)$ und $E_1(x_1,y_1,a_1, b_1,\theta_1)$ gilt $E_0 \leq E_1$ g.d.w. $\pi\cdot a_0 \cdot b_0 \leq \pi \cdot a_1 \cdot b_1$} sortiert, so wie es das Verfahren in \ref{s:ellipseDetection} beschreibt.
 Außerdem seien die Liniensegmente $j = 0,\dotsc,m - 1$ aufsteigend nach Winkel mit der $X$-Achse, wie in \ref{s:pointMapping} beschrieben, sortiert. 
-Eine Sample kann also eindeutig durch ein Tupel $(i,j) \in [0,n-1]\times [0,m-1]$ identifiziert werden und $W(i,j)$ bezeichne seine Koordinaten im Weltkoordinatensystem. 
+Eine Sample kann also eindeutig durch ein Tupel $(i,j) \in [0,n-1]\times [0,m-1]$ identifiziert werden und $(x_{ij},y_{ij},z_{ij})$ bezeichne seine Koordinaten im Weltkoordinatensystem. 
+
+Analog zur parametrischen Darstellung von Kegelstümpfen (Gleichung \ref{eq:paramFrustum}) in Kapitel \ref{s:cone} ergibt sich:
+
+\begin{equation*}
+\begin{aligned}
+x_{ij} &= r_i~cos \theta_j \\
+y_{ij} &= h_i\\
+z_{ij} &= r_i~sin \theta_j
+\end{aligned}
+\end{equation*}
+$\forall (i,j) \in [0,n-1]\times [0,m-1]$ mit 
+\begin{equation*}
+\begin{aligned}
+r_i &= r + \frac{i}{n}\cdot(R - r) \quad&\forall i\in[0,n-1]\\
+h_i &= \frac{i}{n}\cdot\Delta H &\forall i\in[0,n-1]\\
+\theta_j &= \frac{j}{m-1} \cdot  2\pi  &\forall j\in[0,m-1]
+\end{aligned}
+\end{equation*}
 
 \section{Entfaltung}
-\subsection{Vorwärts}
+Die eigentliche Entfaltung des Kegels, mit zwei unterschiedlichen Ansätzen realisiert werden. 
+Die erste Möglichkeit ist die \textit{Vorwärtsentfaltung}. Hierbei wird für jedes Pixel auf dem Kegelbild eine 3D-Koordinate durch geeignete Interpolation bestimmt und dann auf die Mantelfläche abgebildet. Beim zweiten Ansatz der  \textit{Rückwärtsentfaltung} wird ein Punkt von der Mantelfläche zurück auf den Kegel abgebildet und von dort mit einer Projektionsmatrix auf die Bildebene projiziert und dann interpoliert. 
+
+Im folgenden wird genauer auf beide Verfahren eingegangen, sowie deren Probleme erläutert. \todo{hier schon erläutern oder erst in späteren kapiteln?}
+
+\subsection{Vorwärtsentfaltung}
+Bei der \textit{Vorwärtsentfaltung} muss wie oben erwähnt zu jedem Pixel die zugehörige 3D Koordinate im Weltkoordinatensystem berechnet werden. Da bisher jedoch nur die Postionen der Samples bekannt sind muss hier 
+
+Zunächst betrachten wir diejenigen Pixel, die sich weder auf einer Kreislinie, noch auf einem Liniensegment befinden. Es gibt zu einem Pixel $P$ also immer vier Sample-Nachbarn $(bl, br, tr, tl)$. Diese Situation ist in Abbildung \ref{fig:radialInterpolation} illustriert. 
+
+Nachdem die vier Nachbarn bestimmt wurden, können im ersten Schritt die Abstande $d_1$ und $d_2$ zu inneren Ellipse $E_b$, respektive äußeren Ellipse $E_t$ berechnet werden. Mithilfe dieser Abständen kann nun eine \textit{Interpolationsellipse}~$E_1$ definiert werden als:
+\begin{equation*}
+	E_{int} = \left(\frac{d_1}{d_1 + d_2}\right) \cdot E_t + \left(\frac{d_2}{d_1 + d_2}\right) E_b
+\end{equation*}
+
+Wo eine Multiplikation mit einem Skalar alle Charakteristika einer Ellipse skaliert\footnote{der Drehwinkel $\theta$ wird hierbei anschließend$\mod 2\pi$ gerechnet}, und eine Addition elementweise addiert. Im nächsten Schritt wird der Schnittpunkt $L$ mit dem Liniensegment $\overline{bltl}$, sowie der Schnittpunkt $R$ mit dem Liniensegment $\overline{brtr}$ bestimmt. 
+
+Da sich $tl$, $L$ und $bl$ nun auf einem gemeinsamen Liniensegment befinden, kann bezüglich der Weltkoordinaten linear interpoliert werden. Analoges gilt für $R$. 
+
+Die drei Punkte $(L,P, R)$ befinden sich auf der Interpolationsellipse und somit können die  Winkel $(\phi_L, \phi_P, \phi_R)$ bezüglich des Ellipsenkoordinatensystems bestimmt werden. 
+
+
+Die auf Liniensegmenten befindlichen Punkte werden dabei einfach linear interpoliert. Die Pixel, die sich auf Kreislinien befinden werden über Winkel interpoliert. 
+
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=.6]{images/radialInterpolation.eps}
 	\caption{Interpolation}
-	\label{fig:Interpolation}
+	\label{fig:radialInterpolation}
 \end{figure}
-\subsection{Rückwärts}
+
+
+
+Probleme: bei der skizze geht ein punkt auf der kreislinie $E_t$ mit der y-koordinate niemals über die y koordinate von tl und tr hinaus.
+
+bei der transfomrtaiton entstehen unvermeidbare löcher.
+
+
+
+
+
+
+
+\subsection{Rückwärtsentfaltung}
 Projektionsmatrix bestimmen

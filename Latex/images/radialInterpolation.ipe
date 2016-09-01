@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70107" creator="Ipe 7.2.5">
-<info created="D:20160830131802" modified="D:20160830132804"/>
+<info created="D:20160830131802" modified="D:20160901191956"/>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
 <path stroke="sym-stroke" fill="sym-stroke" pen="sym-pen">
@@ -220,13 +220,13 @@ h
 <dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
 <dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
 <textsize name="large" value="\large"/>
+<textsize name="small" value="\small"/>
+<textsize name="tiny" value="\tiny"/>
 <textsize name="Large" value="\Large"/>
 <textsize name="LARGE" value="\LARGE"/>
 <textsize name="huge" value="\huge"/>
 <textsize name="Huge" value="\Huge"/>
-<textsize name="small" value="\small"/>
 <textsize name="footnote" value="\footnotesize"/>
-<textsize name="tiny" value="\tiny"/>
 <textstyle name="center" begin="\begin{center}" end="\end{center}"/>
 <textstyle name="itemize" begin="\begin{itemize}" end="\end{itemize}"/>
 <textstyle name="item" begin="\begin{itemize}\item{}" end="\end{itemize}"/>
@@ -369,5 +369,8 @@ h
 </path>
 <text matrix="1 0 0 1 1.07732 4.03994" transformations="translations" pos="344.998 686.697" stroke="black" type="label" width="9.655" height="6.923" depth="1.49" valign="baseline">$d_1$</text>
 <text matrix="1 0 0 1 1.07732 -2.15463" transformations="translations" pos="352.808 768.303" stroke="black" type="label" width="9.655" height="6.923" depth="1.49" valign="baseline">$d_2$</text>
+<text matrix="0.980926 0.194384 -0.194384 0.980926 170.488 -19.9238" pos="182.654 790.501" stroke="black" type="label" width="10.862" height="6.812" depth="1.49" valign="baseline">$E_t$</text>
+<text matrix="0.978445 0.206507 -0.206507 0.978445 160.294 -26.9474" pos="206.719 720.478" stroke="black" type="label" width="18.606" height="6.812" depth="1.49" valign="baseline">$E_{int}$</text>
+<text matrix="0.985046 0.17229 -0.17229 0.985046 117.628 -31.676" pos="230.93 653.645" stroke="black" type="label" width="11.356" height="6.812" depth="1.49" valign="baseline">$E_b$</text>
 </page>
 </ipe>
