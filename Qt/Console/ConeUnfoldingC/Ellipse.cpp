@@ -172,7 +172,9 @@ std::vector<Ellipse> Ellipse::detectEllipses(const cv::Mat& edgeImage)
     cv::Point currentCenter = weightedCenter;
     while(ellipses.size() < static_cast<size_t>(Config::numCircleSamples))
     {
-        std::vector<cv::Point> collisonPoints = rayCast(currentEdge, currentCenter, 200);
+		cv::Mat debug2 = cv::Mat::zeros(debug.size(), CV_8UC3);
+        std::vector<cv::Point> collisonPoints = rayCast(currentEdge, currentCenter, 200, debug2);
+
         //Ellipse e = Ellipse(cv::fitEllipse(collisonPoints));
         Ellipse e = robustEllipseFit(collisonPoints, edgeImage.size(), 7.0f, 1.5f, 200); //100 = 33 , 200 = 40 percent outlier
 
@@ -198,10 +200,11 @@ std::vector<Ellipse> Ellipse::detectEllipses(const cv::Mat& edgeImage)
 
 }
 
-std::vector<cv::Point> Ellipse::rayCast(const cv::Mat& edgeImage, cv::Point caster, int numSamples)
+std::vector<cv::Point> Ellipse::rayCast(const cv::Mat& edgeImage, cv::Point caster, int numSamples, cv::Mat& img)
 {
     cv::Mat debug = cv::Mat::zeros(edgeImage.rows, edgeImage.cols, CV_8U);
 	cv::circle(debug, caster, 5, cv::Scalar(255), -1);
+	cv::circle(img, caster, 5, cv::Scalar(0, 255, 255), -1);
 
     std::vector<cv::Point> points;
     for(int i = 0; i < numSamples; i++)
@@ -216,8 +219,7 @@ std::vector<cv::Point> Ellipse::rayCast(const cv::Mat& edgeImage, cv::Point cast
 
             if(edgeImage.at<uchar>(p) != 0)
             {
-
-                //cv::circle(sobelEdgeVis, p, 2, Scalar(0,255,255), 1);
+                cv::circle(img, p, 1, cv::Scalar(255, 255, 255), -1);
                 debug.at<uchar>(p) = 255;
                 points.push_back(p);
                 break; //break at first hit
@@ -254,7 +256,7 @@ Ellipse Ellipse::robustEllipseFit(const std::vector<cv::Point>& points, cv::Size
 
         std::mt19937 generator(random_dev());
         std::shuffle(shuffledPoints.begin(), shuffledPoints.end(), generator);
-        std::vector<cv::Point> ellipsePoints = std::vector<cv::Point>(shuffledPoints.begin(), shuffledPoints.begin() + 5);
+        std::vector<cv::Point> ellipsePoints = std::vector<cv::Point>(shuffledPoints.begin(), shuffledPoints.begin() + 6);
 
 
         Ellipse currentEllipse = solveEllipseEquation(ellipsePoints);

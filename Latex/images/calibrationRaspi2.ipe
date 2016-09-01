@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70107" creator="Ipe 7.2.5">
-<info created="D:20160831133848" modified="D:20160831133848"/>
+<info created="D:20160831133848" modified="D:20160901150822"/>
 <bitmap id="1" width="1719" height="1329" length="1152388" ColorSpace="DeviceGray" Filter="FlateDecode" BitsPerComponent="8" encoding="base64">
 eNp8vQdXXGe2LfpP3hjndrdNpqhIhioykpzkds65bZFzzgqkylUUUba73ee4rQCSkJAECKGE
 JLsdT3r3nntut60s+y+8Nef6Nsj93ngbaucqqE3xzT3Xmmuun3/55ZefddLlL9YOa//Dh2b5
@@ -21563,13 +21563,13 @@ h
 <dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
 <dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
 <textsize name="large" value="\large"/>
+<textsize name="small" value="\small"/>
+<textsize name="tiny" value="\tiny"/>
 <textsize name="Large" value="\Large"/>
 <textsize name="LARGE" value="\LARGE"/>
 <textsize name="huge" value="\huge"/>
 <textsize name="Huge" value="\Huge"/>
-<textsize name="small" value="\small"/>
 <textsize name="footnote" value="\footnotesize"/>
-<textsize name="tiny" value="\tiny"/>
 <textstyle name="center" begin="\begin{center}" end="\end{center}"/>
 <textstyle name="itemize" begin="\begin{itemize}" end="\end{itemize}"/>
 <textstyle name="item" begin="\begin{itemize}\item{}" end="\end{itemize}"/>
@@ -21598,6 +21598,12 @@ h
 <layer name="alpha"/>
 <view layers="alpha" active="alpha"/>
 <image layer="alpha" matrix="0.882031 0 0 0.880679 35 266.79" rect="0 190.996 595 651.004" bitmap="1"/>
+<group clip="35 434.996 m
+35 840.116 l
+559.808 840.116 l
+559.808 434.996 l
+h
+">
 <path stroke="red" fill="red" pen="ultrafat">
 34.9297 490.318 m
 85.699 487.241
@@ -21608,7 +21614,7 @@ h
 561.853 468.01
 558.776 468.01 c
 </path>
-<path stroke="red" fill="red" pen="ultrafat">
+<path matrix="1.00835 0 0 0.995451 -0.291737 2.70284" stroke="red" fill="red" pen="ultrafat">
 34.9297 594.164 m
 118.776 589.548
 214.93 584.933
@@ -21618,7 +21624,7 @@ h
 557.237 561.087
 557.237 562.625 c
 </path>
-<path stroke="red" fill="red" pen="ultrafat">
+<path matrix="1.00446 0 0 1.00665 -0.155618 -4.47833" stroke="red" fill="red" pen="ultrafat">
 34.9297 673.394 m
 58.7759 671.856
 144.161 666.471
@@ -21629,7 +21635,7 @@ h
 549.545 637.241
 558.776 636.471 c
 </path>
-<path stroke="red" fill="red" pen="ultrafat">
+<path matrix="1.00276 0 0 1.00338 -0.0922619 -2.49089" stroke="red" fill="red" pen="ultrafat">
 33.3913 736.471 m
 88.0067 732.625
 166.468 727.241
@@ -21640,47 +21646,43 @@ h
 528.776 695.702
 559.545 693.394 c
 </path>
-<path stroke="red" fill="red" pen="ultrafat">
-37.2374 787.241 m
-558.776 741.087 l
-</path>
-<path stroke="red" fill="red" pen="ultrafat">
+<path matrix="1.00102 0 0 1.01191 -0.432302 -10.0548" stroke="red" fill="red" pen="ultrafat">
 517.237 473.394 m
 421.853 844.164 l
 </path>
-<path stroke="red" fill="red" pen="ultrafat">
+<path matrix="1 0 0 1.00568 0 -4.79016" stroke="red" fill="red" pen="ultrafat">
 371.084 843.394 m
 414.161 474.933 l
 </path>
-<path stroke="red" fill="red" pen="ultrafat">
+<path matrix="1.02713 0 0 1.01124 -8.64894 -9.48216" stroke="red" fill="red" pen="ultrafat">
 318.776 843.394 m
 310.314 481.087 l
 </path>
-<path stroke="red" fill="red" pen="ultrafat">
+<path matrix="1.01029 0 0 1.00625 -2.68596 -5.25983" stroke="red" fill="red" pen="ultrafat">
 261.084 841.087 m
 201.084 484.933 l
 </path>
-<path stroke="red" fill="red" pen="ultrafat">
+<path matrix="1.01328 0 0 1.01205 -2.68091 -10.1576" stroke="red" fill="red" pen="ultrafat">
 201.853 842.625 m
 88.7759 491.087 l
 </path>
-<path stroke="red" fill="red" pen="ultrafat">
+<path matrix="1.01151 0 0 1.00716 -1.65027 -6.04148" stroke="red" fill="red" pen="ultrafat">
 143.391 843.394 m
 35.699 619.548 l
 </path>
-<path stroke="red" fill="red" pen="ultrafat">
+<path matrix="1.00752 0 0 1.00999 -0.262298 -7.71641" stroke="red" fill="red" pen="ultrafat">
 78.987 839.52 m
 34.8585 772.602 l
 </path>
-<path stroke="red" fill="red" pen="ultrafat">
+<path matrix="1.01979 0 0 1.02432 -9.71827 -19.3809" stroke="red" fill="red" pen="ultrafat">
 559.324 608.928 m
 471.75 839.698 l
 </path>
-<path stroke="red" fill="red" pen="ultrafat">
+<path matrix="1.05141 0 0 1.05391 -26.8129 -44.4132" stroke="red" fill="red" pen="ultrafat">
 517.904 839.698 m
 559.324 754.491 l
 </path>
-<path stroke="red" fill="red" pen="heavier">
+<path matrix="1.00251 0 0 1.01839 -0.175103 -15.1813" stroke="red" fill="red" pen="heavier">
 69.7042 825.553 m
 255.867 810.078
 255.412 810.533
@@ -21690,5 +21692,23 @@ h
 546.718 779.126
 558.553 778.671 c
 </path>
+<path stroke="red" pen="ultrafat">
+34.6055 785.993 m
+43.7088 785.293
+112.684 780.041
+179.208 775.489
+248.534 770.238
+315.758 764.986
+379.131 759.033
+417.295 754.482
+443.905 751.331
+506.228 746.079
+564.349 738.026 c
+</path>
+<path stroke="red" pen="heavier">
+72.2217 825.318 m
+31.0128 827.864 l
+</path>
+</group>
 </page>
 </ipe>

@@ -40,7 +40,7 @@ Dadurch dass die Geometrie des Kegels bekannt ist, kann jedem Sample nun ein Pun
 Das Muster ist also 
 
 \subsection{Anzahl der Samples}
-Die Anzahl der Samples sollte groß genug sein, um möglichst viel geometrische Informationen des Kegels zu erhalten, aber klein genug, dass eine Detektion der Samples problemlos möglich ist. Insbesondere auf dem innersten Kreis, macht sich eine zu hohe Sampleanzahl negativ bemerkbar, da der Abstand zueinander sehr klein wird, was eine Detektion erschwert. Des Weiteren sollte noch ein möglichst großer Teil der Kreislinie zu sehen bleiben, da diese für die Ellipsendetektion benötigt werden \todo{siehe später, dazu mehr später????}
+Die Anzahl der Samples sollte groß genug sein, um möglichst viel geometrische Informationen des Kegels zu erhalten, aber klein genug, dass eine Detektion der Samples problemlos möglich ist. Insbesondere auf dem innersten Kreis, macht sich eine zu hohe Sampleanzahl negativ bemerkbar, da der Abstand zueinander sehr klein wird, was eine Detektion erschwert. Des Weiteren sollte noch ein möglichst großer Teil der Kreislinie zu sehen bleiben, da diese für die Ellipsendetektion benötigt werden. \todo{siehe später, dazu mehr später????}
 
 
 \todo{warum gerade dieses muster? warum ist das so gut? wie berechnet man das muster? welche eigenschaften hat es?}
@@ -80,7 +80,8 @@ Nach der Kamerakalibrierung und entsprechender Entzerrung werden die Bildkoordin
 Filtert Farbe (schwarz), kleine Flächen werden verworfen, Kreisförmigkeit, Konvexität
 
 \section{Ellipsen-Detektion}
-Nachdem die Samplepositionen bestimmt wurden, muss für jeden Sample entschieden werden, auf welcher der Kreislinien er liegt. Da die Kreise, bedingt durch perspektivische Verzerrung, zu  Ellipsen werden, wird eine Verfahren 
+\label{s:ellipseDetection}
+Nachdem die Sample-Positionen bestimmt wurden, muss für jeden Sample entschieden werden, auf welcher der Kreislinien er liegt. Da die Kreise, bedingt durch perspektivische Verzerrung, zu  Ellipsen werden, wird eine Verfahren 
 benötigt, dass Ellipsen erkennt. 
 
 Zunächst werden die Kanten mit Hilfe von Canny (\ref{s:canny}) detektiert (siehe Abbildung \ref{fig:canny}). 
@@ -89,13 +90,13 @@ Zunächst werden die Kanten mit Hilfe von Canny (\ref{s:canny}) detektiert (sieh
 	\centering
 	\begin{subfigure}{.5\textwidth}
 		\centering
-		\includegraphics[scale=.2]{images/grey.png}
+		\includegraphics[width=.9\textwidth]{images/grey.png}
 		\caption{Grauwertbild}
 		\label{fig:beforeCanny}
 	\end{subfigure}%
 	\begin{subfigure}{.5\textwidth}
 		\centering
-		\includegraphics[scale=.2]{images/canny.png}
+		\includegraphics[width=.9\textwidth]{images/canny.png}
 		\caption{Canny-Kanten}
 		\label{fig:afterCanny}
 	\end{subfigure}
@@ -108,9 +109,6 @@ Wir benutzen dafür Hough-Transformationen, um Linien im Canny-Bild zu \todo{hie
 Es werden anschließend Schnittpunkte aller Liniensegmente bestimmt. Bedingt durch Ungenauigkeiten beim Ausschneiden und Zusammenlegen im Kegel, schneiden sich nicht alle Liniensegmente in einem Punkt.
 Darüber hinaus werden, auf Grund der Liniendicke auf dem Kalibrierungsmuster, durch Canny viele Linien doppelt erkannt. Auch ein inhomogener Hintergrund, erschwert die Schnittpunktsbestimmung. Um also möglichst robust einen Kandidaten auszuwählen, wird zuerst der Median der $x$-Koordinaten der Schnittpunkte und dann der Median der $y$-Koordinaten bestimmt. Die erhaltenen Koordinaten bilden den Schnittpunkt (siehe Abbildung \ref{fig:houghLines}).
 
-Von diesem Schnittpunkt aus werden, in einer vorher definierte Anzahl, gleichmäßig, in alle Richtungen Strahlen ausgesendet. \todo{Komma-Setzung}. 
-Trifft ein Strahl ein weißes Pixel, wird dessen Position gekennzeichnet, trifft er den Rand des Bildes, wird er ignoriert. 
-
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=.25]{images/houghLines.png}
@@ -118,17 +116,97 @@ Trifft ein Strahl ein weißes Pixel, wird dessen Position gekennzeichnet, trifft
 	\label{fig:houghLines}
 \end{figure}
 
-warum sollte das robust sein? siehe raycast
-ransac anzahl iterationen: großzügig da laufzeit unwichtig
+Von diesem Schnittpunkt aus werden, in einer vorher definierte Anzahl, gleichmäßig, in alle Richtungen Strahlen ausgesendet. \todo{Komma-Setzung}. 
+Trifft ein Strahl ein weißes Pixel, wird dessen Position gekennzeichnet, trifft er den Rand des Bildes, wird er ignoriert. In Abbildung \ref{fig:rayCastWOE} sind die getroffenen weißen Pixel und der zugehörige Aussendepunkt eingezeichnet. 
+
+\begin{figure}[!htb]
+	\centering
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.9\textwidth]{images/rayCast0.png}
+		\caption{bestimme Pixel-Positionen}
+		\label{fig:rayCastWOE}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.9\textwidth]{images/rayCast0Ellipse.png}
+		\caption{bestimme Ellipse (grün)}
+		\label{fig:rayCastWE}
+	\end{subfigure}
+	\caption{Ellipsendetektion: bestimme Pixel-Positionen (weiß), Aussendepunkt (gelb)}
+	\label{fig:rayCast}
+\end{figure}
+
+Mit Hilfe der Postionen der weißen Pixel, wird anschließend durch RANSAC (siehe Kapitel \ref{s:ransac}) eine Ellipse geschätzt. Um die, für RANSAC benötigte, Distanz zu berechnen, wird das Verfahren aus Kapitel \ref{sc:distPointEllipse} genutzt, was die exakte euklidische Distanz eines Punktes zu einer Ellipse bestimmt. Ein Verfahren wie das Verfahren der kleinsten Quadraten funktioniert hier nicht, dass die weißen Pixel bezüglich einer zu bestimmen Ellipse, Ausreißer behaftet sind. Wird zum Beispiel auf Grund schlechter Lichtverhältnisse eine Kreislinie nicht deutlich aufgenommen, kann es in dem Kantenbild (Abbildung \ref{fig:canny}) zu "`Löchern"' in den Kreislinien und folglich treffen die ausgesendeten Strahlen die nächst äußere Kreislinie (siehe Abbildung \ref{fig:rayCastR}). Da die Laufzeit nicht im Vordergrund steht, kann eine großzügige Schätzung des Fehleranteils von $\epsilon = 0.4$ mit einer gewünschten Wahrscheinlichkeit $p = 0.9999$ gewählt werden, was zu einer Mindestanzahl an Iterationen von circa $200$ führt (siehe Kapitel \ref{s:ransac}). Die letztendlich bestimmen Ellipsen sind beispielhaft in Abbildung \ref{fig:detectedEllipses} zu sehen.  
+
+
+\begin{figure}[!htb]
+	\centering
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[scale=.6]{images/rayCastRobust.png}
+		\caption{bestimme Pixel-Positionen}
+		\label{fig:rayCastRWOE}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[scale=.6]{images/rayCastRobustEllipse.png}
+		\caption{bestimme Ellipse (grün)}
+		\label{fig:rayCastRWE}
+	\end{subfigure}
+	\caption{Ellipsendetektion bei Ausreißern}
+	\label{fig:rayCastR}
+\end{figure}
+
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=.25]{images/detectedEllipses.png}
+	\caption{Ellipsen}
+	\label{fig:detectedEllipses}
+\end{figure}
 
 \newpage
 \section{Zuordnung der Punkte}
-nach winkel sortieren und dann kürzeste distanz
+\label{s:pointMapping}
+Nach der Bestimmung der Ellipsen muss jede Sample-Positionen der zugehörigen Kreislinie, sowie Liniensegment zugeordnet werden, um seine Position auf dem Kegel bestimmen zu können. 
+Zunächst wird für jeden Punkte diejenige Kreislinie ausgewählt, dessen zugehörige Ellipse die kürzeste Distanz zu ihm hat (siehe Abbildung \ref{fig:ellipseMapping}).
 
-ellipsen neuschätzen
-dann geraden durch ziehen
+Mit Hilfe dieser Zuordnung können die Ellipsen aus Kapitel \ref{s:ellipseDetection} erneut geschätzt werden. Diesmal wird das Verfahren der kleinsten Quadrate genutzt, da nur die ausreißerfreihen Samples als Messdaten dienen und wir eine optimale Lösung für alle Samples anstreben.  
+
+Um nun die Samples auch ihren Liniensegmenten zuzuordnen, wird zunächst der Mittelpunkt der Samples auf der innersten Ellipse bestimmt. Anschließend werden die Samples auf der innersten Ellipsen nach dem Winkel der Verbindungslinien zwischen Sample und Mittelpunkt mit der $X$-Achse sortiert. 
+Die restlichen Samples können nicht nach dem gleichen Schema sortiert werden, da der bestimme Mittelpunkt nicht der genaue Schnittpunkt aller Liniensegmente ist. Der Winkel zwischen der Samples auf einem Liniensegment und des bestimmen Mittelpunkts ist also nicht identisch. 
+Stattdessen wird für jedes Sample  auf den darauffolgenden Ellipsen, das Sample auf der vorherigen Ellipse mit der kürzesten Distanz bestimmt. 
+
+Die Samples können nun entsprechend sortiert werden. Die zugeordneten Liniensegmente sind exemplarisch in Abbildung \ref{fig:lineMapping} zu sehen. 
+
+
+\begin{figure}[!htb]
+	\centering
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.9\textwidth]{images/ellipseMapping.png}
+		\caption{Zuordnung von Punkten zu Ellipsen}
+		\label{fig:ellipseMapping}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.9\textwidth]{images/lineMapping.png}
+		\caption{Zuordnung von Punkten zu Liniensegmenten}
+		\label{fig:lineMapping}
+	\end{subfigure}
+	\caption{Zuordnung von Punkten zu Ellipsen (links) und Liniensegmenten (rechts)}
+	\label{fig:rayCastR}
+\end{figure}
+
 
 \section{Weltkoordinaten bestimmen}
+
+Aus dem vorherigen Kapitel wissen wir nun für jedes Sample den Ort auf dem Kegel. Wir können die 3D-Koordinaten also folgendermaßen angeben:
+
+Ohne Beschränkung der Allgemeinheit, seien die Ellipsen $i = 0,\dotsc,n - 1$ aufsteigend nach ihrer "`Größe"'\footnote{Etwas formaler, könnte man die Ellipsen hier nach ihrem Flächeninhalt sortieren. Für Ellipsen $E_0(x_0,y_0,a_0, b_0, \theta_0)$ und $E_1(x_1,y_1,a_1, b_1,\theta_1)$ gilt $E_0 \leq E_1$ g.d.w. $\pi\cdot a_0 \cdot b_0 \leq \pi \cdot a_1 \cdot b_1$} sortiert, so wie es das Verfahren in \ref{s:ellipseDetection} beschreibt.
+Außerdem seien die Liniensegmente $j = 0,\dotsc,m - 1$ aufsteigend nach Winkel mit der $X$-Achse, wie in \ref{s:pointMapping} beschrieben, sortiert. 
+Eine Sample kann also eindeutig durch ein Tupel $(i,j) \in [0,n-1]\times [0,m-1]$ identifiziert werden und $W(i,j)$ bezeichne seine Koordinaten im Weltkoordinatensystem. 
 
 \section{Entfaltung}
 \subsection{Vorwärts}

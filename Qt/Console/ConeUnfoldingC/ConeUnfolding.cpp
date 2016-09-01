@@ -39,7 +39,6 @@ ConeUnfolding::ConeUnfolding()
 	EdgeDetection::canny(grey, canny, orientation, Config::cannyLow, Config::cannyHigh, Config::cannyKernel, Config::cannySigma);
 
 	cv::imshow("canny", canny);
-	//cv::imwrite("canny.png", canny);
 
 
 	std::vector<cv::Point2f> keyPoints;
@@ -48,10 +47,31 @@ ConeUnfolding::ConeUnfolding()
 	//TODO: HERE CHECK IF POINTS HAVE BEEN DETECTED
 
 	std::vector<Ellipse> ellipses = Ellipse::detectEllipses(canny);
-
-
 	std::vector<std::vector<cv::Point2f>> pointsPerEllipse = Ellipse::getEllipsePointMappings(ellipses, keyPoints);
 	Misc::sort(pointsPerEllipse, ellipses);
+
+	/*cv::Mat debug = cv::Mat::zeros(grey.size(), CV_8UC3);
+
+	int i = 0;
+	for(const Ellipse& e : ellipses)
+	{
+		float currentStep = (1.0f * i++) / (ellipses.size() - 1);
+		cv::ellipse(debug, e.getEllipseAsRotatedRect(), cv::Scalar(currentStep * 150, 255, 255), 2);
+	}
+
+	i = 0;
+	for(const std::vector<cv::Point2f>& ptList : pointsPerEllipse)
+	{
+		float currentStep = (1.0f * i++) / (ellipses.size() - 1);
+		for(const cv::Point2f& pt : ptList)
+			cv::circle(debug, pt, 10, cv::Scalar(currentStep * 150, 255, 255), -1);
+	}
+
+	cv::cvtColor(debug, debug, CV_HSV2BGR);
+	cv::imshow("debug ellipses", debug);*/
+
+
+	
 
 	ellipses = Ellipse::reestimateEllipses(pointsPerEllipse, ellipses);
 	std::vector<Line> lines = Line::fitLines(pointsPerEllipse);

@@ -71,7 +71,7 @@ public:
     double getTheta() const;
 
 private:
-    static std::vector<cv::Point> rayCast(const cv::Mat& edgeImage, cv::Point caster, int numSamples);
+    static std::vector<cv::Point> rayCast(const cv::Mat& edgeImage, cv::Point caster, int numSamples, cv::Mat& img);
     static Ellipse robustEllipseFit(const std::vector<cv::Point> &points, cv::Size szImg, double dist, float maxAtoBRatio, size_t numSteps);
     static Ellipse solveEllipseEquation(const std::vector<cv::Point> &points);
     static bool checkBoundaries(const Ellipse& e, const cv::Size& sz, float maxAToBRatio);
