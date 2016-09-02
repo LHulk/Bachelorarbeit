@@ -5,6 +5,8 @@ analyse?
 projektionsfehler bei dem einen
 anzahl löcher bei dem anderen
 
+prjektionsfehler ohne kalib ist wesentlich größer, da die implizitie intrinsiche kalib durch die svd keine verzerrung entfernt
+
 kann man untersucne wie sich die intrinsische kalibrierung auswirkt?
 
 datenerhebung oder so was? laufzeit?
@@ -22,3 +24,13 @@ Raspberry Pi 2 Model B:
 	\item GCC-4.??? Release
 	\item Opencv???, Qt????
 \end{itemize}
+
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=\textwidth]{images/reprojectionErrorReverse.eps}
+	\caption{Einfluss der intrinischen Kalibrierung}
+	\label{fig:influenceOfCalib}
+\end{figure}
+
+reprojection fehler unter verschiedenen Sichtwinkeln, Lichtverhältnissen?

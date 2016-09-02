@@ -204,7 +204,9 @@ void Transformation::inverseRemap(const cv::Mat& src, cv::Mat& dst, const cv::Ma
 		{
 			cv::Point roundedPt = cv::Point(Misc::round(remapX.at<float>(r,c)), Misc::round(remapY.at<float>(r,c)));
 			if(roundedPt.x > 0 && roundedPt.x < width && roundedPt.y > 0 && roundedPt.y < height)
-				dst.at<uchar>(roundedPt) = src.at<uchar>(r, c);
+			{
+				dst.at<uchar>(roundedPt) = (src.at<uchar>(r, c) == 0) ? 1 : src.at<uchar>(r, c);
+			}
 		}
 	}
 }
@@ -271,21 +273,10 @@ void Transformation::getReverseWarpMaps(const Cone& cone, cv::Mat &remapX, cv::M
 	int height = static_cast<int>(std::ceil(S + S*std::cos(Misc::degToRad(180 - maxAngle))));
 
 	cv::Point origin = cv::Point(width, Misc::round(std::ceil(height - S)));
-	cv::Point2f origin2f = cv::Point2f(static_cast<float>(origin.x), static_cast<float>(origin.y));
 
-	cv::Mat mask = cv::Mat::zeros(height, width, CV_8U);
-	cv::Mat resImg = cv::Mat::zeros(height, width, CV_8U);
+	cv::Mat mask = generateLateralMask(cone);
 	cv::Mat mapx = cv::Mat::zeros(height, width, CV_32F);
 	cv::Mat mapy = cv::Mat::zeros(height, width, CV_32F);
-
-	cv::ellipse(mask, origin, cv::Size2d(S, S), 0, 90, Misc::round(90 + maxAngle), cv::Scalar(255), 3);
-	cv::ellipse(mask, origin, cv::Size2d(s, s), 0, 90, 90 + maxAngle, cv::Scalar(255), 3);
-	cv::line(mask, cv::Point(origin.x, Misc::round(origin.y + s)), cv::Point(origin.x, Misc::round(origin.y + S)), cv::Scalar(255), 3);
-
-	float angleStd = static_cast<float>(Misc::degToRad((90 + maxAngle) - 0.5)); //0.5 for rounding errors
-	cv::line(mask, origin2f + s *cv::Point2f(std::cos(angleStd), std::sin(angleStd)), origin2f + S * cv::Point2f(std::cos(angleStd), std::sin(angleStd)), cv::Scalar(255), 3);
-
-	cv::floodFill(mask, origin2f + S / 2 * cv::Point2f(-1, -1), cv::Scalar(255), nullptr, cv::Scalar(10), cv::Scalar(10));
 
 	//std::vector<cv::Point3f> test;
 	//std::vector<cv::Point2f> test2;
@@ -332,7 +323,7 @@ void Transformation::getReverseWarpMaps(const Cone& cone, cv::Mat &remapX, cv::M
 std::vector<std::vector<cv::Point2f>> Transformation::getReverseReprojects(const Cone& cone, const cv::Mat& proj)
 {
 	std::vector<std::vector<cv::Point2f>> res;
-	std::vector<std::vector<cv::Point2f>> laterals = cone.calculateLateralSamples();; //res[0][j] = innermost ellipse 
+	std::vector<std::vector<cv::Point2f>> laterals = cone.calculateLateralSamples(); //res[0][j] = innermost ellipse
 
 	for(auto ptList : laterals)
 	{
@@ -353,6 +344,83 @@ std::vector<std::vector<cv::Point2f>> Transformation::getReverseReprojects(const
 		res.push_back(currVec);
 	}
 	return res;
+}
+
+
+cv::Mat Transformation::generateLateralMask(const Cone& cone)
+{
+	double S = cone.S();
+	double s = cone.s();
+	double maxAngle = Misc::radToDeg(cone.maxAngle());
+
+	double scale = (1 / S) * Config::resSlantHeight;
+	S *= scale;
+	s *= scale;
+
+	int width = static_cast<int>(std::ceil(S));
+	int height = static_cast<int>(std::ceil(S + S*std::cos(Misc::degToRad(180 - maxAngle))));
+
+	cv::Point origin = cv::Point(width, Misc::round(std::ceil(height - S)));
+	cv::Point2f origin2f = cv::Point2f(static_cast<float>(origin.x), static_cast<float>(origin.y));
+
+	cv::Mat mask = cv::Mat::zeros(height, width, CV_8U);
+
+	cv::ellipse(mask, origin, cv::Size2d(S, S), 0, 90, Misc::round(90 + maxAngle), cv::Scalar(255), 3);
+	cv::ellipse(mask, origin, cv::Size2d(s, s), 0, 90, 90 + maxAngle, cv::Scalar(255), 3);
+	cv::line(mask, cv::Point(origin.x, Misc::round(origin.y + s)), cv::Point(origin.x, Misc::round(origin.y + S)), cv::Scalar(255), 3);
+
+	float angleStd = static_cast<float>(Misc::degToRad((90 + maxAngle) - 0.5)); //0.5 for rounding errors
+	cv::line(mask, origin2f + s *cv::Point2f(std::cos(angleStd), std::sin(angleStd)), origin2f + S * cv::Point2f(std::cos(angleStd), std::sin(angleStd)), cv::Scalar(255), 3);
+
+	cv::floodFill(mask, origin2f + S / 2 * cv::Point2f(-1, -1), cv::Scalar(255), nullptr, cv::Scalar(10), cv::Scalar(10));
+
+	return mask;
+
+}
+
+
+
+std::vector<cv::Point2f> Transformation::getReprojectionError(const Cone& cone, const cv::Mat& projection)
+{
+	std::vector<std::vector<cv::Point3f>> worldCoords = cone.sampleCoordsWorld();
+	std::vector<std::vector<cv::Point2f>> pointsPerEllipse = cone.sampleCoordsImage();
+
+	std::vector<cv::Point2f> deviations;
+	for(size_t i = 0; i < worldCoords.size(); i++)
+	{
+		for(size_t j = 0; j < worldCoords[i].size(); j++)
+		{
+			cv::Point3f currentWorld = worldCoords[i][j];
+			cv::Point2f currImg = pointsPerEllipse[i][j];
+
+			cv::Mat currentWorldMat = cv::Mat::zeros(4, 1, CV_32F);
+			currentWorldMat.at<float>(0, 0) = currentWorld.x; currentWorldMat.at<float>(1, 0) = currentWorld.y; currentWorldMat.at<float>(2, 0) = currentWorld.z; currentWorldMat.at<float>(3, 0) = 1;
+			cv::Mat homImg1 = projection * currentWorldMat;
+
+			float w1 = homImg1.at<float>(2, 0);
+			cv::Point2f reprojected1 = cv::Point2f(homImg1.at<float>(0, 0) / w1, homImg1.at<float>(1, 0) / w1);
+
+			cv::Point2f diff = currImg - reprojected1;
+			deviations.push_back(diff);
+		}
+	}
+
+	return deviations;
+}
+
+
+size_t Transformation::countHoles(const cv::Mat& unfolded, const Cone& cone)
+{
+	cv::Mat mask = generateLateralMask(cone);
+
+	size_t counter = 0;
+	for(int i = 0; i < mask.rows; i++)
+		for(int j = 0; j< mask.cols; j++)
+			if(mask.at<uchar>(i,j) != 0 && unfolded.at<uchar>(i,j) == 0)
+				counter++;
+
+
+	return counter;
 }
 
 

@@ -107,7 +107,7 @@ ConeUnfolding::ConeUnfolding()
 
 	cv::Mat proj = Transformation::getProjectiveMatrix(cone);
 
-	cv::Mat vis;
+	/*cv::Mat vis;
 	cv::cvtColor(grey, vis, CV_GRAY2BGR);
 	for(size_t i = 0; i < worldCoords.size(); i++)
 	{
@@ -160,7 +160,7 @@ ConeUnfolding::ConeUnfolding()
 			cv::circle(vis, currReproject, 2, cv::Scalar(0, 0, 255), -1);
 		}
 	}
-	cv::imshow("repro forwardWarp", vis);
+	cv::imshow("repro forwardWarp", vis);*/
 
 	cv::Mat mapx, mapy;
 	bool isReverse = false;
