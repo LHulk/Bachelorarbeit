@@ -3,10 +3,13 @@
 static bool isDebug = true;
 
 
+#include <chrono>
+#include <ctime>
+
 ConeUnfolding::ConeUnfolding()
 {
 	//Mat grey = cv::imread("../../../img/v5_pattern/pattern2.png", CV_LOAD_IMAGE_GRAYSCALE);
-	cv::Mat grey = cv::imread("../../../img/v5_pattern/pattern3.png", CV_LOAD_IMAGE_GRAYSCALE);
+	//cv::Mat grey = cv::imread("../../../img/v5_pattern/pattern3.png", CV_LOAD_IMAGE_GRAYSCALE);
 	//cv::Mat grey = cv::imread("../../../img/v5_pattern/test.png", CV_LOAD_IMAGE_GRAYSCALE);
 	//cv::Mat grey = cv::imread("../../../img/v5_pattern/blender_perfectCenterDebug.png", CV_LOAD_IMAGE_GRAYSCALE);
 	//cv::Mat grey = cv::imread("../../../img/v5_pattern/blender_perfectCenterDebug.png", CV_LOAD_IMAGE_GRAYSCALE);
@@ -20,6 +23,44 @@ ConeUnfolding::ConeUnfolding()
 	Calibration::getCorners(calib, debug);
 	cv::imshow("corners", debug);
 	return;*/
+	cv::Mat grey = cv::imread("../../../img/rasp/30-08_17-26-20.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	std::string prefix = "../../GUI/ConsoleUnfoldingGUI/xml/";
+	for(int i = 1050; i <= 1200; i+= 50)
+	{
+		//std::cout << i << std::endl;
+
+		cv::FileStorage fs(prefix + std::to_string(i) + ".xml.gz", cv::FileStorage::READ);
+		cv::Mat camera, dist, reWX, reWY;
+		fs["cameraMatrix"] >> camera;
+		fs["distCoeffs"] >> dist;
+
+		fs["remapXWarp"] >> reWX;
+		fs["remapYWarp"] >> reWY;
+		fs.release();
+
+		cv::Mat reCX, reCY;
+		cv::initUndistortRectifyMap(camera, dist, cv::Mat(), camera, grey.size(), CV_32FC1, reCX, reCY);
+
+		std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+		for(int i = 0; i < 500; i++)
+		{
+			cv::Mat unwarpedCam;
+			cv::remap(grey, unwarpedCam, reCX, reCY, cv::INTER_CUBIC);
+
+			cv::Mat unwarpedCone;
+			cv::remap(unwarpedCam, unwarpedCone, reWX, reWY, cv::INTER_CUBIC);
+		}
+		std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
+		long long millisecs = (std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count())/500;
+		std::cout << millisecs << std::endl;
+
+
+
+	}
+
+	std::cout << "finished" << std::endl;
+	return;
 
 	cv::Mat original = grey.clone();
 
@@ -49,6 +90,9 @@ ConeUnfolding::ConeUnfolding()
 	std::vector<Ellipse> ellipses = Ellipse::detectEllipses(canny);
 	std::vector<std::vector<cv::Point2f>> pointsPerEllipse = Ellipse::getEllipsePointMappings(ellipses, keyPoints);
 	Misc::sort(pointsPerEllipse, ellipses);
+
+
+
 
 	/*cv::Mat debug = cv::Mat::zeros(grey.size(), CV_8UC3);
 
@@ -163,7 +207,7 @@ ConeUnfolding::ConeUnfolding()
 	cv::imshow("repro forwardWarp", vis);*/
 
 	cv::Mat mapx, mapy;
-	bool isReverse = false;
+	bool isReverse = true;
 	cv::Mat greyWarped;
 
 	if(isReverse)

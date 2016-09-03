@@ -438,7 +438,7 @@ void Transformation::writeToFile(std::vector<cv::Point2f> point2f, const std::st
 	}
 
 	std::ofstream file;
-	file.open(filename);
+	file.open(filename, std::ios_base::app);
 	file << x << "\n";
 	file << y << "\n";
 	file.close();

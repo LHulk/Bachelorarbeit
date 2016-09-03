@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QStringListModel>
 #include "CalibrationWizard.h"
 
 namespace Ui {
@@ -20,9 +21,17 @@ private slots:
     void on_buttonCalibrationWizard_clicked();
 	void triggeredImport(bool);
 
+	void on_ButtonLoadFiles_clicked();
+
+	void on_buttonUnfold_clicked();
+
 private:
     Ui::MainWindow *ui;
     CalibrationWizard* wizard;
+	QGraphicsScene* scene;
+
+	QStringListModel* model;
+	QStringList files;
 
 	//stored
 	cv::Mat cameraMatrix;
@@ -33,6 +42,9 @@ private:
 	bool isForward;
 	cv::Mat remapXWarp;
 	cv::Mat remapYWarp;
+
+	bool hasSettings;
+	bool hasFiles;
 };
 
 #endif // MAINWINDOW_H

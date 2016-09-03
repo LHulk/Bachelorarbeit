@@ -2,7 +2,7 @@
 
 using cv::Point;
 
-static bool isDebug = true;
+static bool isDebug = false;
 
 Line::Line(float rho, float theta)
 {

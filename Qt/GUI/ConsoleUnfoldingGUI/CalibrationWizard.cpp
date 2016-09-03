@@ -118,6 +118,7 @@ void CalibrationWizard::on_buttonStartIntrinsic_clicked()
 			objectPoints.push_back(currentobjectPoints);
 		}
 		ui->progressIntrinsic->setValue(i);
+		this->refresh();
 	}
 
 	Calibration::getIntrinsicParamters(imagePoints, objectPoints, this->cameraMatrix, this->distCoeffs, size);
@@ -164,8 +165,7 @@ void CalibrationWizard::on_buttonFindBlobs_clicked()
 	std::string fileName = fileNameConeCalib.toStdString();
 	grey = cv::imread(fileName, CV_LOAD_IMAGE_GRAYSCALE);
 
-	cv::Mat optimalNew = cv::Mat();
-	cv::initUndistortRectifyMap(this->cameraMatrix, this->distCoeffs, optimalNew, this->cameraMatrix, grey.size(), CV_32FC1, remapXCam, remapYCam);
+	cv::initUndistortRectifyMap(this->cameraMatrix, this->distCoeffs, cv::Mat(), this->cameraMatrix, grey.size(), CV_32FC1, remapXCam, remapYCam);
 
 	if(!remapXCam.empty()) //if calibration was skipped
 	{
@@ -268,6 +268,24 @@ void CalibrationWizard::on_buttonGetMappings_clicked()
 
 	cv::Mat proj = Transformation::getProjectiveMatrix(cone);
 	this->projectionMatrix = proj;
+
+	std::vector<cv::Point2f> reproj = Transformation::getReprojectionError(cone, proj);
+
+	std::string reprojx = "["; std::string reprojy = "[";
+	for(const auto& pt : reproj)
+	{
+		reprojx += std::to_string(pt.x) + ", ";
+		reprojy += std::to_string(pt.y) + ", ";
+
+	}
+	reprojx += "];"; reprojy += "];";
+	std::cout << reprojx << "\n" << reprojy << std::endl;
+
+	double avg = std::accumulate(reproj.begin(), reproj.end(), 0.0, [](double a, const cv::Point2f pt) { return a + cv::norm(pt);});
+	avg /= reproj.size();
+
+	//std::cout << avg << std::endl;
+
 
 	/*cv::Mat vis;
 	cv::cvtColor(grey, vis, CV_GRAY2BGR);

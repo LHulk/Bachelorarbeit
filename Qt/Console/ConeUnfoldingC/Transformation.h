@@ -34,11 +34,13 @@ public:
 
 	static std::vector<cv::Point2f> getReprojectionError(const Cone& cone, const cv::Mat& projection);
 	static size_t countHoles(const cv::Mat& unfolded, const Cone& cone);
+
+	static void writeToFile(std::vector<cv::Point2f> point2f, const std::string& filename);
+	static void writeToFile(std::vector<cv::Point3f> point3f, const std::string& filename);
 private:
 	static void fillSegments(cv::Mat& img, const std::vector<Ellipse>& ellipses, const std::vector<Line>& lines, const std::vector <std::vector<cv::Point2f>>& pointsPerEllipse);
 	static cv::Mat generateLateralMask(const Cone& cone);
-	static void writeToFile(std::vector<cv::Point2f> point2f, const std::string& filename);
-	static void writeToFile(std::vector<cv::Point3f> point3f, const std::string& filename);
+
 };
 
 
