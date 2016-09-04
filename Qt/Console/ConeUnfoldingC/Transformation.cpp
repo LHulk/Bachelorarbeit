@@ -122,8 +122,11 @@ void Transformation::getForwardWarpMaps(const Cone& cone, cv::Mat& remapX, cv::M
 	mapx.at<float>(0, 0) = static_cast<float>(width);
 	mapy.at<float>(0, 0) = static_cast<float>(height);
 
-	std::vector<cv::Point2f> lateralDebug;
-	std::vector<cv::Point3f> coneDebug;
+	cv::Mat calculated = cv::Mat::zeros(1 / scaleImg * segments.rows, 1 / scaleImg * segments.cols, CV_64FC2);
+	cv::Mat calculatedMask = cv::Mat::zeros(1 / scaleImg * segments.rows, 1 / scaleImg * segments.cols, CV_8U);
+
+	//std::vector<cv::Point2f> lateralDebug;
+	//std::vector<cv::Point3f> coneDebug;
 	for(int r = 0; r < segments.rows; r += 1)
 	{
 		for(int c = 0; c < segments.cols; c += 1)
@@ -132,18 +135,30 @@ void Transformation::getForwardWarpMaps(const Cone& cone, cv::Mat& remapX, cv::M
 			if(val != 0)
 			{
 				cv::Point pt = 1 / scaleImg * cv::Point(c, r);
-
-				//cv::Point3f res = interPolateRadial(pt, val, cone.ellipses(), cone.lines(), cone.sampleCoordsImage(), cone.sampleCoordsWorld());
-				cv::Point3f res = cone.interPolateRadial(pt, val);
-				//coneDebug.push_back(res);
-
-				cv::Point2d lateral = scaleSlant * cone.coneCoordinatesToLateral(res);
-				cv::Point2d rounded = lateral + cv::Point2d(origin.x, origin.y);
-				//lateralDebug.push_back(lateral);
-				if(rounded.x > 0 && rounded.y > 0 && rounded.x < width && rounded.y < height)
+				cv::Point2d lateral;
+				if(calculatedMask.at<uchar>(pt) != 0)
 				{
-					mapx.at<float>(r,c) = static_cast<float>(rounded.x);
-					mapy.at<float>(r,c) = static_cast<float>(rounded.y);
+					cv::Vec2d val = calculated.at<cv::Vec2d>(pt);
+					lateral.x = val(0);
+					lateral.y = val(1);
+				}
+				else
+				{
+					cv::Point3f res = cone.interPolateRadial(pt, val);
+					//coneDebug.push_back(res);
+
+					lateral = scaleSlant * cone.coneCoordinatesToLateral(res);
+					lateral = lateral + cv::Point2d(origin.x, origin.y);
+					//lateralDebug.push_back(lateral);
+
+					calculatedMask.at<uchar>(pt) = 255;
+					calculated.at<cv::Vec2d>(pt) = cv::Vec2d(lateral.x, lateral.y);
+				}		
+
+				if(lateral.x > 0 && lateral.y > 0 && lateral.x < width && lateral.y < height)
+				{
+					mapx.at<float>(r, c) = static_cast<float>(lateral.x);
+					mapy.at<float>(r, c) = static_cast<float>(lateral.y);
 					//uchar val = img.at<uchar>(r,c);
 					//debug.at<uchar>(rounded) = val;
 					//locate_point(resImg, subdiv, lateral, cv::Scalar(0,0,255));

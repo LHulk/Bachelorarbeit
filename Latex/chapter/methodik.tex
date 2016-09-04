@@ -76,8 +76,26 @@ Bedingt durch die Wahl einer Weitwinkelkamera, enthält die Linse der Kamera ein
 \section{Detektion der Samples} \todo{Umbennenen}
 
 Nach der Kamerakalibrierung und entsprechender Entzerrung werden die Bildkoordinaten der Samples bestimmt. Dazu ist wird ein Blob-Detektor \ref{s:blob} benutzt. Um die Samples korrekt von den Kreislinien, sowie den Liniensegmenten trennen zu können, ist es wichtig dass die Umgebung eines Samples frei ist. \todo{Formulierung}.
-
 Filtert Farbe (schwarz), kleine Flächen werden verworfen, Kreisförmigkeit, Konvexität
+
+\begin{figure}[!htb]
+	\centering
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.9\textwidth]{images/coneRasp.jpg}
+		\caption{Grauwertbild}
+		\label{fig:beforeCanny}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.9\textwidth]{images/coneRaspDetectedDots.png}
+		\caption{Canny-Kanten}
+		\label{fig:afterCanny}
+	\end{subfigure}
+	\caption{Canny-Kantendetektion auf Grauwertbild}
+	\label{fig:canny}
+\end{figure}
+
 
 \section{Ellipsen-Detektion}
 \label{s:ellipseDetection}
@@ -162,7 +180,7 @@ Mit Hilfe der Postionen der weißen Pixel, wird anschließend durch RANSAC (sieh
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=.25]{images/detectedEllipses.png}
-	\caption{Ellipsen}
+	\caption{detektierte Ellipsen}
 	\label{fig:detectedEllipses}
 \end{figure}
 
@@ -196,7 +214,7 @@ Die Samples können nun entsprechend sortiert werden. Die zugeordneten Linienseg
 		\label{fig:lineMapping}
 	\end{subfigure}
 	\caption{Zuordnung von Punkten zu Ellipsen (links) und Liniensegmenten (rechts)}
-	\label{fig:rayCastR}
+	\label{fig:mapping}
 \end{figure}
 
 
@@ -259,6 +277,15 @@ Die auf Liniensegmenten befindlichen Punkte werden dabei einfach linear interpol
 \end{figure}
 
 
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=.7]{images/3d_interpol.eps}
+	\caption{Interpolation}
+	\label{fig:3DInterpol}
+\end{figure}
+
+
+
 
 Probleme: bei der skizze geht ein punkt auf der kreislinie $E_t$ mit der y-koordinate niemals über die y koordinate von tl und tr hinaus.
 
@@ -266,9 +293,44 @@ bei der transfomrtaiton entstehen unvermeidbare löcher.
 
 
 
-
+\begin{figure}[!htb]
+	\centering
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.9\textwidth]{images/coneRasp.jpg}
+		\caption{Zuordnung von Punkten zu Ellipsen}
+		\label{fig:ellipseMapping}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[angle=-90, width=.9\textwidth]{images/coneRaspUnWarpForward.png}
+		\caption{Zuordnung von Punkten zu Liniensegmenten}
+		\label{fig:lineMapping}
+	\end{subfigure}
+	\caption{Zuordnung von Punkten zu Ellipsen (links) und Liniensegmenten (rechts)}
+	\label{fig:mapping}
+\end{figure}
 
 
 
 \subsection{Rückwärtsentfaltung}
 Projektionsmatrix bestimmen
+
+
+\begin{figure}[!htb]
+	\centering
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.9\textwidth]{images/coneRasp.jpg}
+		\caption{Zuordnung von Punkten zu Ellipsen}
+		\label{fig:ellipseMapping}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[angle=-90, width=.9\textwidth]{images/coneRaspUnWarpReverse.png}
+		\caption{Zuordnung von Punkten zu Liniensegmenten}
+		\label{fig:lineMapping}
+	\end{subfigure}
+	\caption{Zuordnung von Punkten zu Ellipsen (links) und Liniensegmenten (rechts)}
+	\label{fig:mapping}
+\end{figure}

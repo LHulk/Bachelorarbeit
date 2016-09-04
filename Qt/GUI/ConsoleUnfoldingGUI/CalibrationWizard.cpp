@@ -315,16 +315,8 @@ void CalibrationWizard::on_buttonUnfold_clicked()
 	if(ui->radioForward->isChecked())
 	{
 		this->isForward = true;
-		while(Config::resSlantHeight <= 1000)
-		{
-			Transformation::getForwardWarpMaps(cone, remapXWarp, remapYWarp);
-			Transformation::inverseRemap(greyOriginal, showWarped, remapXWarp, remapYWarp);
-
-			size_t holes = Transformation::countHoles(showWarped, cone);
-			std::cout << "slantheight = " << Config::resSlantHeight << ", holes: " << holes << std::endl;
-			Config::resSlantHeight += 50;
-		}
-
+		Transformation::getForwardWarpMaps(cone, remapXWarp, remapYWarp);
+		Transformation::inverseRemap(greyOriginal, showWarped, remapXWarp, remapYWarp);
 
 	}
 	else
