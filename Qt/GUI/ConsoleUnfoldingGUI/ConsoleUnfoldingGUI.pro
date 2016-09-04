@@ -52,14 +52,16 @@ FORMS    += mainwindow.ui \
 
 unix {
     QMAKE_CXXFLAGS += -std=c++11 -Wall -pedantic -Wno-unknown-pragmas
-    INCLUDEPATH += /usr/include \
-                    /opt/opencv/opencv-2.4/debug/installed/include
+    INCLUDEPATH +=  /usr/include \
+                    /opt/opencv/opencv-2.4/debug/installed/include \
+                    ../../Console/ConeUnfoldingC
 
     LIBS += -L/opt/opencv/opencv-2.4/debug/installed/lib \
             -lopencv_core \
             -lopencv_highgui \
             -lopencv_imgproc \
-            -lopencv_features2d
+            -lopencv_features2d \
+            -lopencv_calib3d
 
     QMAKE_CXXFLAGS_WARN_ON = -Wno-unused-variable -Wno-reorder
 }
