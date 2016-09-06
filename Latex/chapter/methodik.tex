@@ -7,16 +7,14 @@ In diesem Kapitel stellen wir ein Verfahren vor, dass ermöglicht anhand eines B
 Zunächst gehen wir auf das verwendete Kalibrierungsmuster ein, woraufhin die genaue Vorgehensweise zur Entfaltung erläutert wird. 
 
 Die geometrischen Eigenschaften des Kegelstumpfs $(r, R, \Delta H)$ können gemessen und somit als bekannt angenommen werden. 
-Darüber hinaus nehmen wir an, dass sich das Zentrum des kleineren Kreises im links-händigen Weltkoordinatensystem an der Positon $(0,0,0)$ (siehe Abbildung \ref{fig:coneFrustum}) befindet. Durch diese Einschränkung gehen jegliche absolute Größenverhältnisse verloren. Es ist also nicht mehr möglich die Größe einer Larve zu bestimmen. 
-
-Wir wollen eine Beziehung zwischen Bildpunkte und Kegelpunkten herstellen. wo ist z achse?
+Darüber hinaus nehmen wir an, dass sich das Zentrum des kleineren Kreises im links-händigen Weltkoordinatensystem an der Positon $(0,0,0)$ (siehe Abbildung \ref{fig:coneFrustum}) befindet. Durch diese Einschränkung gehen jegliche absolute Größenverhältnisse verloren. Die Larven können jedoch weiterhin relativ zu einander verglichen werden. 
 
 
 \section{Kalibrierungsmuster}
 \label{s:calibrationPattern}
 Um eine Beziehung zwischen Bildpunkten und Kegelpunkten herstellen zu können, ist ein Kalibrierungsmuster notwendig.
 
-Die Wahl des Kalibrierungsmusters spielt dabei eine entscheidende Rolle bei der Robustheit und Präzision der Entfaltung. Es muss gewährleistet sein, dass die charakteristischen Merkmale des Musters, auch bei leichten Abweichungen der Kamera vom Lot und schlechteren Beleuchtungssituationen zuverlässig erkannt werden. Das Muster muss darüber hinaus so entworfen sein, dass beim zusammenlegen im Kegel, dessen geometrische Eigenschaften nicht verfälscht, sondern realitätsgetreu wiedergeben werden. 
+Die Wahl des Kalibrierungsmusters spielt dabei eine entscheidende Rolle bei der Robustheit und Präzision der Entfaltung. Es muss gewährleistet sein, dass die charakteristischen Merkmale des Musters, auch bei leichten Abweichungen der Kamera vom Lot und schlechteren Beleuchtungssituationen zuverlässig erkannt werden. Das Muster muss darüber hinaus so entworfen sein, dass beim Zusammenlegen im Kegel, dessen geometrische Eigenschaften nicht verfälscht, sondern realitätsgetreu wiedergeben werden. 
 
 Wir haben uns für ein Muster entscheiden, dass in äquidistanten Abständen $\Delta R$, beginnend mit dem kleinen Radius $r$ des Kegelstumpfs (siehe Abbildung \ref{fig:coneFrustum}) Kreislinien und in gleichen Winkelabständen $\Delta \alpha$ auf der Seitenhöhe Liniensegmente besitzt. Das zusammengelegte Muster ist in Abbildung \ref{fig:calibrationPatternTop} zu sehen, beziehungsweise das entfaltete in \ref{fig:calibrationPattern}. Die Anzahl der Kreislinien wird mit $n$ gekennzeichnet, die Anzahl sichtbarer Liniensegmente im Kegel mit $m$. Zu beachten ist, dass bedingt durch das Entfalten, in \ref{fig:calibrationPattern}  ein Liniensegment doppelt zu sehen ist. Die schwarzen Kreise bezeichnen wir als Samples. 
 
@@ -37,10 +35,9 @@ Dadurch dass die Geometrie des Kegels bekannt ist, kann jedem Sample nun ein Pun
 	\label{fig:calibrationPattern}
 \end{figure}
 
-Das Muster ist also 
 
 \subsection{Anzahl der Samples}
-Die Anzahl der Samples sollte groß genug sein, um möglichst viel geometrische Informationen des Kegels zu erhalten, aber klein genug, dass eine Detektion der Samples problemlos möglich ist. Insbesondere auf dem innersten Kreis, macht sich eine zu hohe Sampleanzahl negativ bemerkbar, da der Abstand zueinander sehr klein wird, was eine Detektion erschwert. Des Weiteren sollte noch ein möglichst großer Teil der Kreislinie zu sehen bleiben, da diese für die Ellipsendetektion benötigt werden. \todo{siehe später, dazu mehr später????}
+Die Anzahl der Samples sollte groß genug sein, um möglichst viel geometrische Informationen des Kegels zu erhalten, aber klein genug, dass eine Detektion der Samples problemlos möglich ist. Insbesondere auf dem innersten Kreis, macht sich eine zu hohe Sampleanzahl negativ bemerkbar, da der Abstand zueinander sehr klein wird, was eine Detektion erschwert. Des Weiteren sollte noch ein möglichst großer Teil der Kreislinien zu sehen bleiben, da diese für die Ellipsendetektion benötigt werden. 
 
 
 \todo{warum gerade dieses muster? warum ist das so gut? wie berechnet man das muster? welche eigenschaften hat es?}
@@ -50,9 +47,8 @@ Bilder von kegel mit muster drin?
 
 \section{Intrinsische Kamerakalibrierung}
 
-Bedingt durch die Wahl einer Weitwinkelkamera, enthält die Linse der Kamera eine starke tonnenförmige (nach außen gewölbte) Verzerrung. Ohne eine intrinsische Kamerakalibrierung würde. Es werden nur die intrinsischen Parameter benötigt. \todo{ Warum die extrinsciehn nicht? kamera postion gegeben dann ??}
+Bedingt durch die Wahl einer Weitwinkelkamera, enthält die Linse der Kamera eine starke tonnenförmige (nach außen gewölbte) Verzerrung. Ohne eine intrinsische Kamerakalibrierung würde. Es werden nur die intrinsischen Parameter benötigt.
 
-\todo{Vergleich ohne und mit Kalibrierung}
 
 \begin{figure}[!htb]
 	\centering
@@ -73,10 +69,19 @@ Bedingt durch die Wahl einer Weitwinkelkamera, enthält die Linse der Kamera ein
 \end{figure}
 
 
-\section{Detektion der Samples} \todo{Umbennenen}
+\section{Detektion der charakteristischen Punkte}
 
-Nach der Kamerakalibrierung und entsprechender Entzerrung werden die Bildkoordinaten der Samples bestimmt. Dazu ist wird ein Blob-Detektor \ref{s:blob} benutzt. Um die Samples korrekt von den Kreislinien, sowie den Liniensegmenten trennen zu können, ist es wichtig dass die Umgebung eines Samples frei ist. \todo{Formulierung}.
-Filtert Farbe (schwarz), kleine Flächen werden verworfen, Kreisförmigkeit, Konvexität
+Nach der Kamerakalibrierung und entsprechender Entzerrung werden die Bildkoordinaten der Samples bestimmt. Dazu wird ein Blob-Detektor (siehe Kapitel \ref{s:blob}) benutzt. 
+Um ein Sample korrekt detektieren zu können, muss sich der Punkt farblich stark von seiner Umgebung abheben (siehe Definition: Blob \ref{def:blob}). Insbesondere dürfen die Kreislinien und Liniensegmente des Kalibrierungsmusters also nicht durchgezogen sein. Nach der Detektion werden die Blobs nach folgenden Kriterien gefiltert:
+
+\begin{itemize}
+	\item \textbf{Fläche:} zu kleine Blobs werden verworfen
+	\item \textbf{Rundheit:} zu "`unrude"' Blobs werden verworfen. Rundheit ist hier definiert als $circ = \frac{4\pi\cdot \textrm{Fläche}}{\left(\textrm{Umfang}\right)^2}\in[0,1]$, wobei ein Kreis mit $circ = 1$ maximal rund ist. 
+	\item  \textbf{Rundheit:} zu "`unkonvexe"' Blobs werden verworfen. Konvextität ist hier definiert als $conv = \frac{\textrm{Fläche Blob}}{\textrm{Fläche konvexe Hülle}}$
+\end{itemize}
+
+In Abbildung \ref{fig:blobDetect} ist beispielhaft links ein Grauwertbild und rechts die detektierten Blobs auf dem gleichen Bild nach der Kameraentzerrung zu sehen.
+
 
 \begin{figure}[!htb]
 	\centering
@@ -84,16 +89,14 @@ Filtert Farbe (schwarz), kleine Flächen werden verworfen, Kreisförmigkeit, Kon
 		\centering
 		\includegraphics[width=.9\textwidth]{images/coneRasp.jpg}
 		\caption{Grauwertbild}
-		\label{fig:beforeCanny}
 	\end{subfigure}%
 	\begin{subfigure}{.5\textwidth}
 		\centering
 		\includegraphics[width=.9\textwidth]{images/coneRaspDetectedDots.png}
-		\caption{Canny-Kanten}
-		\label{fig:afterCanny}
+		\caption{detektierte Blobs in grün}
 	\end{subfigure}
-	\caption{Canny-Kantendetektion auf Grauwertbild}
-	\label{fig:canny}
+	\caption{Detektion der Samples}
+	\label{fig:blobDetect}
 \end{figure}
 
 
@@ -123,9 +126,9 @@ Zunächst werden die Kanten mit Hilfe von Canny (\ref{s:canny}) detektiert (sieh
 \end{figure}
 
 Anschließend versuchen wir möglichst genau das Zentrum der innersten Ellipsen zu bestimmen.
-Wir benutzen dafür Hough-Transformationen, um Linien im Canny-Bild zu \todo{hier passendes Wort einfügen}.
-Es werden anschließend Schnittpunkte aller Liniensegmente bestimmt. Bedingt durch Ungenauigkeiten beim Ausschneiden und Zusammenlegen im Kegel, schneiden sich nicht alle Liniensegmente in einem Punkt.
-Darüber hinaus werden, auf Grund der Liniendicke auf dem Kalibrierungsmuster, durch Canny viele Linien doppelt erkannt. Auch ein inhomogener Hintergrund, erschwert die Schnittpunktsbestimmung. Um also möglichst robust einen Kandidaten auszuwählen, wird zuerst der Median der $x$-Koordinaten der Schnittpunkte und dann der Median der $y$-Koordinaten bestimmt. Die erhaltenen Koordinaten bilden den Schnittpunkt (siehe Abbildung \ref{fig:houghLines}).
+Wir benutzen dafür Hough-Transformationen, um Linien im Canny-Bild zu detektieren.
+Es werden anschließend die Schnittpunkte aller Liniensegmente bestimmt. Bedingt durch Ungenauigkeiten beim Ausschneiden und Zusammenlegen im Kegel und perspektivischer Verzerrung, schneiden sich nicht alle Liniensegmente in einem Punkt.
+Darüber hinaus werden, auf Grund der Liniendicke auf dem Kalibrierungsmuster, durch Canny viele Linien doppelt erkannt\footnote{Dies ist kein Widerspruch zur Eindeutigkeit von Canny-Kanten (siehe \ref{s:canny}), da dickere Linien zwei Kanten besitzen. Stellt man sich ein relativ breites Liniensegment vor, so gibt es einmal den Übergang vom Hintergrund auf die Linie, sowie den Übergang von der Linie wieder auf den Hintergrund}. Auch ein inhomogener Hintergrund, erschwert die Schnittpunktsbestimmung. Um also möglichst robust einen Kandidaten auszuwählen, wird zuerst der Median der $x$-Koordinaten der Schnittpunkte und dann der Median der $y$-Koordinaten bestimmt. Die erhaltenen Koordinaten bilden den Schnittpunkt (siehe Abbildung \ref{fig:houghLines}).
 
 \begin{figure}[!htb]
 	\centering
@@ -134,7 +137,7 @@ Darüber hinaus werden, auf Grund der Liniendicke auf dem Kalibrierungsmuster, d
 	\label{fig:houghLines}
 \end{figure}
 
-Von diesem Schnittpunkt aus werden, in einer vorher definierte Anzahl, gleichmäßig, in alle Richtungen Strahlen ausgesendet. \todo{Komma-Setzung}. 
+Von diesem Schnittpunkt aus werden, in einer vorher definierte Anzahl, gleichmäßig, in alle Richtungen Strahlen ausgesendet.
 Trifft ein Strahl ein weißes Pixel, wird dessen Position gekennzeichnet, trifft er den Rand des Bildes, wird er ignoriert. In Abbildung \ref{fig:rayCastWOE} sind die getroffenen weißen Pixel und der zugehörige Aussendepunkt eingezeichnet. 
 
 \begin{figure}[!htb]
@@ -155,6 +158,7 @@ Trifft ein Strahl ein weißes Pixel, wird dessen Position gekennzeichnet, trifft
 	\label{fig:rayCast}
 \end{figure}
 
+\todo{beschreiben, warum die Hauptachsentransformation gebraucht wird}
 Mit Hilfe der Postionen der weißen Pixel, wird anschließend durch RANSAC (siehe Kapitel \ref{s:ransac}) eine Ellipse geschätzt. Um die, für RANSAC benötigte, Distanz zu berechnen, wird das Verfahren aus Kapitel \ref{sc:distPointEllipse} genutzt, was die exakte euklidische Distanz eines Punktes zu einer Ellipse bestimmt. Ein Verfahren wie das Verfahren der kleinsten Quadraten funktioniert hier nicht, dass die weißen Pixel bezüglich einer zu bestimmen Ellipse, Ausreißer behaftet sind. Wird zum Beispiel auf Grund schlechter Lichtverhältnisse eine Kreislinie nicht deutlich aufgenommen, kann es in dem Kantenbild (Abbildung \ref{fig:canny}) zu "`Löchern"' in den Kreislinien und folglich treffen die ausgesendeten Strahlen die nächst äußere Kreislinie (siehe Abbildung \ref{fig:rayCastR}). Da die Laufzeit nicht im Vordergrund steht, kann eine großzügige Schätzung des Fehleranteils von $\epsilon = 0.4$ mit einer gewünschten Wahrscheinlichkeit $p = 0.9999$ gewählt werden, was zu einer Mindestanzahl an Iterationen von circa $200$ führt (siehe Kapitel \ref{s:ransac}). Die letztendlich bestimmen Ellipsen sind beispielhaft in Abbildung \ref{fig:detectedEllipses} zu sehen.  
 
 

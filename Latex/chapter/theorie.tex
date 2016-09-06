@@ -2,18 +2,21 @@
 \chapter{Theoretische Grundlagen}
 \label{ch:theory}
 
-Links Koordinatensystem...
+In diesem Kapitel werden einige Grundlagen für die folgende Kapitel eingeführt. 
+
+
+Wir benutzen ein linkshändiges Koordinatensystem.
 
 \section{Kegel}
 \label{s:cone}
 
 \begin{definition}[Kegel]
-	kegel
-	$S$ bezeichnet die Seitenhöhe und ist definiert durch $S = \sqrt{H^2 + R^2}$
-	$S >= R$ Dreiecksungleichung
+	Ein Kegel ist ein geometrischer Körper, der durch eine beliebige Grundfläche, sowie einen Punkt definiert wird.
+	Ein Kegel mit Kreis als Grundfläche wird als Kreiskegel bezeichnet. Liegt die Kegelspitze auf einer Geraden durch die Normale der Grundebene, bezeichnen wir den Kegel als gerade.
 \end{definition}
 
-In der weiteren Arbeit betrachten wir nur gerade Kreiskegel
+In der weiteren Arbeit betrachten wir nur gerade Kreiskegel.
+$S$ bezeichne hierbei die Seitenhöhe und ist definiert durch $S = \sqrt{H^2 + R^2}$ (siehe Abbildung \ref{fig:cone}).
 
 \begin{figure}[!htb]
 	\centering
@@ -80,10 +83,11 @@ y &= (s + \frac{u}{\Delta H} (S-s)) ~cos \phi
 \end{equation}
 mit  $u\in [0, \Delta H]$ und $\phi \in [0, \alpha] \subseteq [0, 2\pi]$ mit $\alpha S = 2\pi R \implies \alpha = 2\pi\frac{R}{S}$
 
+\bigskip
 
 Ein Punkt auf der Oberfläche des Kegelstumpfs kann eindeutig einem Punkt auf der Mantelfläche (und umgekehrt) zugeordnet werden. Dazu konstruieren wir folgende Abbildung und ihr Inverses:
 
-Sein ein Punkt $C(x,y,z)$ auf der Oberfläche des Kegelstumpfs gegeben. Wir wissen aus der parametrischen Form \ref{eq:paramFrustum}, dass $C$ die Form
+Sei ein Punkt $C(x,y,z)$ auf der Oberfläche des Kegelstumpfs gegeben. Wir wissen aus der parametrischen Form \ref{eq:paramFrustum}, dass $C$ die Form
 \[
 C(x,y,z) = (r + \frac{u}{\Delta H} (R - r))~cos \theta, u, (r + \frac{u}{\Delta H} (R - r))~sin \theta
 \]  für ein $u\in [0, \Delta H]$ und $\theta \in [0, 2\pi)$ besitzt. 
@@ -103,10 +107,10 @@ Aus der $y$-Koordinate kann man als die Höhe ablesen und somit den Radius in de
 
 Da $R, r, \Delta H$  und nun auch die Höhe bekannt sind, kann man den Winkel $\theta$ im Kegelstumpf einfach ausrechnen. Anschließend muss dieser noch mit  $\frac{R}{S}$ multipliziert werden um ihn auf $[0, \alpha]$ zu skalieren (siehe \ref{eq:paramLateral}).  Auch hierfür definieren wir eine Hilfsfunktion:
 \begin{equation*}
-\Phi(x,y,z) := \frac{R}{S} \atant\left(\frac{z}{r + \frac{y}{\Delta h} (R - r)}, \frac{x}{r + \frac{y}{\delta H} (R - r)}\right)
+\Phi(x,y,z) := \frac{R}{S} \atant\left(\frac{z}{r + \frac{y}{\Delta h} (R - r)}, \frac{x}{r + \frac{y}{\delta H} (R - r)}\right),
 \end{equation*}
 
-, wobei wir $\atant$ benutzen um den Winkel im richtigen Quadranten, also in $[0, 2\pi)$, bestimmen zu können. 
+wobei wir $\atant$ benutzen um den Winkel im richtigen Quadranten, also in $[0, 2\pi)$, bestimmen zu können. 
 
 Mit diesen beiden Hilfsfunktionen und \ref{eq:paramLateral} ergibt sich insgesamt:
 \begin{equation}
@@ -124,13 +128,14 @@ x \\ y \\ z
 
 Analog lässt die sich Umkehrabbildung konstruieren:
 
-Sein ein Punkt $L(x,y)$ auf der Mantelfläche des Kegelstumpfs gegeben. Aus der parametrischen Form \ref{eq:paramLateral} ergibt sich
+Sei ein Punkt $L(x,y)$ auf der Mantelfläche des Kegelstumpfs gegeben. Aus der parametrischen Form \ref{eq:paramLateral} ergibt sich
 
 \[
 L(x,y) = (-(s + \frac{u}{\Delta H}(S-s)) ~sin \phi, (s + \frac{u}{\Delta H} (S-s)) ~cos \phi)
 \]
 
-für ein passendes $u\in [0, \Delta H]$ und $\phi \in [0, \alpha] \subseteq  [0, 2\pi]$
+für ein passendes $u\in [0, \Delta H]$ und $\phi \in [0, \alpha] \subseteq  [0, 2\pi]$.
+
 Da $L(x,y)$ in Polarkoordinaten gegeben ist, lässt sich der Radius durch $\sqrt{x^2+y^2}$ bestimmen. Wir können den Winkel $\phi$ mit inverser Skalierung also analog durch folgende Hilfsfunktion bestimmen:
 
 \begin{equation*}
@@ -169,35 +174,57 @@ x \\ y
 	und/oder die 3D-Position und Orientierung der Bildebene relativ zu einem Weltkoordinatensystem (extrinische Parameter) bestimmt werden \cite{Tsai1987}.
 \end{definition}
 
+Um die Parameter einer Kamera korrekt beschreiben zu können, ist ein Kameramodell notwendig. Das wohl bekannteste Kameramodell ist das Lochkamera-Modell. Die Lichtstrahlen der Szene gelangen dabei durch eine kleine Öffnung in die Kamera (siehe dazu Abbildung \ref{fig:pinhole}).
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=.8]{images/pinhole2.eps}
+	\caption{Lochkameramodell}
+	\label{fig:pinhole}
+\end{figure}
+
+Das Bild das an der Rückseite der Kamera entsteht ist dabei um 180° gedreht. Damit man diese Rotation nicht betrachten muss, kann man die Bildebene virtuell vor die Lochblende setzen. Da sich der Abstand zur Blende nicht ändert, ändern sich, außer der ersparten Rotation, auch die optischen Eigenschaften nicht.
+
+
+
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=.8]{images/pinhole.eps}
 	\caption{Projektion eines Punktes $P$ im Weltkoordinatensystem $(x_w, y_w, z_w)$ auf die Bildebene im Kamerakoordinatensystem  $(x_c, y_c, z_c)$}
-	\label{fig:pinhole}
+	\label{fig:extrinsic}
 \end{figure}
 
-Lochkamera bild, erklären warum man eine virtuelle Bildebene for die Kamera macht, damit sich das bild nicht dreht. die optischen eigenschaften ändern sich nicht.
 
-Kamerakalibrierung wird benötigt, um eine Beziehung zwischen Punkten in 3D im Weltkoordinatensystem und den Punkten auf der Bildebene herzustellen. Genauer suchen wir eine Abbildung 
+
+Kamerakalibrierung wird benötigt, um eine Beziehung zwischen Punkten in 3D im Weltkoordinatensystem und den Punkten auf der Bildebene herzustellen. Genauer suchen wir eine projektive Abbildung:
 
 \begin{equation}
 	\begin{pmatrix}
 	wu \\wv \\w 
 	\end{pmatrix} = 
-		\begin{pmatrix}
-		t_{11} & t_{12} & t_{13} & t_{14} \\
-		t_{21} & t_{22} & t_{23} & t_{24} \\
-		t_{31} & t_{32} & t_{33} & t_{34} 
-		\end{pmatrix} 	\begin{pmatrix}
+		\underbrace{\begin{pmatrix}
+		a_{11} & a_{12} & a_{13} & a_{14} \\
+		a_{21} & a_{22} & a_{23} & a_{24} \\
+		a_{31} & a_{32} & a_{33} & a_{34} 
+		\end{pmatrix}}_{=:A}	\begin{pmatrix}
 		x \\y \\z \\ 1 
 		\end{pmatrix},
 \end{equation}
 
-die einen Punkt $P=(x,y,z)$ in homogenen Koordinaten $\tilde P = (x,y,z,1)$ auf einen Punkt $C = (u,v)$ auf die Bildebene abbildet.
+die einen Punkt $P=(x,y,z)$ in homogenen Koordinaten $\tilde P = (x,y,z,1)$ auf einen Punkt $\tilde C = (wu,wv, w)$ beziehungsweise nach der perspektivischen Division $C = (u,v)$ auf die Bildebene abbildet, wobei die $a_{i,j}$ von den intrinsischen und extrinsischen Parametern der Kamera abhängen \cite{Heikkila1997}.
+
+Wir konstruieren nun schrittweise die Matrix $A$:
+
+ Zunächst wird das Weltkoordinatensystem wie in Abbildung \ref{fig:extrinsic} mit einer Rotation und einer Translation in das Kamerakoordinatensystem überführt. 
+
+Die vier Schritt der Kamerakalibrierung sind nach Tsai\cite{Tsai1987}:
+\begin{enumerate}
+	\item Rotation und Translation des Weltkoordinatensystems, um es in das Bildkoordinatensystem zu überführen.
+	\item Perspektivische Division und Skalierung mit der Brennweite
+	\item Bestimmen der Verzerrungskoeffiezienten $\kappa_1$ und $\kappa_2$
+\end{enumerate}
 
 
-Schritt einzeln erkklären
-Zunächst wird das Weltkoordinatensystem mit einer Rotation und einer Translation in das Kamerakoordinatensystem überführt. 
+
 
 Selfcalibrating vs bla bla
 
@@ -225,16 +252,12 @@ SVD, QR, LSQ?
 \subsection{allgemein}
 \label{s:ellipseGeneral}
 
-\todo{wie schreibt man Achsen-ausgerichtet?}
-\todo{wie viele punkte braucht man zum definieren von Ellipsen}
-Ellipsen sind deshalb für diese Arbeit interessant, als dass sie als perspektivische Verzerrung von Kreisen entstehen. Nimmt man das Kalibrierungsmuster nicht perfekt im Lot auf, entstehen zwangsläufig Ellipsen. 
-
 \begin{definition}[Ellipse]
 	Ellipsen entstehen durch 
 	Kegelschnitt und so bla bla. im weiteren bla bla meinen wir mit Hauptachsen immer die Semihauptachsen
 \end{definition}
 
-In ihrer einfachsten Form liegt die Ellipse im Zentrum des Koordinatensystems und ihre Haupt- und Nebenachse $a$ und $b$ sind Achsen-ausgerichtet, das heißt ihre Hauptachse liegt auf der $X$-Achse und ihre Nebenachse auf der $Y$-Achse. Sie kann dann in der impliziten Form
+In ihrer einfachsten Form liegt die Ellipse im Zentrum des Koordinatensystems und ihre Haupt- und Nebenachse $a$ und $b$ sind achsenausgerichtet, das heißt ihre Hauptachse liegt auf der $X$-Achse und ihre Nebenachse auf der $Y$-Achse. Sie kann dann in der impliziten Form
 
 \begin{equation} \label{eq:ellipseNoRotNoTrans}
 \frac{x^2}{a^2} + \frac{y^2}{b^2} = 1
@@ -276,7 +299,7 @@ mit $a,b,c,d,e,f \in \mathbb{R}$. Eine Ellipse lässt sich also durch sechs Punk
 
 Die beiden Formen \ref{eq:ellipseRotTrans} und \ref{eq:ellipseQuadratic} sind äquivalent, falls die Ellipse nicht degeneriert ist (ohne Beweis). Da wir die Umformung von \ref{eq:ellipseRotTrans} nach \ref{eq:ellipseQuadratic} später brauchen, wird sie hier einmal exemplarisch vorgeführt. 
 
-Zunächst einmal fällt auf, dass der gemischten Term $cxy$ genau dann null ist wenn, die Ellipse nicht rotiert wurde. Im ersten Schritt versuchen wir also die Rotation der Ellipse rückgängig zu machen, um den Rotationswinkel bestimmen zu können..
+Zunächst einmal fällt auf, dass der gemischte Term $cxy$ genau dann null ist, wenn die Ellipse nicht rotiert wurde. Im ersten Schritt versuchen wir also die Rotation der Ellipse rückgängig zu machen, um den Rotationswinkel bestimmen zu können.
 
 Die Gleichung \ref{eq:ellipseQuadratic} kann umgeformt werden zu:
 \begin{equation*}
@@ -288,7 +311,7 @@ Die Gleichung \ref{eq:ellipseQuadratic} kann umgeformt werden zu:
 Der gemischte Term wird alleine durch $M = \begin{pmatrix}a & \frac{c}{2} \\ \frac{c}{2} & b\end{pmatrix}$ bestimmt. Da die Matrix $M$ symmetrisch ist, ist sie orthogonal diagonalisierbar. Des Weiteren hat $M$ zwei von null verschiedene Eigenwerte, denn 
 \[
 \det M = ab - \dfrac{c^2}{4}
-\] ist nur dann gleich null, wenn $c^2 - 4ab = 0$, was ein Widerspruch zur Annahme in \ref{eq:ellipseQuadratic} ist. $M$ ist somit eine von null verschiedene Determinante und somit vollen Rang, hat also zwei von null verschiedene Eigenwerte. Insbesondere gibt es also zwei Eigenvektoren von $M$, die zueinander orthogonal sind.
+\] ist nur dann gleich null, wenn $c^2 - 4ab = 0$, was ein Widerspruch zur Annahme in \ref{eq:ellipseQuadratic} ist. $M$ hat somit eine von null verschiedene Determinante und somit vollen Rang, hat also zwei von null verschiedene Eigenwerte. Insbesondere gibt es also zwei Eigenvektoren von $M$, die zueinander orthogonal sind.
 
 Es gilt $M = S^TDS$, wobei $S\in\mathbb{R}^{2\times2}$ eine orthogonale Matrix mit den normierten Eigenvektoren als Zeilen und $D = \text{diag}(\lambda_1, \lambda_2)\in\mathbb{R}^{2\times2}$ eine Diagonalmatrix mit den beiden Eigenwerten von $M$ auf der Diagonalen ist. Ohne Beschränkung der Allgemeinheit gelte $\lambda_1 <= \lambda_2$, andernfalls vertausche die Eigenvektoren in $S$. 
 
@@ -303,7 +326,7 @@ So gilt:
 \end{aligned}
 \end{equation}
 
-Man kann leicht nachrechnen, dass der gemischte Teil somit eliminiert wurde. Durch Anwenden der Transformation $S$ wurde $u$ also in das Koordinatensystem, in dem die Ellipse Achsen-ausgerichtet ist,  transformiert.
+Man kann leicht nachrechnen, dass der gemischte Teil somit eliminiert wurde. Durch Anwenden der Transformation $S$ wurde $u$ also in das Koordinatensystem, in dem die Ellipse achsenausgerichtet ist,  transformiert.
 
 Eine Rotationsmatrix mit Rotationswinkel $\theta$ ist definiert durch: 
 \begin{equation}
@@ -363,13 +386,15 @@ Es gilt wie erwartet $a \geq b$, da $\lambda_1 \leq \lambda_2$
 \subsection{Abstand: Punkt zu Ellipse}
 \label{sc:distPointEllipse}
 Das hier beschriebene Verfahren zur Bestimmung der kürzesten euklidischen Distanz eines Punktes zu einer Ellipse stammt aus der Arbeit von David Eberly \cite{Eberly2013}.
-Wir betrachten nur Ellipsen im Ursprung, die Achsen-ausgerichtet sind und darüber hinaus nur Punkte im ersten Quadranten. Ansonsten wir die Ellipse in den Ursprung verschoben und um ihren entgegengesetzten Drehwinkel rotiert. Da die Ellipse dann bezüglich der $X$- und $Y$- Achse symmetrisch ist, kann der Punkt einfach durch Spiegelung in den richtigen Quadranten transformiert werden. Der Abstand ändert sich dadurch nicht. 
+Wir betrachten nur Ellipsen im Ursprung, die achsenausgerichtet sind und darüber hinaus nur Punkte im ersten Quadranten. Ansonsten wir die Ellipse in den Ursprung verschoben und um ihren entgegengesetzten Drehwinkel rotiert. Da die Ellipse dann bezüglich der $X$- und $Y$- Achse symmetrisch ist, kann der Punkt einfach durch Spiegelung in den richtigen Quadranten transformiert werden. Der Abstand ändert sich dadurch nicht. 
 
-Wir bezeichnen von nun an $Q = (y_0, y_1)$ als eine Punkt, dessen Distanz zur Ellipse uns interessiert und $E = (x_0, x_1)$ als denjenigen eindeutigen Punkt, welcher auf der Ellipse liegt und die kürzeste euklidische Distanz vom Punkt $Q$ hat. 
+Wir bezeichnen von nun an $Q = (y_0, y_1)$ als eine Punkt, dessen Distanz zur Ellipse wir berechnen wollen und $E = (x_0, x_1)$ als denjenigen eindeutigen Punkt, welcher auf der Ellipse liegt und die kürzeste euklidische Distanz vom Punkt $Q$ hat. 
 
 Aufgrund dieser Forderungen können wir ohne Beschränkung der Allgemeinheit folgende Aussagen treffen:
 \begin{itemize}
-	\item Die Ellipse kann stets durch die implizite Gleichung \[\frac{x_0^2}{a^2} + \frac{x_1^2}{b^2} = 1\] mit $a \geq b \geq 0$ beziehungsweise
+	\item Die Ellipse kann stets durch die implizite Gleichung 
+	\begin{equation}\label{eq:distEqParam} \frac{x_0^2}{a^2} + \frac{x_1^2}{b^2} = 1\end{equation}
+	 mit $a \geq b \geq 0$ beziehungsweise
 	in der parametrischen Form \[\mathcal{E}(\theta) = (a\cos\phi, b\sin\phi)  \tag*{$\phi \in [0, 2\pi)$}\] beschrieben werden.
 	\item Es gilt $y_0,y_1,x_0, x_1 \geq 0$
 \end{itemize}
@@ -416,23 +441,34 @@ x_0 = \frac{a^2y_0}{t+a^2},\quad x_1 = \frac{b^2y_1}{t+b^2}
 \end{equation}
 
 
-
+\bigskip
 Man macht nun eine Fallunterscheidung:
 
 \begin{enumerate}
 	\item Der einfachste Fall ist, wenn sich der Punkt $Q$ auf der $Y$-Achse (außer $(0,0)$) befindet, wenn also gilt $y_0 = 0, y_1 > 0$.
-	Da die Hauptachse nach der $X-Achse$ ausgerichtet ist und $a >= b$ gilt, ist der Punkt auf der Ellipse mit der kürzesten Distanz zu $Q$ offenbar $E = (0, b)$ und für die Distanz gilt $d = \abs{y_1 - b}$.
-	\item Als nächstes betrachten wir ein $Q$ auf der $X$-Achse (einschließlich $(0,0)$), wenn also gilt  $y_0 \geq 0, y_1 = 0$.
-	
-	\todo{den zweiten teil überarbeiten hier}
-	Es kann gezeigt werden, dass der Punkt auf der Ellipse mit der kürzesten Distanz zu $(y_0, 0)$ für $0 < y_0 < (a^2 - b^2)/a^2$, $E = (x_0,x_1)$ ist mit 
+	Da die Hauptachse nach der $X$-Achse ausgerichtet ist und $a >= b$ gilt, ist der Punkt auf der Ellipse mit der kürzesten Distanz zu $Q$ offenbar $E = (0, b)$ und für die Distanz gilt $d = \abs{y_1 - b}$.
+	\item Als nächstes betrachten wir ein $Q$ auf der $X$-Achse (einschließlich $(0,0)$), wenn also gilt  $y_0 \geq 0, y_1 = 0$. Es gilt also mit \ref{eq:ellipseDistY}
+	\[
+		y_0 = x_0\left(1 + \frac{t}{a^2}\right), \quad 0 = x_1\left(1 + \frac{t}{b^2}\right)
+	\]
 	
 	Wenn $x_1 = 0$ gilt, muss $x_0 = a$ gelten, damit $E(x_0,x_1)$ auf der Ellipse ist. Es  gilt analog zum ersten Fall $E=(a,0)$ mit $d = \abs{y_0 - a}$ 
-	Einfach nur es kann gezeigt werden, dass bla? 
 	
-	Wenn $x_1 \neq 0$ kann gezeigt werden, dass für die Distanz gilt:
+	Gilt $x_1 \neq 0$, so können wir in der zweiten Gleichung durch $x_1$ teilen und es folgt $t = -b^2$ und somit $y_0 = x_0\left(1 - \frac{b^2}{a^2}\right)$. Auf Grund der Krümmung der Ellipse gilt außerdem $x_0 < a$ und somit ergibt sich zusammen mit \ref{eq:ellipseDistX} die Ungleichung:
+	\begin{equation*}
+	\begin{aligned}
+		&x_0 = \frac{a^2y_0}{a^2 - b^2} < a \\
+		\Leftrightarrow\quad &y_0 < \frac{a^2 - b^2}{a} < a
+	\end{aligned}
+	\end{equation*}
+		
+	Für Punkte $Q(y_0,0)$ mit $y_0 \geq \frac{a^2 - b^2}{a}$, ist der kürzeste Punkt also wieder $E(a,0)$
+	
+	Für Punkte $Q(y_0,0)$ mit $y_0 < \frac{a^2 - b^2}{a}$, muss für $E(x_0,x_1)$ nach Umstellen der Ellipsengleichung \ref{eq:distEqParam}\quad$x_1 = b\cdot\sqrt{1-\left(\frac{x_0}{a}\right)}$ gelten. 
+	Die Distanz beträgt dann:
+
 	\[
-		d^2 = b^2\left(1 - \frac{y_0^2}{a^2 - b^2}\right)
+		d^2 = (x_0 - y_0)^2 + x_1^2 = b^2\left(1 - \frac{y_0^2}{a^2 - b^2}\right)
 	\]
 	\item Der letzte Fall, den wir betrachten müssen, ist der allgemeinste Fall. Es gilt $y_0 > 0$, sowie $y_1 > 0$. Da wir uns nur im ersten Quadranten bewegen, gilt darüber hinaus $x_0, x_1 \geq 0$. Mit diesen Eigenschaften und \ref{eq:ellipseDistY} lässt sich folgende Einschränkung für $t$ herleiten:
 	\begin{equation}
@@ -441,54 +477,125 @@ Man macht nun eine Fallunterscheidung:
 	\Leftrightarrow\quad& -1\cdot a^2 < t.
 	\end{aligned}
 	\end{equation}
-	Analog ergibt sich mit $y_1\colon -b^2 < t$. Da $a\geq b$ gilt, reicht es, sich nur die zweite Ungleichung anzuschauen, dass sie die erste impliziert. Setzt man nun \ref{eq:ellipseDistX} in \ref{eq:ellipseDistEq} ein, erhält man:
+	Analog ergibt sich mit $y_1\colon -b^2 < t$. Da $a\geq b$ gilt, reicht es, sich nur die zweite Ungleichung anzuschauen, da sie die erste impliziert. Setzt man nun \ref{eq:ellipseDistX} in \ref{eq:ellipseDistEq} ein, erhält man:
 	
 	\begin{equation}
 		F(t) = \left(\frac{ay_0}{t+a^2}\right)^2 + \left(\frac{by_1}{t+b^2}\right)^2 - 1
 	\end{equation}
 	
-	Man kann nun zeigen, dass diese Funktion auf dem gesamten Intervall $[-b^2\infty)$ monoton fällt und links gekrümmt ist. Darüber hinaus gilt:
+	Man kann nun zeigen, dass diese Funktion auf dem gesamten Intervall $[-b^2,\infty)$ monoton fällt und links gekrümmt ist. Darüber hinaus gilt:
 	\[
 	\lim\limits_{t \searrow -b^2}{F(t)}	= +\infty, \quad\lim\limits_{t \rightarrow \infty}{F(t)}	= 1.
 	\]
 	Da $F$ stetig ist, muss es also eine Nullstelle geben, die aufgrund des Monotonie- und Krümmungsverhaltens sogar eindeutig ist. Die Nullstelle lässt sich beispielsweise durch Intervallschachtelung oder Newton-Verfahren bestimmen. 
 \end{enumerate}
 
+\todo{möglicherweise Reihenfolge hier ändern, so wie sie auch später benutzt werden}
 
 \section{RANSAC}
 \label{s:ransac}
 \textit{Random Sample Consensus} (RANSAC) \cite{Fischler1981} ist ein nicht-deterministisches robustes Verfahren zur Parameterschätzung eines Modells bei einer, möglicherweise durch starke Ausreißer, gestörten Messreihe. 
 Im Gegensatz zu Verfahren, wie der Methode der kleinsten Quadrate, die versuchen eine optimale Lösung für alle Messdaten zu bestimmen, nutzt RANSAC nur eine Teilmenge der Messreihe. 
 
-\todo{Modell wortwiederholungen}
 RANSAC wählt aus der Menge der Messdaten wiederholt zufällig die minimale Anzahl Messdaten aus, die nötig sind um das Modell eindeutig zu beschreiben und prüft dann, wie gut das geschätzte Modell die restlichen Messdaten beschreibt. 
-Die Güte des Modells wird im Allgemeinen durch ein Distanzmaß, wie zum Beispiel der euklidische Abstand bei, charakterisiert. 
+Die Güte des Modells wird im Allgemeinen durch ein Distanzmaß, wie zum Beispiel der euklidische Abstand, berechnet. 
 Hat ein Messdatum eine vorher definierte Maximaldistanz zum geschätzten Modell nicht überschritten, wird es ins sogenannte Consensus Set des Modells aufgenommen. 
 Das Modell mit dem größten Consensus Set wird schließlich ausgewählt. 
 
-Die Anzahl der Iterationen, die mindestens notwendig sind, um mit einer Wahrscheinlichkeit von $p \in [0,1)$, bei einem relativen Ausreißeranteil von $\epsilon \in[0,1)$ und einer Anzahl von $k$ Daten, um das Modell eindeutig zu beschreiben, mindestens einmal eine ausreißerfreie Teilmenge der Messreihe zu erhalten,  lässt sich berechnen mit:
+Die Anzahl der Iterationen, die mindestens notwendig sind, um mit einer Wahrscheinlichkeit von $p \in [0,1)$, bei einem relativen Ausreißeranteil von $\epsilon \in[0,1)$ und einer Anzahl von $k$ Daten, um das Modell eindeutig zu beschreiben, mindestens einmal eine ausreißerfreie Teilmenge der Messreihe zu erhalten, lässt sich berechnen mit:
 
 \begin{equation}
 	\frac{\log{\left(1-p\right)}}{\log{\left(1-\left(1-\epsilon\right)^k\right)}}
 \end{equation}
 
 
-
-
-\section{Hough-Transformation für Linien}
-\label{s:hough}
-
-
-
-
 \section{Canny}
 \label{s:canny}
-Der \textit{Canny}-Algorithmus\cite{Canny1986} ist ein Verfahren zur Kantendetektion. Das 
+Der Canny-Algorithmus\cite{Canny1986} ist ein Verfahren zur Kantendetektion. Im Gegensatz zu anderen Verfahren wie Sobel, oder Prewitt, versucht Canny die Fehlerrate der Kantendetektion minimal zu halten. 
+Es sollten nicht mehr Kanten zurückgegeben werden, als auf dem Bild zu sehen und es sollten auch keine Kanten übersehen werden. Darüber hinaus markiert Canny die Kanten möglichst exakt, minimiert also die Distanz eines markierten Punktes zur eigentlichen Kante. Zuletzt gewährleistet Canny außerdem die Eindeutigkeit einer Kante. Das bedeutet, dass eine Kante nicht mehrmals markiert wird.
+
+\section{Hough-Transformation}
+\label{s:hough}
+Hough-Transformation ist ein Verfahren zur Detektion von beliebigen parametrisierbaren Konturen. In dieser Arbeit werden Hough-Transforamtionen benutzt um Geraden zu detektieren. 
+
+Eine beliebige zweidimensionale Gerade kann in Polarkoordinaten folgendermaßen implizit ausgedrückt werden:
+
+\begin{equation}\label{eq:HoughLines}
+	x\cos\phi + y\sin\phi - d = 0,
+\end{equation}
+
+wobei $\phi \in [0,2\pi)$ der Winkel der Geraden mit der $X$-Achse und $d \geq 0$ der Radius, also der euklidische Abstand der Geraden zum Ursprung des Koordinatensystems ist.
+
+Eine Gerade wird somit als ein Punkt $(d,\phi)$ in den Parameterraum (auch Hough-Raum) abgebildet. 
+
+Um eine Gerade eindeutig zu definieren benötigt man, wie auch bei der klassischen Defintionen $y = mx + b$, zwei Punkte. Nimmt man nur einen, so lässt sich jedoch die Auswahl von $\phi$ und $d$ einschränken. Hat man beispielsweise einen Punkt $(x_k,y_k)$ gegeben so lässt sich die Gleichung \ref{eq:HoughLines} nach $d$ umstellen und man erhält eine sinusförmige Funktion in Abhängigkeit von $\phi$. 
+
+Um beliebige Geraden detektieren zu können, werden $\phi$ und $d$ passen diskretisiert:
+\begin{equation*}
+\begin{aligned}
+	\phi_i &= \phi_{min} + \frac{i}{n} \cdot (\phi_{max} - \phi_{min}) \quad&\forall &i\in [0,n]\\
+	d_j &= d_{min} + \frac{j}{m} \cdot  (d_{max} - d_{min}) &\forall &j\in [0,m]
+\end{aligned}
+\end{equation*}
+
+Es wird nun ein Akkumulator $\mathcal{H}(\phi, d)$ für alle $\phi_i$ und $d_j$ auf null gesetzt.
+
+Als Nächstes wird ein Kantentbild mittels Canny erzeugt und jene Pixel $(x_k,y_k)$ betrachtet, die nicht null sind.
+Zu einen gegebenen Pixel wir nun für alle diskreten Winkel $\phi_i$ ein $d_i$ ausgerechnet und entsprechend im Akkumulator  $\mathcal{H}$ der Wert an der Stelle $(\phi_i, d_i)$ erhöht. 
+Am Ende des Verfahrens such man im Akkumulator nach Häufungspunkten. Jeder Häufungspunkt steht dort für eine Gerade. 
 
 
-
-Kantendetektion (canny sobel)
-
-\section{Blobdetection}
+\section{Blob-Detektor}
 \label{s:blob}
-??
+\begin{definition}[Blob]\label{def:blob}
+	Ein Blob ist eine glatte zusammenhängende Region in einem Bild, die sich farblich von ihrer Umgebung abhebt \cite{Lindeberg1993}.
+\end{definition}
+
+Ein Blob-Detektor ist also ein Verfahren zum Detektieren solcher Blobs. Die gefunden Blobs können anschließend nach verschiedenen Kriterien, wie Größe, Farbe, Konvexität oder Rundheit gefiltert werden. 
+
+
+\section{Ausgleichsproblem}
+Gegeben seien $m$ Messdaten $(x_1,y_1),\dotsc,(x_m,y_m)$, sowie $n$ Funktionen $u_1,\dotsc,u_n$ mit $n\leq m$ und $n,m\in\mathbb{N}$. Hier Zitat einfügen. Skript von Ohlberger
+
+Gesucht ist eine Linearkombination $u(x) = \sum_{i=1}^{m} c_iu_i(x)$ welche die mittlere Abweichung minimiert, also 
+
+\[
+	\Delta_2 = \inf_{c_1,\dotsc,c_n\in\mathbb{R}} \left(\sum_{j=1}^{m}\left(\sum_{i=1}^{n}\left(c_iu_i(x_j)\right) - y_j\right)^2\right)^{\frac{1}{2}}.
+\]
+
+Diese Problem wird als Ausgleichsproblem bezeichnet und ist äquivalent zur Minimierung des Funktionals:
+
+\[
+	F(c) = ||Ac - y||_2,
+\]
+mit 
+\[
+\begin{aligned}
+	c &= (c_1,\dotsc,c_n)^T\in\mathbb{R}^n \\
+	x &= (x_1,\dotsc,x_m)^T\in\mathbb{R}^m \\
+	y &= (y_1,\dotsc,y_m)^T\in\mathbb{R}^m \\
+	A &= (a_{ij})\in\mathbb{R}^{m\times n}\quad\text{mit}\quad a_{ij} = u_i(x_j)
+\end{aligned}
+\]
+
+und äquivalent zur Normalengleichung:
+\begin{equation}\label{eq:normaleq}
+	(A^TA)^{-1}Ac = A^Ty
+\end{equation}
+
+
+Die Lösung des Ausgleichproblems kann mit einer Singulärwertzerlegung gelöst werden. Die Matrix $A\in\mathbb{R}^{m\times n}$ kann geschrieben werden als:
+ 
+\[
+A = U\Sigma V^T
+\]
+
+mit orthogonalen Matrizen $U\in\mathbb{R}^{m\times m}$ und $V\in\mathbb{R}^{n\times n}$ und einer Diagonalmatrix $\Sigma\in\mathbb{R}^{m\times n}$ mit den absteigend sortierten Singulärwerten auf der Diagonale. Setzt man diese Form für $A$ in die Normalengleichung (\ref{eq:normaleq}) ein so ergibt sich:
+\begin{equation*}
+((U\Sigma V^T)^T\cdot (U\Sigma V^T))^{-1}\cdot (U\Sigma V^T)^T = V\Sigma^{-1}U^T
+\end{equation*}
+
+
+Lösen mittels SVD
+
+
