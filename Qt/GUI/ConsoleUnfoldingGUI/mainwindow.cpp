@@ -30,7 +30,7 @@ void MainWindow::on_buttonCalibrationWizard_clicked()
 
 void MainWindow::triggeredImport(bool checked)
 {
-	QString fileName = QFileDialog::getOpenFileName(this, "Open XML config", "", "compressed XML (*.xml.gz)");
+    QString fileName = QFileDialog::getOpenFileName(this, "Open XML config", "", "compressed XML (*.xml.gz)", nullptr ,QFileDialog::DontUseNativeDialog);
 	std::string file = QtOpencvCore::qstr2str(fileName);
 
 	cv::FileStorage fs(file, cv::FileStorage::READ);
@@ -50,7 +50,7 @@ void MainWindow::triggeredImport(bool checked)
 
 void MainWindow::on_ButtonLoadFiles_clicked()
 {
-	this->files = QFileDialog::getOpenFileNames(this, "Select images", "", "Images (*.png *.jpg *.jpeg *.PNG *.JPG, *.JPEG)" );
+    this->files = QFileDialog::getOpenFileNames(this, "Select images", "", "Images (*.png *.jpg *.jpeg *.PNG *.JPG, *.JPEG)", nullptr ,QFileDialog::DontUseNativeDialog);
 
 	this->model->setStringList(files);
 

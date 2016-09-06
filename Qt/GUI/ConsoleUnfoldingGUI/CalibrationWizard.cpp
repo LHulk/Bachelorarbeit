@@ -32,13 +32,13 @@ CalibrationWizard::CalibrationWizard(QWidget *parent) :
 	ui->labelBlobStatus->setText("");
 
 
-	cv::FileStorage fs("cameraSettings.txt", cv::FileStorage::READ);
+    /*cv::FileStorage fs("cameraSettings.txt", cv::FileStorage::READ);
 	fs["cameraMatrix"] >> this->cameraMatrix;
 	fs["distCoeffs"] >> this->distCoeffs;
-	fs.release();
+    fs.release();*/
 
-	//this->cameraMatrix = cv::Mat::eye(3, 3, CV_32F);
-	//this->distCoeffs = cv::Mat::zeros(5, 1, CV_32F);
+    this->cameraMatrix = cv::Mat::eye(3, 3, CV_32F);
+    this->distCoeffs = cv::Mat::zeros(5, 1, CV_32F);
 
 	std::ostringstream stream;
 	stream << "Camera Matrix: \n" << cameraMatrix << "\n\n" << "Distortion coefficients: \n" << distCoeffs;
@@ -66,7 +66,7 @@ CalibrationWizard::~CalibrationWizard()
 
 void CalibrationWizard::on_buttonLoadIntrinsic_clicked()
 {
-	fileNamesCamCalib = QFileDialog::getOpenFileNames(this, "Select calibration images", "D:/lars/Documents/gitProjects/BA-Haalck-2016/img/calibration/chessboard", "Images (*.png *.jpg *.jpeg *.PNG *.JPG, *.JPEG)" );
+    fileNamesCamCalib = QFileDialog::getOpenFileNames(this, "Select calibration images", "D:/lars/Documents/gitProjects/BA-Haalck-2016/img/calibration/chessboard", "Images (*.png *.jpg *.jpeg *.PNG *.JPG, *.JPEG)", nullptr, QFileDialog::DontUseNativeDialog);
 
 	if(fileNamesCamCalib.size() > 0)
 	{
@@ -79,7 +79,7 @@ void CalibrationWizard::on_buttonLoadIntrinsic_clicked()
 
 void CalibrationWizard::on_buttonLoadCone_clicked()
 {
-	fileNameConeCalib = QFileDialog::getOpenFileName(this, "Select calibration image", "D:/lars/Documents/gitProjects/BA-Haalck-2016/img/calibration/chessboard", "Images (*.png *.jpg *.jpeg *.PNG *.JPG, *.JPEG)" );
+    fileNameConeCalib = QFileDialog::getOpenFileName(this, "Select calibration image", "D:/lars/Documents/gitProjects/BA-Haalck-2016/img/calibration/chessboard", "Images (*.png *.jpg *.jpeg *.PNG *.JPG, *.JPEG)", nullptr ,QFileDialog::DontUseNativeDialog);
 
 	if(fileNameConeCalib != "")
 	{
@@ -140,7 +140,7 @@ void CalibrationWizard::drawKeyPoints()
 	ui->viewBlob->setScene(scene1);
 	ui->viewBlob->show();
 
-	if(keyPoints.size() != Config::numCircleSamples * Config::numLineSamples)
+    if(keyPoints.size() != static_cast<size_t>(Config::numCircleSamples * Config::numLineSamples))
 	{
 		ui->labelBlobStatus->setText(QtOpencvCore::str2qstr(std::string("") + "not the right amount blobs detected. needed: " + std::to_string(Config::numCircleSamples * Config::numLineSamples) +
 															", found: " + std::to_string(keyPoints.size())));
@@ -269,8 +269,7 @@ void CalibrationWizard::on_buttonGetMappings_clicked()
 	cv::Mat proj = Transformation::getProjectiveMatrix(cone);
 	this->projectionMatrix = proj;
 
-	std::vector<cv::Point2f> reproj = Transformation::getReprojectionError(cone, proj);
-
+    /*std::vector<cv::Point2f> reproj = Transformation::getReprojectionError(cone, proj);
 	std::string reprojx = "["; std::string reprojy = "[";
 	for(const auto& pt : reproj)
 	{
@@ -279,12 +278,12 @@ void CalibrationWizard::on_buttonGetMappings_clicked()
 
 	}
 	reprojx += "];"; reprojy += "];";
-	std::cout << reprojx << "\n" << reprojy << std::endl;
+    std::cout << reprojx << "\n" << reprojy << std::endl;
 
 	double avg = std::accumulate(reproj.begin(), reproj.end(), 0.0, [](double a, const cv::Point2f pt) { return a + cv::norm(pt);});
 	avg /= reproj.size();
 
-	//std::cout << avg << std::endl;
+    std::cout << avg << std::endl;*/
 
 
 	/*cv::Mat vis;
@@ -379,6 +378,7 @@ void CalibrationWizard::on_buttonExport_clicked()
 	dialog.setFileMode(QFileDialog::AnyFile);
 	dialog.setNameFilter(tr("compressed XML (*.xml.gz)"));
 	dialog.setDefaultSuffix("xml.gz");
+    dialog.setOptions(QFileDialog::DontUseNativeDialog);
 
 	QStringList fileNames;
 	if(dialog.exec())

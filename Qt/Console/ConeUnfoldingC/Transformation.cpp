@@ -184,29 +184,6 @@ void Transformation::getForwardWarpMaps(const Cone& cone, cv::Mat& remapX, cv::M
 	mapy.copyTo(remapY);
 }
 
-std::vector<std::vector<cv::Point2f>> Transformation::getForwardReprojects(const Cone& cone, const std::vector<std::vector<cv::Point2f>> pointsPerEllipse)
-{
-	/*double S = cone.S();
-	double s = cone.s();
-	double maxAngle = cone.maxAngle();
-	double angleOffset = CV_PI / 2;
-
-	int n = Config::numCircleSamples;
-	int m = Config::numLineSamples;*/
-
-	for(auto ptList : pointsPerEllipse)
-	{
-		for(auto pt : ptList)
-		{
-
-		}
-
-	}
-
-	return std::vector<std::vector<cv::Point2f>>();
-
-}
-
 void Transformation::inverseRemap(const cv::Mat& src, cv::Mat& dst, const cv::Mat &remapX, const cv::Mat& remapY)
 {
 	int width = static_cast<int>(remapX.at<float>(0,0));
@@ -302,7 +279,7 @@ void Transformation::getReverseWarpMaps(const Cone& cone, cv::Mat &remapX, cv::M
 			if(mask.at<uchar>(r, c) != 0)
 			{
 				//test2.push_back(cv::Point2d(c, r) - cv::Point2d(origin));
-				cv::Point3f coneCoords = cone.lateralToConeCoordinates(1/scale*cv::Point2d((cv::Point2d(c, r) - cv::Point2d(origin))));
+                cv::Point3f coneCoords = cone.lateralToConeCoordinates(1/scale*cv::Point2d((cv::Point2d(c, r) - cv::Point2d(origin.x, origin.y))));
 				//test.push_back(coneCoords);
 				cv::Mat coneCoordsMat = cv::Mat(coneCoords);
 				cv::Mat homogenous = cv::Mat::ones(1, 1, CV_32F);
