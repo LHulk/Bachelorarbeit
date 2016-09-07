@@ -76,8 +76,8 @@ Um ein Sample korrekt detektieren zu können, muss sich der Punkt farblich stark
 
 \begin{itemize}
 	\item \textbf{Fläche:} zu kleine Blobs werden verworfen
-	\item \textbf{Rundheit:} zu "`unrude"' Blobs werden verworfen. Rundheit ist hier definiert als $circ = \frac{4\pi\cdot \textrm{Fläche}}{\left(\textrm{Umfang}\right)^2}\in[0,1]$, wobei ein Kreis mit $circ = 1$ maximal rund ist. 
-	\item  \textbf{Rundheit:} zu "`unkonvexe"' Blobs werden verworfen. Konvextität ist hier definiert als $conv = \frac{\textrm{Fläche Blob}}{\textrm{Fläche konvexe Hülle}}$
+	\item \textbf{Rundheit:} zu unrude Blobs werden verworfen. Rundheit ist hier definiert als $circ = \frac{4\pi\cdot \textrm{Fläche}}{\left(\textrm{Umfang}\right)^2}\in[0,1]$, wobei ein Kreis mit $circ = 1$ maximal rund ist. 
+	\item  \textbf{Konvexität:} zu unkonvexe Blobs werden verworfen. Konvextität ist hier definiert als $conv = \frac{\textrm{Fläche Blob}}{\textrm{Fläche konvexe Hülle}}$
 \end{itemize}
 
 In Abbildung \ref{fig:blobDetect} ist beispielhaft links ein Grauwertbild und rechts die detektierten Blobs auf dem gleichen Bild nach der Kameraentzerrung zu sehen.
@@ -159,7 +159,26 @@ Trifft ein Strahl ein weißes Pixel, wird dessen Position gekennzeichnet, trifft
 \end{figure}
 
 \todo{beschreiben, warum die Hauptachsentransformation gebraucht wird}
-Mit Hilfe der Postionen der weißen Pixel, wird anschließend durch RANSAC (siehe Kapitel \ref{s:ransac}) eine Ellipse geschätzt. Um die, für RANSAC benötigte, Distanz zu berechnen, wird das Verfahren aus Kapitel \ref{sc:distPointEllipse} genutzt, was die exakte euklidische Distanz eines Punktes zu einer Ellipse bestimmt. Ein Verfahren wie das Verfahren der kleinsten Quadraten funktioniert hier nicht, dass die weißen Pixel bezüglich einer zu bestimmen Ellipse, Ausreißer behaftet sind. Wird zum Beispiel auf Grund schlechter Lichtverhältnisse eine Kreislinie nicht deutlich aufgenommen, kann es in dem Kantenbild (Abbildung \ref{fig:canny}) zu "`Löchern"' in den Kreislinien und folglich treffen die ausgesendeten Strahlen die nächst äußere Kreislinie (siehe Abbildung \ref{fig:rayCastR}). Da die Laufzeit nicht im Vordergrund steht, kann eine großzügige Schätzung des Fehleranteils von $\epsilon = 0.4$ mit einer gewünschten Wahrscheinlichkeit $p = 0.9999$ gewählt werden, was zu einer Mindestanzahl an Iterationen von circa $200$ führt (siehe Kapitel \ref{s:ransac}). Die letztendlich bestimmen Ellipsen sind beispielhaft in Abbildung \ref{fig:detectedEllipses} zu sehen.  
+Mit Hilfe der Postionen der weißen Pixel, wird anschließend durch RANSAC (siehe Kapitel \ref{s:ransac}) eine Ellipse geschätzt. 
+
+Es wird konkret für sechs zufällig ausgewählte Punkte das lineare Gleichungssystem:
+\[
+\begin{pmatrix}
+x_1^2 & y_1^2 & x_1y_1 & x_1 & y_1 & 1\\
+\vdots &\vdots & \vdots & \vdots &\vdots & \vdots\\
+\vdots &\vdots & \vdots & \vdots &\vdots & \vdots\\
+x_6^2 & y_6^2 & x_6y_6 & x_6 & y_6 & 1
+\end{pmatrix} \begin{pmatrix}
+a \\ b \\ c \\ d \\ e \\ f
+\end{pmatrix} = \begin{pmatrix}
+0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0
+\end{pmatrix}
+\]
+
+gelöst, was auf der Gleichung \ref{eq:ellipseQuadratic} aus Kapitel \ref{s:ellipse} basiert. Nach dem Lösen wird geprüft ob, es sich tatsächlich um eine Ellipse handelt und mittels Hauptachsentransformation (siehe Kapitel \ref{s:ellipse}) in die allgemeine Ellipsenform $(x_0,y_0,a,b,\phi)$ umgewandelt. 
+
+
+Um die, für RANSAC benötigte, Distanz zu berechnen, wird das Verfahren aus Kapitel \ref{sc:distPointEllipse} genutzt, was die exakte euklidische Distanz eines Punktes zu einer Ellipse bestimmt. Ein Verfahren wie das Verfahren der kleinsten Quadraten funktioniert hier nicht, da die weißen Pixel bezüglich einer zu bestimmenden Ellipse, ausreißerbehaftet sind. Wird zum Beispiel auf Grund schlechter Lichtverhältnisse eine Kreislinie nicht deutlich aufgenommen, kann es in dem Kantenbild (Abbildung \ref{fig:canny}) zu "`Löchern"' in den Kreislinien kommen und folglich treffen die ausgesendeten Strahlen die nächst äußere Kreislinie (siehe Abbildung \ref{fig:rayCastR}). Da die Laufzeit nicht im Vordergrund steht, kann eine großzügige Schätzung des Fehleranteils von $\epsilon = 0.4$ mit einer gewünschten Wahrscheinlichkeit $p = 0.9999$ gewählt werden, was zu einer Mindestanzahl an Iterationen von circa $200$ führt (siehe Kapitel \ref{s:ransac}). Die letztendlich bestimmten Ellipsen sind beispielhaft in Abbildung \ref{fig:detectedEllipses} zu sehen.  
 
 
 \begin{figure}[!htb]
@@ -192,7 +211,7 @@ Mit Hilfe der Postionen der weißen Pixel, wird anschließend durch RANSAC (sieh
 \section{Zuordnung der Punkte}
 \label{s:pointMapping}
 Nach der Bestimmung der Ellipsen muss jede Sample-Positionen der zugehörigen Kreislinie, sowie Liniensegment zugeordnet werden, um seine Position auf dem Kegel bestimmen zu können. 
-Zunächst wird für jeden Punkte diejenige Kreislinie ausgewählt, dessen zugehörige Ellipse die kürzeste Distanz zu ihm hat (siehe Abbildung \ref{fig:ellipseMapping}).
+Zunächst wird für jeden Punkt diejenige Kreislinie ausgewählt, dessen zugehörige Ellipse die kürzeste Distanz zu ihm hat (siehe Abbildung \ref{fig:ellipseMapping}).
 
 Mit Hilfe dieser Zuordnung können die Ellipsen aus Kapitel \ref{s:ellipseDetection} erneut geschätzt werden. Diesmal wird das Verfahren der kleinsten Quadrate genutzt, da nur die ausreißerfreihen Samples als Messdaten dienen und wir eine optimale Lösung für alle Samples anstreben.  
 
@@ -249,29 +268,30 @@ h_i &= \frac{i}{n}\cdot\Delta H &\forall i\in[0,n-1]\\
 \end{equation*}
 
 \section{Entfaltung}
-Die eigentliche Entfaltung des Kegels, mit zwei unterschiedlichen Ansätzen realisiert werden. 
-Die erste Möglichkeit ist die \textit{Vorwärtsentfaltung}. Hierbei wird für jedes Pixel auf dem Kegelbild eine 3D-Koordinate durch geeignete Interpolation bestimmt und dann auf die Mantelfläche abgebildet. Beim zweiten Ansatz der  \textit{Rückwärtsentfaltung} wird ein Punkt von der Mantelfläche zurück auf den Kegel abgebildet und von dort mit einer Projektionsmatrix auf die Bildebene projiziert und dann interpoliert. 
+Die eigentliche Entfaltung des Kegels kann mit zwei unterschiedlichen Ansätzen realisiert werden. 
+Die erste Möglichkeit ist die \textit{Vorwärtsentfaltung}. Hierbei wird für jedes Pixel auf dem Kegelbild eine 3D-Koordinate durch geeignete Interpolation bestimmt und dann auf die Mantelfläche abgebildet. Beim zweiten Ansatz, der \textit{Rückwärtsentfaltung}, wird ein Punkt von der Mantelfläche zurück auf den Kegel abgebildet und von dort mit einer Projektionsmatrix auf die Bildebene projiziert und dann interpoliert. 
 
 Im folgenden wird genauer auf beide Verfahren eingegangen, sowie deren Probleme erläutert. \todo{hier schon erläutern oder erst in späteren kapiteln?}
 
 \subsection{Vorwärtsentfaltung}
-Bei der \textit{Vorwärtsentfaltung} muss wie oben erwähnt zu jedem Pixel die zugehörige 3D Koordinate im Weltkoordinatensystem berechnet werden. Da bisher jedoch nur die Postionen der Samples bekannt sind muss hier 
+Bei der \textit{Vorwärtsentfaltung} muss wie oben erwähnt zu jedem Pixel die zugehörige 3D Koordinate im Weltkoordinatensystem berechnet werden. Da bisher jedoch nur die Positionen der Samples bekannt sind muss hier 
 
 Zunächst betrachten wir diejenigen Pixel, die sich weder auf einer Kreislinie, noch auf einem Liniensegment befinden. Es gibt zu einem Pixel $P$ also immer vier Sample-Nachbarn $(bl, br, tr, tl)$. Diese Situation ist in Abbildung \ref{fig:radialInterpolation} illustriert. 
 
-Nachdem die vier Nachbarn bestimmt wurden, können im ersten Schritt die Abstande $d_1$ und $d_2$ zu inneren Ellipse $E_b$, respektive äußeren Ellipse $E_t$ berechnet werden. Mithilfe dieser Abständen kann nun eine \textit{Interpolationsellipse}~$E_1$ definiert werden als:
+Nachdem die vier Nachbarn bestimmt wurden, können im ersten Schritt die Abstände $d_1$ und $d_2$ zu inneren Ellipse $E_b$, respektive äußeren Ellipse $E_t$ berechnet werden. Mithilfe dieser Abständen kann nun eine \textit{Interpolationsellipse}~$E_1$ definiert werden als
 \begin{equation*}
-	E_{int} = \left(\frac{d_1}{d_1 + d_2}\right) \cdot E_t + \left(\frac{d_2}{d_1 + d_2}\right) E_b
+	E_{int} = \left(\frac{d_1}{d_1 + d_2}\right) \cdot E_t + \left(\frac{d_2}{d_1 + d_2}\right) E_b,
 \end{equation*}
 
-Wo eine Multiplikation mit einem Skalar alle Charakteristika einer Ellipse skaliert\footnote{der Drehwinkel $\theta$ wird hierbei anschließend$\mod 2\pi$ gerechnet}, und eine Addition elementweise addiert. Im nächsten Schritt wird der Schnittpunkt $L$ mit dem Liniensegment $\overline{bltl}$, sowie der Schnittpunkt $R$ mit dem Liniensegment $\overline{brtr}$ bestimmt. 
+wobei eine Multiplikation mit einem Skalar alle Charakteristika einer Ellipse skaliert. Der Drehwinkel $\theta$ wird hierbei bei $2\pi$ umgebrochen. Eine Addition geschieht elementweise. Im nächsten Schritt wird der Schnittpunkt $L$ mit dem Liniensegment $\overline{bltl}$, sowie der Schnittpunkt $R$ mit dem Liniensegment $\overline{brtr}$ bestimmt. 
 
-Da sich $tl$, $L$ und $bl$ nun auf einem gemeinsamen Liniensegment befinden, kann bezüglich der Weltkoordinaten linear interpoliert werden. Analoges gilt für $R$. 
+Da sich $tl$, $L$ und $bl$ nun auf einem gemeinsamen Liniensegment befinden, kann bezüglich der Weltkoordinaten linear interpoliert werden. Analoges gilt für $tr$,$R$ und $br$. 
 
-Die drei Punkte $(L,P, R)$ befinden sich auf der Interpolationsellipse und somit können die  Winkel $(\phi_L, \phi_P, \phi_R)$ bezüglich des Ellipsenkoordinatensystems bestimmt werden. 
+Die drei Punkte $(L, P, R)$ befinden sich auf der Interpolationsellipse und somit können die  Winkel $(\phi_L, \phi_P, \phi_R)$ bezüglich des gemeinsamen Ellipsenkoordinatensystems bestimmt werden. 
 
+Analog zu oben werden die 3D-Koordinaten von $P$ als lineare Interpolation zwischen den gerade bestimmen 3D-Koordinaten von $L$ und $R$ bestimmt. Als Interpolationsfaktor benutzen wir
+$\frac{\phi_L - \phi_P}{\phi_L - \phi_R}$
 
-Die auf Liniensegmenten befindlichen Punkte werden dabei einfach linear interpoliert. Die Pixel, die sich auf Kreislinien befinden werden über Winkel interpoliert. 
 
 \begin{figure}[!htb]
 	\centering
@@ -288,37 +308,41 @@ Die auf Liniensegmenten befindlichen Punkte werden dabei einfach linear interpol
 	\label{fig:3DInterpol}
 \end{figure}
 
+Analog werden die auf Liniensegmenten befindlichen Punkte einfach linear interpoliert. Die Punkte, die sich auf Kreislinien befinden werden über Winkel interpoliert. 
 
+Jedes Pixel hat nun 3D-Koordinaten im Kegel erhalten, die beispielhaft in Abbildung \ref{fig:3DInterpol} zu sehen sind. \todo{gehören Probleme schon hier her? oder erst bei analyse?}
+Anhand der Abbildung lässt sich das erste Problem bei der Vorwärtsentfaltung feststellen. Zwischen den Samples auf einer Kreislinie sollten die interpolierte Positionen nach außen gewölbt sein, da ein Kegel rund ist. Da wir jedoch Interpolieren und nicht Extrapolieren, gehen die Werte nie über die zur Interpolation genutzten Werte hinaus. Konkreter kann eine interpolierte Position keine größeren oder kleineren $X$ und $Z$ Koordinaten erhalten, als die der genutzten Samples. Diese wäre jedoch notwendig, sodass die Rundung des Kegels erhalten bleibt. Die Oberfläche des Kegels scheint eckig. 
 
+Neben der außerdem sehr hohen Laufzeit, bedingt durch die komplexe Interpolation, ergibt sich noch ein weiteres Problem, dass sich erst bei der Entfaltung ergibt. 
 
-Probleme: bei der skizze geht ein punkt auf der kreislinie $E_t$ mit der y-koordinate niemals über die y koordinate von tl und tr hinaus.
+Die eigentliche Entfaltung geschieht über die Abbildung \ref{eq:coneToLateral}, die in Kapitel \ref{s:cone} konstruiert wurde. Gegebenenfalls nach einer Skalierung und Translation, um den Ursprung zu verschieben ergibt sich das entfaltete Bild, wie in Abbildung \ref{fig:forwardUnfold}. Auch bei kleinen Skalierungen entstehen schon auffällige "`Löcher"' im entfalteten Bild. Grund dafür ist, dass jedes Pixel aus dem Ursprungsbild auf eine 2D-Koordinate der Mantelfläche abgebildet wird. Auch nach einer Skalierung handelt es sich bei diesen Werten im Allgemeinen nicht um ganzzahlige Werte. Es muss im entfalteten Bild gerundet werden. Auch wenn Rundungsfehler nicht entständen, fehlte es einfach an genügend Informationen, gerade in den inneren, kleineren Regionen des Ursprungsbild. \todo{soll ich hier auf den ausblick verweisen?}.
 
-bei der transfomrtaiton entstehen unvermeidbare löcher.
-
-
+Da wir von dem Ursprungsbild aus, auf das entfaltete Bild abbilden, ist eine Interpolation auf dem Ursprungsbild nicht möglich, da wir vorher nicht genau wissen, wo Löcher genau entstehen. 
 
 \begin{figure}[!htb]
 	\centering
 	\begin{subfigure}{.5\textwidth}
 		\centering
 		\includegraphics[width=.9\textwidth]{images/coneRasp.jpg}
-		\caption{Zuordnung von Punkten zu Ellipsen}
-		\label{fig:ellipseMapping}
+		\caption{Ursprungsbild}
 	\end{subfigure}%
 	\begin{subfigure}{.5\textwidth}
 		\centering
 		\includegraphics[angle=-90, width=.9\textwidth]{images/coneRaspUnWarpForward.png}
-		\caption{Zuordnung von Punkten zu Liniensegmenten}
-		\label{fig:lineMapping}
+		\caption{entfaltetes Bild}
 	\end{subfigure}
-	\caption{Zuordnung von Punkten zu Ellipsen (links) und Liniensegmenten (rechts)}
-	\label{fig:mapping}
+	\caption{Vorwärtsentfaltung}
+	\label{fig:forwardUnfold}
 \end{figure}
 
-
+Wir müssten zu einem gegebenen Loch im entfalteten Bild über die Umkehrabbildung auf die Pixel (bzw. Subpixel) schließen.
 
 \subsection{Rückwärtsentfaltung}
-Projektionsmatrix bestimmen
+Bei der Rückwärtsentfaltung gehen wir von dem entfalteten Bild aus und bestimmen zunächst mit der Umkehrabbildung \ref{eq:lateralToCone} aus Kapitel \ref{s:cone}, die 3D Kegelkoordinaten. Mit Hilfe einer Projektionsmatrix werden diese 3D-Koordinten dann auf Bildkoordinaten abgebildet.
+
+Konkret lösen wir das überbestimmte lineare Gleichungssystem:
+
+
 
 
 \begin{figure}[!htb]
@@ -326,15 +350,13 @@ Projektionsmatrix bestimmen
 	\begin{subfigure}{.5\textwidth}
 		\centering
 		\includegraphics[width=.9\textwidth]{images/coneRasp.jpg}
-		\caption{Zuordnung von Punkten zu Ellipsen}
-		\label{fig:ellipseMapping}
+		\caption{Ursprungsbild}
 	\end{subfigure}%
 	\begin{subfigure}{.5\textwidth}
 		\centering
 		\includegraphics[angle=-90, width=.9\textwidth]{images/coneRaspUnWarpReverse.png}
-		\caption{Zuordnung von Punkten zu Liniensegmenten}
-		\label{fig:lineMapping}
+		\caption{entfaltetes Bild}
 	\end{subfigure}
-	\caption{Zuordnung von Punkten zu Ellipsen (links) und Liniensegmenten (rechts)}
-	\label{fig:mapping}
+	\caption{Rückwärtsentfaltung}
+	\label{fig:reverseUnfold}
 \end{figure}

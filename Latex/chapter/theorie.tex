@@ -113,7 +113,7 @@ Da $R, r, \Delta H$  und nun auch die Höhe bekannt sind, kann man den Winkel $\
 wobei wir $\atant$ benutzen um den Winkel im richtigen Quadranten, also in $[0, 2\pi)$, bestimmen zu können. 
 
 Mit diesen beiden Hilfsfunktionen und \ref{eq:paramLateral} ergibt sich insgesamt:
-\begin{equation}
+\begin{equation}\label{eq:coneToLateral}
 \begin{aligned}
 \Psi \colon [r,R] \times [0, \Delta H] \times [r,R] &\to [s,S] \times [s,S]\\
 \begin{pmatrix}
@@ -148,7 +148,7 @@ Die Höhe  im Kegel und somit der Radius lässt sich nun gewissermaßen als Umke
 \end{equation*}
 
 Insgesamt ergibt sich:
-\begin{equation}
+\begin{equation}\label{eq:LateralToCone}
 \begin{aligned}
 \Psi^{-1} \colon  [s,S]x[s,S] &\to [r,R] \times [0, \Delta H] \times [r,R]\\
 \begin{pmatrix}
@@ -208,6 +208,13 @@ Kamerakalibrierung wird benötigt, um eine Beziehung zwischen Punkten in 3D im W
 		\end{pmatrix}}_{=:A}	\begin{pmatrix}
 		x \\y \\z \\ 1 
 		\end{pmatrix},
+\end{equation}
+
+\begin{equation}
+\begin{aligned}
+u &= \frac{a_{11} x +a_{12}y + a_{13}z + a_{14}}{a_{31} x +a_{32}y + a_{33}z + a_{34}} \\
+v &= \frac{a_{21} x +a_{22}y + a_{23}z + a_{24}}{a_{31} x +a_{32}y + a_{33}z + a_{34}}
+\end{aligned}
 \end{equation}
 
 die einen Punkt $P=(x,y,z)$ in homogenen Koordinaten $\tilde P = (x,y,z,1)$ auf einen Punkt $\tilde C = (wu,wv, w)$ beziehungsweise nach der perspektivischen Division $C = (u,v)$ auf die Bildebene abbildet, wobei die $a_{i,j}$ von den intrinsischen und extrinsischen Parametern der Kamera abhängen \cite{Heikkila1997}.
@@ -554,7 +561,7 @@ Am Ende des Verfahrens such man im Akkumulator nach Häufungspunkten. Jeder Häu
 Ein Blob-Detektor ist also ein Verfahren zum Detektieren solcher Blobs. Die gefunden Blobs können anschließend nach verschiedenen Kriterien, wie Größe, Farbe, Konvexität oder Rundheit gefiltert werden. 
 
 
-\section{Ausgleichsproblem}
+\section{Ausgleichsproblem}\todo{nicht ohlbergers skript zitieren}
 Gegeben seien $m$ Messdaten $(x_1,y_1),\dotsc,(x_m,y_m)$, sowie $n$ Funktionen $u_1,\dotsc,u_n$ mit $n\leq m$ und $n,m\in\mathbb{N}$. Hier Zitat einfügen. Skript von Ohlberger
 
 Gesucht ist eine Linearkombination $u(x) = \sum_{i=1}^{m} c_iu_i(x)$ welche die mittlere Abweichung minimiert, also 
@@ -578,24 +585,36 @@ mit
 \end{aligned}
 \]
 
-und äquivalent zur Normalengleichung:
-\begin{equation}\label{eq:normaleq}
-	(A^TA)^{-1}Ac = A^Ty
-\end{equation}
-
-
-Die Lösung des Ausgleichproblems kann mit einer Singulärwertzerlegung gelöst werden. Die Matrix $A\in\mathbb{R}^{m\times n}$ kann geschrieben werden als:
- 
-\[
-A = U\Sigma V^T
-\]
-
-mit orthogonalen Matrizen $U\in\mathbb{R}^{m\times m}$ und $V\in\mathbb{R}^{n\times n}$ und einer Diagonalmatrix $\Sigma\in\mathbb{R}^{m\times n}$ mit den absteigend sortierten Singulärwerten auf der Diagonale. Setzt man diese Form für $A$ in die Normalengleichung (\ref{eq:normaleq}) ein so ergibt sich:
+und äquivalent zur Normalengleichung
 \begin{equation*}
-((U\Sigma V^T)^T\cdot (U\Sigma V^T))^{-1}\cdot (U\Sigma V^T)^T = V\Sigma^{-1}U^T
+	(A^TA)c = A^Ty,
 \end{equation*}
 
+wobei mindestens eine Lösung existiert und die Lösung mit kleinster 2-Norm eindeutig ist. 
 
-Lösen mittels SVD
+Gilt darüber hinaus $\text{rang}\left(A\right) = n$ so gilt 
+
+\begin{equation}\label{eq:normaleq}
+c = \underbrace{(A^TA)^{-1}A^T}_{A^+}y
+\end{equation}
+
+und c ist die eindeutige Lösung mit kleinster 2-Norm.
+
+Die Lösung des Ausgleichproblems kann dann mit einer Singulärwertzerlegung (SVD) gelöst werden. Die Matrizen $A\in\mathbb{R}^{m\times n}$ und $A^+\in\mathbb{R}^{n\times m}$ können geschrieben werden als:
+
+\[
+\begin{aligned}
+A &= U\Sigma V^T \\
+A^+ &= V\Sigma^+U^T
+\end{aligned}
+\]
+
+mit orthogonalen Matrizen $U\in\mathbb{R}^{m\times m}$ und $V\in\mathbb{R}^{n\times n}$ und einer Diagonalmatrix $\Sigma\in\mathbb{R}^{m\times n}$ mit den absteigend sortierten Singulärwerten auf der Diagonale (aufgefüllt mit Nullen), sowie $\Sigma^+\in\mathbb{R}^{n\times m}$ mit den jeweiligen reziproken Singulärwerten.
+
+
+Die Lösung des Ausgleichsproblems kann also mittels SVD angeben werden als:
+\[
+c = V\Sigma^+U^Ty
+\]
 
 
