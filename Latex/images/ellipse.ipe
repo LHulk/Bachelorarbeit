@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70107" creator="Ipe 7.2.5">
-<info created="D:20160828203110" modified="D:20160829154605"/>
+<info created="D:20160828203110" modified="D:20160908154735"/>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
 <path stroke="sym-stroke" fill="sym-stroke" pen="sym-pen">
@@ -220,13 +220,13 @@ h
 <dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
 <dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
 <textsize name="large" value="\large"/>
+<textsize name="small" value="\small"/>
+<textsize name="tiny" value="\tiny"/>
 <textsize name="Large" value="\Large"/>
 <textsize name="LARGE" value="\LARGE"/>
 <textsize name="huge" value="\huge"/>
 <textsize name="Huge" value="\Huge"/>
-<textsize name="small" value="\small"/>
 <textsize name="footnote" value="\footnotesize"/>
-<textsize name="tiny" value="\tiny"/>
 <textstyle name="center" begin="\begin{center}" end="\end{center}"/>
 <textstyle name="itemize" begin="\begin{itemize}" end="\end{itemize}"/>
 <textstyle name="item" begin="\begin{itemize}\item{}" end="\end{itemize}"/>
@@ -258,12 +258,20 @@ h
 128 512 m
 448 512 l
 </path>
-<path stroke="black" arrow="normal/normal">
+<path matrix="1 0 0 0.643963 0 182.291" stroke="black" arrow="normal/normal">
 128 512 m
 128 832 l
 </path>
 <text matrix="1 0 0 1 -16 0" transformations="translations" pos="448 496" stroke="black" type="label" width="9.579" height="7.412" depth="0" valign="baseline" size="LARGE">$x$</text>
-<text matrix="1 0 0 1 16 0" transformations="translations" pos="96 816" stroke="black" type="label" width="8.837" height="7.41" depth="3.35" valign="baseline" size="LARGE">$y$</text>
+<text matrix="1 0 0 1 16 -112" transformations="translations" pos="96 816" stroke="black" type="label" width="8.837" height="7.41" depth="3.35" valign="baseline" size="LARGE">$y$</text>
+<path stroke="black">
+128 512 m
+128 496 l
+128 512 l
+112 512 l
+112 512 l
+</path>
+<group matrix="1 0 0 1 -16 -48">
 <path matrix="0.639551 0.374684 -0.206767 0.352933 200.831 315.249" stroke="black">
 181.019 0 0 181.019 320 640 e
 </path>
@@ -273,11 +281,11 @@ h
 </path>
 <text matrix="1 0 0 1 0 1.47005" transformations="translations" pos="336 688" stroke="black" type="label" width="8.849" height="7.412" depth="0" valign="baseline" size="LARGE">$a$</text>
 <text matrix="1 0 0 1 -22.9347 -23.3502" transformations="translations" pos="256 704" stroke="black" type="label" width="7.167" height="11.955" depth="0" valign="baseline" size="LARGE">$b$</text>
-<path stroke="black" dash="dashed" arrow="normal/normal">
+<path matrix="0.777778 0 0 1 21.3333 0" stroke="black" dash="dashed" arrow="normal/normal">
 96 656 m
 544 656 l
 </path>
-<text transformations="translations" pos="512 640" stroke="black" type="label" width="13.365" height="12.889" depth="0" valign="baseline" size="LARGE">$x&apos;$</text>
+<text matrix="1 0 0 1 -96 0" transformations="translations" pos="512 640" stroke="black" type="label" width="13.365" height="12.889" depth="0" valign="baseline" size="LARGE">$x&apos;$</text>
 <path stroke="black">
 320 656 m
 48 0 0 48 272 656 311.059 683.899 a
@@ -288,12 +296,6 @@ h
 272.675 656.482 m
 227.028 719.567 l
 </path>
-<path stroke="black">
-128 512 m
-128 496 l
-128 512 l
-112 512 l
-112 512 l
-</path>
+</group>
 </page>
 </ipe>

@@ -18,11 +18,10 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_buttonCalibrationWizard_clicked();
 	void triggeredImport(bool);
-
+	void triggeredCalibration(bool);
+	void triggeredSetOutputDir(bool);
 	void on_ButtonLoadFiles_clicked();
-
 	void on_buttonUnfold_clicked();
 
 private:
@@ -30,7 +29,9 @@ private:
     CalibrationWizard* wizard;
 	QGraphicsScene* scene;
 
-	QStringListModel* model;
+	QStringListModel* modelIn;
+	QStringListModel* modelOut;
+
 	QStringList files;
 
 	//stored
@@ -45,6 +46,8 @@ private:
 
 	bool hasSettings;
 	bool hasFiles;
+
+	std::string outputDir;
 };
 
 #endif // MAINWINDOW_H

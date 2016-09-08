@@ -32,13 +32,15 @@ CalibrationWizard::CalibrationWizard(QWidget *parent) :
 	ui->labelBlobStatus->setText("");
 
 
-    /*cv::FileStorage fs("cameraSettings.txt", cv::FileStorage::READ);
+	cv::FileStorage fs("cameraSettings.txt", cv::FileStorage::READ);
+	if(!fs.isOpened())
+		exit(0);
 	fs["cameraMatrix"] >> this->cameraMatrix;
 	fs["distCoeffs"] >> this->distCoeffs;
-    fs.release();*/
+	fs.release();
 
-    this->cameraMatrix = cv::Mat::eye(3, 3, CV_32F);
-    this->distCoeffs = cv::Mat::zeros(5, 1, CV_32F);
+	//this->cameraMatrix = cv::Mat::eye(3, 3, CV_32F);
+	//this->distCoeffs = cv::Mat::zeros(5, 1, CV_32F);
 
 	std::ostringstream stream;
 	stream << "Camera Matrix: \n" << cameraMatrix << "\n\n" << "Distortion coefficients: \n" << distCoeffs;
@@ -94,7 +96,7 @@ void CalibrationWizard::on_buttonLoadCone_clicked()
 void CalibrationWizard::on_buttonStartIntrinsic_clicked()
 {
 	ui->progressIntrinsic->setValue(0);
-	ui->progressIntrinsic->setMaximum(fileNamesCamCalib.size() - 1);
+	ui->progressIntrinsic->setMaximum(fileNamesCamCalib.size());
 
 	std::vector<std::vector<cv::Point2f>> imagePoints;
 	std::vector<std::vector<cv::Point3f>> objectPoints;
@@ -117,7 +119,7 @@ void CalibrationWizard::on_buttonStartIntrinsic_clicked()
 			imagePoints.push_back(currentImagePoints);
 			objectPoints.push_back(currentobjectPoints);
 		}
-		ui->progressIntrinsic->setValue(i);
+		ui->progressIntrinsic->setValue(i + 1);
 		this->refresh();
 	}
 
@@ -322,7 +324,7 @@ void CalibrationWizard::on_buttonUnfold_clicked()
 	{
 		this->isForward = false;
 		Transformation::getReverseWarpMaps(cone, remapXWarp, remapYWarp, projectionMatrix);
-		cv::remap(greyOriginal, showWarped, remapXWarp, remapYWarp, cv::INTER_CUBIC);
+		cv::remap(greyOriginal, showWarped, remapXWarp, remapYWarp, cv::INTER_CUBIC, cv::BORDER_CONSTANT, cv::Scalar(0,0,0));
 
 		/*double S = cone.S();
 		double s = cone.s();

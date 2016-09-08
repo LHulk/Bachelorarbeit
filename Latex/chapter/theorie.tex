@@ -7,6 +7,8 @@ In diesem Kapitel werden einige Grundlagen für die folgende Kapitel eingeführt
 
 Wir benutzen ein linkshändiges Koordinatensystem.
 
+
+
 \section{Kegel}
 \label{s:cone}
 
@@ -163,9 +165,68 @@ x \\ y
 \end{equation}
 
 
+\section{Lineares Ausgleichsproblem}
+\label{s:LSQ}
+Gegeben seien $m$ Messdaten $(x_1,y_1),\dotsc,(x_m,y_m)$, sowie eine lineare Funktion $\varphi(x) = \sum_{i = 1}^{n}c_i\varphi_i(x)$ in $x$ mit $c_1,\dotsc,c_n\in\mathbb{R}$, $n\leq m$ und $n,m\in\mathbb{N}$. 
+
+Gesucht ist eine Lösung der $c_i$ welche die mittlere Abweichung, also 
+
+\[
+\Delta_2 = \min_{c_1,\dotsc,c_n\in\mathbb{R}} \left(\sum_{j=1}^{m}\left(y_j - \varphi(x_j)\right)^2\right) = \min_{c_1,\dotsc,c_n\in\mathbb{R}} \left(\sum_{j=1}^{m}\left(\sum_{i=1}^{n}y_j-\left(c_i\varphi_i(x_j)\right)\right)^2\right)
+\]
+
+minimiert \cite{Stoer2007}.
+
+Diese Problem wird als lineares Ausgleichsproblem oder aber auch als Methode der kleinsten Quadrate bezeichnet und lässt sich auch wie folgt formulieren:
+
+\[
+\min_{c\in\mathbb{R}^n} ||y - Ac||_2,
+\]
+
+mit 
+\[
+\begin{aligned}
+c &= (c_1,\dotsc,c_n)^T\in\mathbb{R}^n \\
+x &= (x_1,\dotsc,x_m)^T\in\mathbb{R}^m \\
+y &= (y_1,\dotsc,y_m)^T\in\mathbb{R}^m \\
+A &= (a_{ij})\in\mathbb{R}^{m\times n}\quad\text{mit}\quad a_{ij} = \varphi_i(x_j)
+\end{aligned}
+\]
+
+Das Problem lässt sich auch mit Hilfe der äquivalenten sogenannten Normalengleichung
+\begin{equation*}
+	(A^TA)c = A^Ty
+\end{equation*}
+
+lösen, wobei mindestens eine Lösung existiert und die Lösung mit kleinster 2-Norm eindeutig ist. 
+
+Gilt darüber hinaus $\text{rang}\left(A\right) = n$ so ist $A^TA$ invertierbar und es gilt 
+
+\begin{equation}\label{eq:normaleq}
+c = \underbrace{(A^TA)^{-1}A^T}_{A^+}y
+\end{equation}
+
+und c ist die eindeutige Lösung mit kleinster 2-Norm.
+
+$A^+$ bezeichnet man auch als Pseudoinverse von $A$ und lässt sich durch eine Singulärwertzerlegung (SVD) bestimmen \cite{Stoer2011}. Die Matrizen $A\in\mathbb{R}^{m\times n}$ und $A^+\in\mathbb{R}^{n\times m}$ können geschrieben werden als:
+
+\[
+\begin{aligned}
+A &= U\Sigma V^T \\
+A^+ &= V\Sigma^+U^T
+\end{aligned}
+\]
+
+mit orthogonalen Matrizen $U\in\mathbb{R}^{m\times m}$ und $V\in\mathbb{R}^{n\times n}$ und einer Diagonalmatrix $\Sigma\in\mathbb{R}^{m\times n}$ mit den absteigend sortierten Singulärwerten auf der Diagonale (aufgefüllt mit Nullen), sowie $\Sigma^+\in\mathbb{R}^{n\times m}$ mit den jeweiligen reziproken Singulärwerten.
 
 
-\todo{dieses kapitel sollte aussagekräftig sein, da projektive geometrie im titel vorkommt}
+Die Lösung des Ausgleichsproblems kann also mittels SVD angeben werden als:
+\[
+c = V\Sigma^+U^Ty
+\]
+
+
+
 \section{Kamerakalibrierung und projektive Geometrie}
 \label{s:calib}
 
@@ -173,7 +234,7 @@ x \\ y
 	Kamerakalibrierung ist ein Verfahren, bei dem die interne Kamerageometrie und optischen Eigenschaften (intrinische Parameter) 
 	und/oder die 3D-Position und Orientierung der Bildebene relativ zu einem Weltkoordinatensystem (extrinische Parameter) bestimmt werden \cite{Tsai1987}.
 \end{definition}
-
+\bigskip
 Um die Parameter einer Kamera korrekt beschreiben zu können, ist ein Kameramodell notwendig. Das wohl bekannteste Kameramodell ist das Lochkamera-Modell. Die Lichtstrahlen der Szene gelangen dabei durch eine kleine Öffnung in die Kamera (siehe dazu Abbildung \ref{fig:pinhole}).
 \begin{figure}[!htb]
 	\centering
@@ -184,18 +245,7 @@ Um die Parameter einer Kamera korrekt beschreiben zu können, ist ein Kameramode
 
 Das Bild das an der Rückseite der Kamera entsteht ist dabei um 180° gedreht. Damit man diese Rotation nicht betrachten muss, kann man die Bildebene virtuell vor die Lochblende setzen. Da sich der Abstand zur Blende nicht ändert, ändern sich, außer der ersparten Rotation, auch die optischen Eigenschaften nicht.
 
-
-
-\begin{figure}[!htb]
-	\centering
-	\includegraphics[scale=.8]{images/pinhole.eps}
-	\caption{Projektion eines Punktes $P$ im Weltkoordinatensystem $(x_w, y_w, z_w)$ auf die Bildebene im Kamerakoordinatensystem  $(x_c, y_c, z_c)$}
-	\label{fig:extrinsic}
-\end{figure}
-
-
-
-Kamerakalibrierung wird benötigt, um eine Beziehung zwischen Punkten in 3D im Weltkoordinatensystem und den Punkten auf der Bildebene herzustellen. Genauer suchen wir eine projektive Abbildung:
+Kamerakalibrierung wird benötigt, um eine Beziehung zwischen Punkten in 3D im Weltkoordinatensystem und den Punkten auf der Bildebene herzustellen. Konkret suchen wir eine projektive Abbildung
 
 \begin{equation}
 	\begin{pmatrix}
@@ -210,18 +260,75 @@ Kamerakalibrierung wird benötigt, um eine Beziehung zwischen Punkten in 3D im W
 		\end{pmatrix},
 \end{equation}
 
-\begin{equation}
-\begin{aligned}
-u &= \frac{a_{11} x +a_{12}y + a_{13}z + a_{14}}{a_{31} x +a_{32}y + a_{33}z + a_{34}} \\
-v &= \frac{a_{21} x +a_{22}y + a_{23}z + a_{24}}{a_{31} x +a_{32}y + a_{33}z + a_{34}}
-\end{aligned}
+
+die einen Punkt $P=(x,y,z)$ in homogenen Koordinaten $\tilde P = (x,y,z,1)$ auf einen Punkt $\tilde C = (wu,wv, w)$ beziehungsweise nach der perspektivischen Division $C = (u,v)$ auf die Bildebene abbildet, wobei die $a_{ij}$ von den intrinsischen und extrinsischen Parametern der Kamera abhängen \cite{Heikkila1997}.
+
+Man kann leicht zeigen, dass für $A$ gilt
+\[
+A = \lambda \cdot
+\begin{pmatrix}
+1 & 0 & u_0\\
+0 & 1 & v_0\\
+0 & 0 & 1 
+\end{pmatrix}
+\begin{pmatrix}
+f & 0 & 0\\
+0 & f & 0\\
+0 & 0 & 1 
+\end{pmatrix} 
+\left(\begin{array}{ccc}
+R &  T\\
+0 & 1 
+\end{array}\right) = \lambda\underbrace{\begin{pmatrix}
+f & 0 & u_0\\
+0 & f & v_0\\
+0 & 0 & 1 
+\end{pmatrix}}_{=:V}
+\left(\begin{BMAT}(e)[1pt]{ccc|c}{ccc|c}
+& & & \\
+& \text{\large R}& & \text{\large T} \\
+& &  & \\
+0 & 0 & 0 & 1
+\end{BMAT}\right),
+\]
+
+wobei $\lambda$ ein beliebiger Skalierungsfaktor ist. $V$ beschreibt die intrinsischen und $R$ und $T$ die extrinsischen Parameter (siehe \cite{Heikkila1997}). $f$ ist hierbei die Brennweite; $u_0$ und $v_0$ die Bildmitte.
+
+%Zunächst wird also das Weltkoordinatensystem wie in Abbildung \ref{fig:extrinsic} mit einer Rotation und einer Translation in das Kamerakoordinatensystem überführt. Anschließend wird 
+ 
+ Zu gegebenen Punktenpaaren $(x_k,y_k), k = 1,\dotsc,m$ kann diese Matrix wie folgt gelöst werden:
+ 
+ \begin{equation*}
+ \begin{aligned}
+ u_k &= \frac{a_{11} x_k +a_{12}y_k + a_{13}z_k + a_{14}}{a_{31} x_k +a_{32}y_k + a_{33}z_k + a_{34}} \\
+ v_k &= \frac{a_{21} x_k +a_{22}y_k + a_{23}z_k + a_{24}}{a_{31} x_k +a_{32}y_k + a_{33}z_k + a_{34}}
+ \end{aligned}
+ \end{equation*}
+ 
+ \setcounter{MaxMatrixCols}{20}
+\begin{equation}\label{eq:DLT}
+\underbrace{\begin{pmatrix}
+x_1 & y_1 & z_1 & 1 & 0 & 0 & 0 & 0 & -u_1 x_1 & -u_1 y_1 & -u_1z_1 \\
+0 & 0 & 0 & 0 & x_1 & y_1 & z_1 & 1 & -v_1x_1 & -v_1y_1 & -v_1z_1 \\
+\vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots\\
+x_m & y_m & z_m & 1 & 0 & 0 & 0 & 0 & -u_m x_m & -u_m y_m & -u_m z_m \\
+0 & 0 & 0 & 0 & x_m & y_m & z_m & 1 & -v_mx_m & -v_my_m & -v_mz_m
+\end{pmatrix}}_{=:M}
+\begin{pmatrix}
+a_{11} \\ a_{12} \\ a_{13} \\ a_{14} \\ a_{21} \\ a_{22} \\ a_{23} \\ a_{24} \\ a_{31} \\ a_{32} \\ a_{33}
+\end{pmatrix} = 
+\begin{pmatrix}
+u_1 \\ v_1 \\ \vdots \\ u_m \\ v_m
+\end{pmatrix},
 \end{equation}
 
-die einen Punkt $P=(x,y,z)$ in homogenen Koordinaten $\tilde P = (x,y,z,1)$ auf einen Punkt $\tilde C = (wu,wv, w)$ beziehungsweise nach der perspektivischen Division $C = (u,v)$ auf die Bildebene abbildet, wobei die $a_{i,j}$ von den intrinsischen und extrinsischen Parametern der Kamera abhängen \cite{Heikkila1997}.
-
-Wir konstruieren nun schrittweise die Matrix $A$:
-
- Zunächst wird das Weltkoordinatensystem wie in Abbildung \ref{fig:extrinsic} mit einer Rotation und einer Translation in das Kamerakoordinatensystem überführt. 
+wobei $a_{34}$ auf eins skaliert wird.  Es handelt sich hierbei um ein überbestimmtes lineares Gleichungssystem, was mittels der Methode der kleinsten Quadrate (siehe Kapitel \ref{s:LSQ}) gelöst werden kann. 
+Diese Verfahren wird auch als \textit{Direct Linear Transformation}(DLT) bezeichnet.
+ 
+Das beschriebene Verfahren vernachlässigt dabei Linsenverzerrungen. Solche Verzerrungen entstehen entweder als Produktionsfehler günstiger Linsen, oder bewusst beispielsweise bei Weitwinkelkameras. Verzerrungen können in der Regel nicht linear modelliert werden. Der Ansatz über DLT funktioniert hier dementsprechend nicht. 
+ 
+ \todo{hier muss noch was getan werden}DLT vernachlässigt alle Verzerrungen. Um diese zu kompensieren benutze die 4 schritte von tsai
+ 
 
 Die vier Schritt der Kamerakalibrierung sind nach Tsai\cite{Tsai1987}:
 \begin{enumerate}
@@ -230,28 +337,79 @@ Die vier Schritt der Kamerakalibrierung sind nach Tsai\cite{Tsai1987}:
 	\item Bestimmen der Verzerrungskoeffiezienten $\kappa_1$ und $\kappa_2$
 \end{enumerate}
 
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=.8]{images/pinhole.eps}
+	\caption{Projektion eines Punktes $P$ im Weltkoordinatensystem $(x_w, y_w, z_w)$ auf die Bildebene im Kamerakoordinatensystem  $(x_c, y_c, z_c)$}
+	\label{fig:extrinsic}
+\end{figure}
 
 
 
 Selfcalibrating vs bla bla
 
- erst mal außen vor. erst nach dem rest
-Zu den intrinsischen Parametern gehören neben Brennweite $f$ der Kamera, die Bildmitte (auch Bildmittelpunkt) $(u_0, v_0)$, metrische Pixelgrößen $s_x$ und $s_y$, sowie Verzerrungskoeffizienten.
-Mit Hilfe der intrinsischen und extrinsischen Parameter lässt sich eine 
-
-wofür braucht man das? billige linsen, verzerrungen, 3d rekonstruktionen. abbildung von 3d auf 2d, lochkamera, intrinisch, extrinsisch
-Lochkamera
-
-
-Linsenverzerrungen
-
-projektionsmatrix
-(homogene Koordinaten????)
-SVD, QR, LSQ?
 
 
 
+\section{Blob-Detektor}
+\label{s:blob}
+\begin{definition}[Blob]\label{def:blob}
+	Ein Blob ist eine glatte zusammenhängende Region in einem Bild, die sich farblich von ihrer Umgebung abhebt \cite{Lindeberg1993}.
+\end{definition}
 
+Ein Blob-Detektor ist also ein Verfahren zum Detektieren solcher Blobs. Die gefunden Blobs können anschließend nach verschiedenen Kriterien, wie Größe, Farbe, Konvexität oder Rundheit gefiltert werden. 
+
+\section{Canny}
+\label{s:canny}
+Der Canny-Algorithmus\cite{Canny1986} ist ein Verfahren zur Kantendetektion. Im Gegensatz zu anderen Verfahren wie Sobel, oder Prewitt, versucht Canny die Fehlerrate der Kantendetektion minimal zu halten. 
+Es sollten nicht mehr Kanten zurückgegeben werden, als auf dem Bild zu sehen und es sollten auch keine Kanten übersehen werden. Darüber hinaus markiert Canny die Kanten möglichst exakt, minimiert also die Distanz eines markierten Punktes zur eigentlichen Kante. Zuletzt gewährleistet Canny außerdem die Eindeutigkeit einer Kante. Das bedeutet, dass eine Kante nicht mehrmals markiert wird.
+
+\section{Hough-Transformation}
+\label{s:hough}
+Hough-Transformation ist ein Verfahren zur Detektion von beliebigen parametrisierbaren Konturen. In dieser Arbeit werden Hough-Transforamtionen benutzt um Geraden zu detektieren. 
+
+Eine beliebige zweidimensionale Gerade kann in Polarkoordinaten folgendermaßen implizit ausgedrückt werden:
+
+\begin{equation}\label{eq:HoughLines}
+x\cos\phi + y\sin\phi - d = 0,
+\end{equation}
+
+wobei $\phi \in [0,2\pi)$ der Winkel der Geraden mit der $X$-Achse und $d \geq 0$ der Radius, also der euklidische Abstand der Geraden zum Ursprung des Koordinatensystems ist.
+
+Eine Gerade wird somit als ein Punkt $(d,\phi)$ in den Parameterraum (auch Hough-Raum) abgebildet. 
+
+Um eine Gerade eindeutig zu definieren benötigt man, wie auch bei der klassischen Defintionen $y = mx + b$, zwei Punkte. Nimmt man nur einen, so lässt sich jedoch die Auswahl von $\phi$ und $d$ einschränken. Hat man beispielsweise einen Punkt $(x_k,y_k)$ gegeben so lässt sich die Gleichung \ref{eq:HoughLines} nach $d$ umstellen und man erhält eine sinusförmige Funktion in Abhängigkeit von $\phi$. 
+
+Um beliebige Geraden detektieren zu können, werden $\phi$ und $d$ passen diskretisiert:
+\begin{equation*}
+	\begin{aligned}
+		\phi_i &= \phi_{min} + \frac{i}{n} \cdot (\phi_{max} - \phi_{min}) \quad&\forall &i\in [0,n]\\
+		d_j &= d_{min} + \frac{j}{m} \cdot  (d_{max} - d_{min}) &\forall &j\in [0,m]
+	\end{aligned}
+\end{equation*}
+
+Es wird nun ein Akkumulator $\mathcal{H}(\phi, d)$ für alle $\phi_i$ und $d_j$ auf null gesetzt.
+
+Als Nächstes wird ein Kantentbild mittels Canny erzeugt und jene Pixel $(x_k,y_k)$ betrachtet, die nicht null sind.
+Zu einen gegebenen Pixel wir nun für alle diskreten Winkel $\phi_i$ ein $d_i$ ausgerechnet und entsprechend im Akkumulator  $\mathcal{H}$ der Wert an der Stelle $(\phi_i, d_i)$ erhöht. 
+Am Ende des Verfahrens such man im Akkumulator nach Häufungspunkten. Jeder Häufungspunkt steht dort für eine Gerade. 
+
+
+\section{RANSAC}
+\label{s:ransac}
+\textit{Random Sample Consensus} (RANSAC) \cite{Fischler1981} ist ein nicht-deterministisches robustes Verfahren zur Parameterschätzung eines Modells bei einer, möglicherweise durch starke Ausreißer, gestörten Messreihe. 
+Im Gegensatz zu Verfahren, wie der Methode der kleinsten Quadrate, die versuchen eine optimale Lösung für alle Messdaten zu bestimmen, nutzt RANSAC nur eine Teilmenge der Messreihe. 
+
+RANSAC wählt aus der Menge der Messdaten wiederholt zufällig die minimale Anzahl Messdaten aus, die nötig sind um das Modell eindeutig zu beschreiben und prüft dann, wie gut das geschätzte Modell die restlichen Messdaten beschreibt. 
+Die Güte des Modells wird im Allgemeinen durch ein Distanzmaß, wie zum Beispiel der euklidische Abstand, berechnet. 
+Hat ein Messdatum eine vorher definierte Maximaldistanz zum geschätzten Modell nicht überschritten, wird es ins sogenannte Consensus Set des Modells aufgenommen. 
+Das Modell mit dem größten Consensus Set wird schließlich ausgewählt. 
+
+Die Anzahl der Iterationen, die mindestens notwendig sind, um mit einer Wahrscheinlichkeit von $p \in [0,1)$, bei einem relativen Ausreißeranteil von $\epsilon \in[0,1)$ und einer Anzahl von $k$ Daten, um das Modell eindeutig zu beschreiben, mindestens einmal eine ausreißerfreie Teilmenge der Messreihe zu erhalten, lässt sich berechnen mit:
+
+\begin{equation}
+\frac{\log{\left(1-p\right)}}{\log{\left(1-\left(1-\epsilon\right)^k\right)}}
+\end{equation}
 
 
 \section{Ellipsen}
@@ -260,11 +418,18 @@ SVD, QR, LSQ?
 \label{s:ellipseGeneral}
 
 \begin{definition}[Ellipse]
-	Ellipsen entstehen durch 
-	Kegelschnitt und so bla bla. im weiteren bla bla meinen wir mit Hauptachsen immer die Semihauptachsen
+	Eine Ellipse wird beschrieben durch diejenigen Punkte, dessen Summe der Abstände zu zwei gegebenen Punkten $f_1$ und $f_2$(Brennpunkte) konstant sind. Der Mittelpunkt der Verbindungslinie der beiden Brennpunkt wird als Zentrum der Ellipse bezeichnet (siehe Abbildung \ref{fig:ellipseDef}). 
+	Als Hauptachse $a$ bezeichnen wir die Verbindungslinie von Mittelpunkt durch einen der Brennpunkte bis zum Scheitel $V_1$ (bzw. $V_3$) der Ellipse. Die zu ihr rechtwinklige Verbindungslinie durch den Mittelpunkt bis zu einem der anderen Scheitelpunkte ($V_2$ oder $V_4$) nennen wir Nebenachse $b$.
 \end{definition}
 
-In ihrer einfachsten Form liegt die Ellipse im Zentrum des Koordinatensystems und ihre Haupt- und Nebenachse $a$ und $b$ sind achsenausgerichtet, das heißt ihre Hauptachse liegt auf der $X$-Achse und ihre Nebenachse auf der $Y$-Achse. Sie kann dann in der impliziten Form
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=.8]{images/ellipse_focalDef.eps}
+	\caption{Ellipse mit Brennpunkten $f_1, f_2$, Zentrum $C$, Hauptachse $a$, Nebenachse $b$ und Scheitelpunkten $V_1$ und $V_2$}
+	\label{fig:ellipseDef}
+\end{figure}
+
+In ihrer einfachsten Form liegt die Ellipse im Zentrum des Koordinatensystems und ihre Haupt- und Nebenachse $a$ und $b$ sind achsenausgerichtet. Das heißt ihre Hauptachse liegt auf der $X$-Achse und ihre Nebenachse auf der $Y$-Achse. Sie kann dann in der impliziten Form
 
 \begin{equation} \label{eq:ellipseNoRotNoTrans}
 \frac{x^2}{a^2} + \frac{y^2}{b^2} = 1
@@ -295,7 +460,7 @@ mit Ellipsenzentrum $(x_0,y_0)\in\mathbb{R}^2$, Hauptachsen $a,b\in\mathbb{R}^+$
 \begin{pmatrix}x \\ y\end{pmatrix} = \begin{pmatrix}x_0 + a\cos\phi\cos\theta - b\sin\phi\sin\theta \\ 
 y_0 + a\cos\phi\sin\theta + b\sin\phi\cos\theta\end{pmatrix}
 \end{equation}
-mit $\phi \in [0, 2\pi)$, $x_0, y_0, a,b, \theta$ wie oben.
+mit $\phi \in [0, 2\pi)$ und $x_0, y_0, a,b, \theta$ wie oben.
 
 In ihrer allgemeinsten Form lässt sich eine Ellipse durch ein implizites Polynom zweiten Grades charakterisieren
 \begin{equation} \label{eq:ellipseQuadratic}
@@ -304,7 +469,7 @@ ax^2 + by^2 + cxy + dx + ey + f = 0 \quad \text{mit}\quad c^2-4ab < 0
 mit $a,b,c,d,e,f \in \mathbb{R}$. Eine Ellipse lässt sich also durch sechs Punkte eindeutig beschrieben (fünf, wenn man $f$ auf eins skaliert).
 
 
-Die beiden Formen \ref{eq:ellipseRotTrans} und \ref{eq:ellipseQuadratic} sind äquivalent, falls die Ellipse nicht degeneriert ist (ohne Beweis). Da wir die Umformung von \ref{eq:ellipseRotTrans} nach \ref{eq:ellipseQuadratic} später brauchen, wird sie hier einmal exemplarisch vorgeführt. 
+Die beiden Formen \ref{eq:ellipseRotTrans} und \ref{eq:ellipseQuadratic} sind äquivalent, falls die Ellipse nicht degeneriert ist (ohne Beweis) \cite{Lawrence1972}. Da wir die Umformung von \ref{eq:ellipseRotTrans} nach \ref{eq:ellipseQuadratic} später brauchen, wird sie hier einmal exemplarisch vorgeführt. 
 
 Zunächst einmal fällt auf, dass der gemischte Term $cxy$ genau dann null ist, wenn die Ellipse nicht rotiert wurde. Im ersten Schritt versuchen wir also die Rotation der Ellipse rückgängig zu machen, um den Rotationswinkel bestimmen zu können.
 
@@ -497,124 +662,11 @@ Man macht nun eine Fallunterscheidung:
 	Da $F$ stetig ist, muss es also eine Nullstelle geben, die aufgrund des Monotonie- und Krümmungsverhaltens sogar eindeutig ist. Die Nullstelle lässt sich beispielsweise durch Intervallschachtelung oder Newton-Verfahren bestimmen. 
 \end{enumerate}
 
-\todo{möglicherweise Reihenfolge hier ändern, so wie sie auch später benutzt werden}
-
-\section{RANSAC}
-\label{s:ransac}
-\textit{Random Sample Consensus} (RANSAC) \cite{Fischler1981} ist ein nicht-deterministisches robustes Verfahren zur Parameterschätzung eines Modells bei einer, möglicherweise durch starke Ausreißer, gestörten Messreihe. 
-Im Gegensatz zu Verfahren, wie der Methode der kleinsten Quadrate, die versuchen eine optimale Lösung für alle Messdaten zu bestimmen, nutzt RANSAC nur eine Teilmenge der Messreihe. 
-
-RANSAC wählt aus der Menge der Messdaten wiederholt zufällig die minimale Anzahl Messdaten aus, die nötig sind um das Modell eindeutig zu beschreiben und prüft dann, wie gut das geschätzte Modell die restlichen Messdaten beschreibt. 
-Die Güte des Modells wird im Allgemeinen durch ein Distanzmaß, wie zum Beispiel der euklidische Abstand, berechnet. 
-Hat ein Messdatum eine vorher definierte Maximaldistanz zum geschätzten Modell nicht überschritten, wird es ins sogenannte Consensus Set des Modells aufgenommen. 
-Das Modell mit dem größten Consensus Set wird schließlich ausgewählt. 
-
-Die Anzahl der Iterationen, die mindestens notwendig sind, um mit einer Wahrscheinlichkeit von $p \in [0,1)$, bei einem relativen Ausreißeranteil von $\epsilon \in[0,1)$ und einer Anzahl von $k$ Daten, um das Modell eindeutig zu beschreiben, mindestens einmal eine ausreißerfreie Teilmenge der Messreihe zu erhalten, lässt sich berechnen mit:
-
-\begin{equation}
-	\frac{\log{\left(1-p\right)}}{\log{\left(1-\left(1-\epsilon\right)^k\right)}}
-\end{equation}
 
 
-\section{Canny}
-\label{s:canny}
-Der Canny-Algorithmus\cite{Canny1986} ist ein Verfahren zur Kantendetektion. Im Gegensatz zu anderen Verfahren wie Sobel, oder Prewitt, versucht Canny die Fehlerrate der Kantendetektion minimal zu halten. 
-Es sollten nicht mehr Kanten zurückgegeben werden, als auf dem Bild zu sehen und es sollten auch keine Kanten übersehen werden. Darüber hinaus markiert Canny die Kanten möglichst exakt, minimiert also die Distanz eines markierten Punktes zur eigentlichen Kante. Zuletzt gewährleistet Canny außerdem die Eindeutigkeit einer Kante. Das bedeutet, dass eine Kante nicht mehrmals markiert wird.
-
-\section{Hough-Transformation}
-\label{s:hough}
-Hough-Transformation ist ein Verfahren zur Detektion von beliebigen parametrisierbaren Konturen. In dieser Arbeit werden Hough-Transforamtionen benutzt um Geraden zu detektieren. 
-
-Eine beliebige zweidimensionale Gerade kann in Polarkoordinaten folgendermaßen implizit ausgedrückt werden:
-
-\begin{equation}\label{eq:HoughLines}
-	x\cos\phi + y\sin\phi - d = 0,
-\end{equation}
-
-wobei $\phi \in [0,2\pi)$ der Winkel der Geraden mit der $X$-Achse und $d \geq 0$ der Radius, also der euklidische Abstand der Geraden zum Ursprung des Koordinatensystems ist.
-
-Eine Gerade wird somit als ein Punkt $(d,\phi)$ in den Parameterraum (auch Hough-Raum) abgebildet. 
-
-Um eine Gerade eindeutig zu definieren benötigt man, wie auch bei der klassischen Defintionen $y = mx + b$, zwei Punkte. Nimmt man nur einen, so lässt sich jedoch die Auswahl von $\phi$ und $d$ einschränken. Hat man beispielsweise einen Punkt $(x_k,y_k)$ gegeben so lässt sich die Gleichung \ref{eq:HoughLines} nach $d$ umstellen und man erhält eine sinusförmige Funktion in Abhängigkeit von $\phi$. 
-
-Um beliebige Geraden detektieren zu können, werden $\phi$ und $d$ passen diskretisiert:
-\begin{equation*}
-\begin{aligned}
-	\phi_i &= \phi_{min} + \frac{i}{n} \cdot (\phi_{max} - \phi_{min}) \quad&\forall &i\in [0,n]\\
-	d_j &= d_{min} + \frac{j}{m} \cdot  (d_{max} - d_{min}) &\forall &j\in [0,m]
-\end{aligned}
-\end{equation*}
-
-Es wird nun ein Akkumulator $\mathcal{H}(\phi, d)$ für alle $\phi_i$ und $d_j$ auf null gesetzt.
-
-Als Nächstes wird ein Kantentbild mittels Canny erzeugt und jene Pixel $(x_k,y_k)$ betrachtet, die nicht null sind.
-Zu einen gegebenen Pixel wir nun für alle diskreten Winkel $\phi_i$ ein $d_i$ ausgerechnet und entsprechend im Akkumulator  $\mathcal{H}$ der Wert an der Stelle $(\phi_i, d_i)$ erhöht. 
-Am Ende des Verfahrens such man im Akkumulator nach Häufungspunkten. Jeder Häufungspunkt steht dort für eine Gerade. 
 
 
-\section{Blob-Detektor}
-\label{s:blob}
-\begin{definition}[Blob]\label{def:blob}
-	Ein Blob ist eine glatte zusammenhängende Region in einem Bild, die sich farblich von ihrer Umgebung abhebt \cite{Lindeberg1993}.
-\end{definition}
-
-Ein Blob-Detektor ist also ein Verfahren zum Detektieren solcher Blobs. Die gefunden Blobs können anschließend nach verschiedenen Kriterien, wie Größe, Farbe, Konvexität oder Rundheit gefiltert werden. 
 
 
-\section{Ausgleichsproblem}\todo{nicht ohlbergers skript zitieren}
-Gegeben seien $m$ Messdaten $(x_1,y_1),\dotsc,(x_m,y_m)$, sowie $n$ Funktionen $u_1,\dotsc,u_n$ mit $n\leq m$ und $n,m\in\mathbb{N}$. Hier Zitat einfügen. Skript von Ohlberger
-
-Gesucht ist eine Linearkombination $u(x) = \sum_{i=1}^{m} c_iu_i(x)$ welche die mittlere Abweichung minimiert, also 
-
-\[
-	\Delta_2 = \inf_{c_1,\dotsc,c_n\in\mathbb{R}} \left(\sum_{j=1}^{m}\left(\sum_{i=1}^{n}\left(c_iu_i(x_j)\right) - y_j\right)^2\right)^{\frac{1}{2}}.
-\]
-
-Diese Problem wird als Ausgleichsproblem bezeichnet und ist äquivalent zur Minimierung des Funktionals:
-
-\[
-	F(c) = ||Ac - y||_2,
-\]
-mit 
-\[
-\begin{aligned}
-	c &= (c_1,\dotsc,c_n)^T\in\mathbb{R}^n \\
-	x &= (x_1,\dotsc,x_m)^T\in\mathbb{R}^m \\
-	y &= (y_1,\dotsc,y_m)^T\in\mathbb{R}^m \\
-	A &= (a_{ij})\in\mathbb{R}^{m\times n}\quad\text{mit}\quad a_{ij} = u_i(x_j)
-\end{aligned}
-\]
-
-und äquivalent zur Normalengleichung
-\begin{equation*}
-	(A^TA)c = A^Ty,
-\end{equation*}
-
-wobei mindestens eine Lösung existiert und die Lösung mit kleinster 2-Norm eindeutig ist. 
-
-Gilt darüber hinaus $\text{rang}\left(A\right) = n$ so gilt 
-
-\begin{equation}\label{eq:normaleq}
-c = \underbrace{(A^TA)^{-1}A^T}_{A^+}y
-\end{equation}
-
-und c ist die eindeutige Lösung mit kleinster 2-Norm.
-
-Die Lösung des Ausgleichproblems kann dann mit einer Singulärwertzerlegung (SVD) gelöst werden. Die Matrizen $A\in\mathbb{R}^{m\times n}$ und $A^+\in\mathbb{R}^{n\times m}$ können geschrieben werden als:
-
-\[
-\begin{aligned}
-A &= U\Sigma V^T \\
-A^+ &= V\Sigma^+U^T
-\end{aligned}
-\]
-
-mit orthogonalen Matrizen $U\in\mathbb{R}^{m\times m}$ und $V\in\mathbb{R}^{n\times n}$ und einer Diagonalmatrix $\Sigma\in\mathbb{R}^{m\times n}$ mit den absteigend sortierten Singulärwerten auf der Diagonale (aufgefüllt mit Nullen), sowie $\Sigma^+\in\mathbb{R}^{n\times m}$ mit den jeweiligen reziproken Singulärwerten.
-
-
-Die Lösung des Ausgleichsproblems kann also mittels SVD angeben werden als:
-\[
-c = V\Sigma^+U^Ty
-\]
 
 

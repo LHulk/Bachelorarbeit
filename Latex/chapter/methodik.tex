@@ -46,7 +46,7 @@ Die Anzahl der Samples sollte groß genug sein, um möglichst viel geometrische 
 Bilder von kegel mit muster drin?
 
 \section{Intrinsische Kamerakalibrierung}
-
+\todo{hier mit linsenverzerrungen}
 Bedingt durch die Wahl einer Weitwinkelkamera, enthält die Linse der Kamera eine starke tonnenförmige (nach außen gewölbte) Verzerrung. Ohne eine intrinsische Kamerakalibrierung würde. Es werden nur die intrinsischen Parameter benötigt.
 
 
@@ -158,7 +158,6 @@ Trifft ein Strahl ein weißes Pixel, wird dessen Position gekennzeichnet, trifft
 	\label{fig:rayCast}
 \end{figure}
 
-\todo{beschreiben, warum die Hauptachsentransformation gebraucht wird}
 Mit Hilfe der Postionen der weißen Pixel, wird anschließend durch RANSAC (siehe Kapitel \ref{s:ransac}) eine Ellipse geschätzt. 
 
 Es wird konkret für sechs zufällig ausgewählte Punkte das lineare Gleichungssystem:
@@ -175,7 +174,7 @@ a \\ b \\ c \\ d \\ e \\ f
 \end{pmatrix}
 \]
 
-gelöst, was auf der Gleichung \ref{eq:ellipseQuadratic} aus Kapitel \ref{s:ellipse} basiert. Nach dem Lösen wird geprüft ob, es sich tatsächlich um eine Ellipse handelt und mittels Hauptachsentransformation (siehe Kapitel \ref{s:ellipse}) in die allgemeine Ellipsenform $(x_0,y_0,a,b,\phi)$ umgewandelt. 
+gelöst, was auf der Gleichung \ref{eq:ellipseQuadratic} aus Kapitel \ref{s:ellipse} basiert. Nach dem Lösen wird geprüft ob, es sich tatsächlich um eine Ellipse handelt und mittels Hauptachsentransformation (siehe Kapitel \ref{s:ellipse}) in die Ellipsenform $(x_0,y_0,a,b,\phi)$ umgewandelt. 
 
 
 Um die, für RANSAC benötigte, Distanz zu berechnen, wird das Verfahren aus Kapitel \ref{sc:distPointEllipse} genutzt, was die exakte euklidische Distanz eines Punktes zu einer Ellipse bestimmt. Ein Verfahren wie das Verfahren der kleinsten Quadraten funktioniert hier nicht, da die weißen Pixel bezüglich einer zu bestimmenden Ellipse, ausreißerbehaftet sind. Wird zum Beispiel auf Grund schlechter Lichtverhältnisse eine Kreislinie nicht deutlich aufgenommen, kann es in dem Kantenbild (Abbildung \ref{fig:canny}) zu "`Löchern"' in den Kreislinien kommen und folglich treffen die ausgesendeten Strahlen die nächst äußere Kreislinie (siehe Abbildung \ref{fig:rayCastR}). Da die Laufzeit nicht im Vordergrund steht, kann eine großzügige Schätzung des Fehleranteils von $\epsilon = 0.4$ mit einer gewünschten Wahrscheinlichkeit $p = 0.9999$ gewählt werden, was zu einer Mindestanzahl an Iterationen von circa $200$ führt (siehe Kapitel \ref{s:ransac}). Die letztendlich bestimmten Ellipsen sind beispielhaft in Abbildung \ref{fig:detectedEllipses} zu sehen.  
@@ -315,9 +314,9 @@ Anhand der Abbildung lässt sich das erste Problem bei der Vorwärtsentfaltung f
 
 Neben der außerdem sehr hohen Laufzeit, bedingt durch die komplexe Interpolation, ergibt sich noch ein weiteres Problem, dass sich erst bei der Entfaltung ergibt. 
 
-Die eigentliche Entfaltung geschieht über die Abbildung \ref{eq:coneToLateral}, die in Kapitel \ref{s:cone} konstruiert wurde. Gegebenenfalls nach einer Skalierung und Translation, um den Ursprung zu verschieben ergibt sich das entfaltete Bild, wie in Abbildung \ref{fig:forwardUnfold}. Auch bei kleinen Skalierungen entstehen schon auffällige "`Löcher"' im entfalteten Bild. Grund dafür ist, dass jedes Pixel aus dem Ursprungsbild auf eine 2D-Koordinate der Mantelfläche abgebildet wird. Auch nach einer Skalierung handelt es sich bei diesen Werten im Allgemeinen nicht um ganzzahlige Werte. Es muss im entfalteten Bild gerundet werden. Auch wenn Rundungsfehler nicht entständen, fehlte es einfach an genügend Informationen, gerade in den inneren, kleineren Regionen des Ursprungsbild. \todo{soll ich hier auf den ausblick verweisen?}.
+Die eigentliche Entfaltung geschieht über die Abbildung \ref{eq:coneToLateral}, die in Kapitel \ref{s:cone} konstruiert wurde. Die erhaltenen Werte müssen anschließend skaliert werden, da im entfalteten Bild sonst 1 mm einem Pixel entspreche. Es ergibt sich das entfaltete Bild, wie in Abbildung \ref{fig:forwardUnfold} dargestellt. Auch schon bei kleinen Skalierungen entstehen auffällige "`Löcher"' im entfalteten Bild. Grund dafür ist, dass jedes Pixel aus dem Ursprungsbild auf eine 2D-Koordinate der Mantelfläche abgebildet wird. Auch nach einer Skalierung handelt es sich bei diesen Werten im Allgemeinen nicht um ganzzahlige Werte. Es muss im entfalteten Bild gerundet werden. Auch wenn Rundungsfehler nicht entständen, fehlte es einfach an genügend Informationen, gerade in den inneren, kleineren Regionen des Ursprungsbild.
 
-Da wir von dem Ursprungsbild aus, auf das entfaltete Bild abbilden, ist eine Interpolation auf dem Ursprungsbild nicht möglich, da wir vorher nicht genau wissen, wo Löcher genau entstehen. 
+Da wir von dem Ursprungsbild aus auf das entfaltete Bild abbilden, ist außerdem eine Interpolation auf dem Ursprungsbild nicht möglich, da wir vorher nicht genau wissen, wo Löcher entstehen. Man müsste als entweder auf dem resultierendem Bild interpolieren (siehe Kapitel \ref{ch:summary}), oder zu gegebenen Löchern über die Umkehrabbildung auf dem Ursprungsbild interpolieren. 
 
 \begin{figure}[!htb]
 	\centering
@@ -335,14 +334,13 @@ Da wir von dem Ursprungsbild aus, auf das entfaltete Bild abbilden, ist eine Int
 	\label{fig:forwardUnfold}
 \end{figure}
 
-Wir müssten zu einem gegebenen Loch im entfalteten Bild über die Umkehrabbildung auf die Pixel (bzw. Subpixel) schließen.
+Es bietet sich dann jedoch an, direkt die Umkehrabbildung zu nutzen, was die Motivation hinter der Rückwärtsentfaltung ist.
 
 \subsection{Rückwärtsentfaltung}
-Bei der Rückwärtsentfaltung gehen wir von dem entfalteten Bild aus und bestimmen zunächst mit der Umkehrabbildung \ref{eq:lateralToCone} aus Kapitel \ref{s:cone}, die 3D Kegelkoordinaten. Mit Hilfe einer Projektionsmatrix werden diese 3D-Koordinten dann auf Bildkoordinaten abgebildet.
+Bei der Rückwärtsentfaltung gehen wir von dem entfalteten Bild aus und bestimmen zunächst mit der Umkehrabbildung \ref{eq:LateralToCone} aus Kapitel \ref{s:cone}, die 3D Kegelkoordinaten. Mit Hilfe einer Projektionsmatrix werden diese 3D-Koordinten dann auf Bildkoordinaten abgebildet.
 
-Konkret lösen wir das überbestimmte lineare Gleichungssystem:
-
-
+Konkret lösen wir das überbestimmte lineare Gleichungssystem \ref{eq:DLT} aus Kapitel \ref{ch:theory} mittels \textit{Direct Linear Transformation}.
+Die resultierenden Bildkoordinaten sind im Allgemeinen nicht ganzzahlig. Es kann hier allerdings im Gegensatz zur Vorwärtsentfaltung einfach auf dem Ursprungsbild interpoliert werden. 
 
 
 \begin{figure}[!htb]

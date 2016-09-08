@@ -38,6 +38,36 @@ cv::Mat Transformation::getProjectiveMatrix(const Cone& cone)
 	proj = proj.reshape(0, 3);
 
 	return proj;
+
+	/*cv::Mat A = cv::Mat::zeros(2 * l, 8, CV_32F);
+	cv::Mat D = cv::Mat::zeros(2 * l, 1, CV_32F);
+	for(int i = 0; i < 2*l; i+=2)
+	{
+		cv::Point2f currentImg = sampleImg[(i / 2) / m][(i / 2) % m];
+		cv::Point3f currentWorld = sampelWorld[(i / 2) / m][(i / 2) % m];
+
+		A.at<float>(i, 0) = currentWorld.x; A.at<float>(i, 1) = currentWorld.y; A.at<float>(i, 2) = currentWorld.z;
+		A.at<float>(i, 3) = 1.0f;
+		//A.at<float>(i, 8) = -currentImg.x * currentWorld.x; A.at<float>(i, 9) = -currentImg.x * currentWorld.y; A.at<float>(i, 10) = -currentImg.x * currentWorld.z;
+
+		A.at<float>(i + 1, 4) = currentWorld.x; A.at<float>(i + 1, 5) = currentWorld.y; A.at<float>(i + 1, 6) = currentWorld.z;
+		A.at<float>(i + 1, 7) = 1.0f;
+		//A.at<float>(i + 1, 8) = -currentImg.y * currentWorld.x; A.at<float>(i + 1, 9) = -currentImg.y * currentWorld.y; A.at<float>(i + 1, 10) = -currentImg.y * currentWorld.z;
+
+		D.at<float>(i, 0) = currentImg.x;
+		D.at<float>(i + 1, 0) = currentImg.y;
+	}
+
+	cv::Mat proj;
+	cv::solve(A, D, proj, cv::DECOMP_SVD);
+	cv::Mat row = cv::Mat::zeros(3, 1, CV_32F);
+	proj.push_back(row);
+	row = cv::Mat::ones(1, 1, CV_32F);
+	proj.push_back(row);
+	proj = proj.reshape(0, 3);
+	std::cout << proj << std::endl;
+
+	return proj;*/
 }
 
 static void draw_subdiv_point(cv::Mat& img, cv::Point2f fp, cv::Scalar color)
@@ -267,8 +297,8 @@ void Transformation::getReverseWarpMaps(const Cone& cone, cv::Mat &remapX, cv::M
 	cv::Point origin = cv::Point(width, Misc::round(std::ceil(height - S)));
 
 	cv::Mat mask = generateLateralMask(cone);
-	cv::Mat mapx = cv::Mat::zeros(height, width, CV_32F);
-	cv::Mat mapy = cv::Mat::zeros(height, width, CV_32F);
+	cv::Mat mapx = -1*cv::Mat::ones(height, width, CV_32F);
+	cv::Mat mapy = -1*cv::Mat::ones(height, width, CV_32F);
 
 	//std::vector<cv::Point3f> test;
 	//std::vector<cv::Point2f> test2;
