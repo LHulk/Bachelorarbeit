@@ -10,6 +10,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	this->hasSettings = false;
 	this->hasFiles = false;
+	this->hasOutput = false;
+
+	evalStatus();
 
 	this->modelIn = new QStringListModel(this);
 	ui->listViewFiles->setModel(this->modelIn);
@@ -47,9 +50,7 @@ void MainWindow::triggeredImport(bool checked)
 	fs.release();
 
 	this->hasSettings = true;
-
-	if(hasSettings && hasFiles)
-		ui->buttonUnfold->setEnabled(true);
+	evalStatus();
 }
 
 void MainWindow::on_ButtonLoadFiles_clicked()
@@ -59,9 +60,7 @@ void MainWindow::on_ButtonLoadFiles_clicked()
 	this->modelIn->setStringList(files);
 
 	this->hasFiles = true;
-
-	if(hasSettings && hasFiles)
-		ui->buttonUnfold->setEnabled(true);
+	evalStatus();
 }
 
 
@@ -73,6 +72,9 @@ void MainWindow::on_buttonUnfold_clicked()
 	cv::Mat optimalNew = cv::Mat();
 	cv::initUndistortRectifyMap(this->cameraMatrix, this->distCoeffs, optimalNew, this->cameraMatrix, imgSize, CV_32FC1, remapXCam, remapYCam);
 
+	ui->progressBarMain->setValue(0);
+	ui->progressBarMain->setMaximum(files.size());
+	int counter = 0;
 	QStringList processedFiles;
 	for(const QString& qstr : files)
 	{
@@ -86,12 +88,14 @@ void MainWindow::on_buttonUnfold_clicked()
 		cv::Mat unwarpedCone;
 		cv::remap(unwarpedCam, unwarpedCone, remapXWarp, remapYWarp, cv::INTER_CUBIC);
 
-		std::string outputFile = outputDir + "" + QtOpencvCore::qstr2str(qstr);
+		std::string outputFile = outputDir + "/" + QtOpencvCore::qstr2str(qstr.section("/", -1, -1));
 
 		cv::imwrite(outputFile, unwarpedCone);
 
 		processedFiles.push_back(QtOpencvCore::str2qstr(outputFile));
 		this->modelOut->setStringList(processedFiles);
+		ui->progressBarMain->setValue(++counter);
+		QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 
 	}
 
@@ -114,8 +118,36 @@ void MainWindow::triggeredSetOutputDir(bool checked)
 
 	outputDir = QtOpencvCore::qstr2str(file);
 
-	std::cout << outputDir << std::endl;
+	hasOutput = true;
+	evalStatus();
+}
 
+void MainWindow::evalStatus()
+{
+	ui->labelStatusMain->setText("");
+	QString status;
+	if(!hasSettings)
+		status += "no settings loaded. ";
+	if(!hasFiles)
+		status += "no files loaded. ";
+	if(!hasOutput)
+		status += "no ouput dir specified. ";
+
+	ui->labelStatusMain->setText(status);
+	if(hasSettings && hasFiles && hasOutput)
+		ui->buttonUnfold->setEnabled(true);
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70107" creator="Ipe 7.2.5">
-<info created="D:20160906152527" modified="D:20160906153424"/>
+<info created="D:20160906152527" modified="D:20160909104939"/>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
 <path stroke="sym-stroke" fill="sym-stroke" pen="sym-pen">
@@ -220,13 +220,13 @@ h
 <dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
 <dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
 <textsize name="large" value="\large"/>
+<textsize name="small" value="\small"/>
+<textsize name="tiny" value="\tiny"/>
 <textsize name="Large" value="\Large"/>
 <textsize name="LARGE" value="\LARGE"/>
 <textsize name="huge" value="\huge"/>
 <textsize name="Huge" value="\Huge"/>
-<textsize name="small" value="\small"/>
 <textsize name="footnote" value="\footnotesize"/>
-<textsize name="tiny" value="\tiny"/>
 <textstyle name="center" begin="\begin{center}" end="\end{center}"/>
 <textstyle name="itemize" begin="\begin{itemize}" end="\end{itemize}"/>
 <textstyle name="item" begin="\begin{itemize}\item{}" end="\end{itemize}"/>
@@ -298,11 +298,11 @@ h
 265.793 597.89
 251.779 578.78 c
 </path>
-<path matrix="1.00567 0 0 1.00564 -2.53797 -3.97283" stroke="black" pen="fat">
+<path matrix="1.00559 0 0 1.00162 -2.52613 -1.51316" stroke="black" pen="fat">
 448 704 m
 143.365 612.155 l
 </path>
-<path matrix="1.00398 0 0 1.00367 -1.78251 -2.11428" stroke="black" pen="fat">
+<path matrix="1.00446 0 0 0.999717 -1.85074 0.537462" stroke="black" pen="fat">
 448 576 m
 142.827 670.828 l
 </path>

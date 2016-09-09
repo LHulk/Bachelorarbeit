@@ -46,8 +46,11 @@ private:
 
 	bool hasSettings;
 	bool hasFiles;
+	bool hasOutput;
 
 	std::string outputDir;
+
+	void evalStatus();
 };
 
 #endif // MAINWINDOW_H

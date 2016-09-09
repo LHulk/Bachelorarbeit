@@ -67,7 +67,7 @@
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Please load calibration images for regular camera calibration (chessboard) and set the calibration paramters accordingly&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Please load calibration images for regular camera calibration (chessboard) and set the calibration paramters accordingly.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="acceptRichText">
        <bool>false</bool>
@@ -313,11 +313,11 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Please load calbration image for cone calibration (glued lateral surface). &lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;After detection, check if all black dots have been detected. &lt;span style=&quot; font-weight:600;&quot;&gt;Left click&lt;/span&gt; adds a marker, &lt;span style=&quot; font-weight:600;&quot;&gt;right click&lt;/span&gt; deletes.&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Make sure the background is mostly homogenous and there is enough distance to the cone&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Circle Samples&lt;/span&gt;: number of circles with black blobs on it&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Line Samples:&lt;/span&gt; number of lines on lateral surface with black blobs on it minus one or number of lines on glued lateral surface&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Please load calbration image for cone calibration (folded lateral surface). &lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;After detection, check if all black dots have been detected. &lt;span style=&quot; font-weight:600;&quot;&gt;Left click&lt;/span&gt; to add a marker. &lt;span style=&quot; font-weight:600;&quot;&gt;Right click&lt;/span&gt; to delete a marker.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Make sure the background is mostly homogenous and there is enough distance to the cone.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Circle Samples&lt;/span&gt;: number of circles with black dots on it&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Line Samples:&lt;/span&gt; number of lines on folded pattern (equals number of lines on unfolded minus one)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="acceptRichText">
        <bool>false</bool>
@@ -647,7 +647,7 @@ p, li { white-space: pre-wrap; }
       <item>
        <widget class="QLabel" name="label_19">
         <property name="text">
-         <string>pixels in slant height</string>
+         <string>pixels per slant height</string>
         </property>
        </widget>
       </item>

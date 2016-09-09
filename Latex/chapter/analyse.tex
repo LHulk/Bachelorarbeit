@@ -5,11 +5,7 @@ In diesem Kapitel bla bla bla.
 
 
 \section{Vergleich Vorwärtsentfaltung und Rückwärtsentfaltung}
-
-Bla bla Rückwärtsentfaltung ist optisch viel besser und schneller, deshalb beziehen sich alle folgenden Analysen nur noch auf Rückwärts
-wenn man umkerabbildung bestimmen kann ist das vorzuziehen
-warum kann man nicht richtig vergleichen
-
+In Kapitel \ref{ch:method} haben wir festgestellt, dass das entfaltete Bild mittels Vorwärtsentfaltung Löcher enthält. Es ist hierbei von Interesse wie sich die Anzahl der Löcher bei einer Änderung der Auflösung verhält. Der Einfluss der Ausgabeauflösung auf die Anzahl der Löcher lässt sich in Abbildung \ref{fig:influenceRes} ablesen. 
 
 \begin{figure}[!htb]
 	\centering
@@ -18,7 +14,25 @@ warum kann man nicht richtig vergleichen
 	\label{fig:influenceRes}
 \end{figure}
 
+Wie erwartet verhält sich die Anzahl der Löcher quadratisch zur gewählten Ausgabeaufösung. Der Informationsgehalt (Pixelanzahl) des Ursprungsbild bleibt natürlich trotz erhöhter Ausgabeauflösung konstant. Da sich die Auflösung der Seitenhöhe quadratisch zur Gesamtanzahl der Pixel verhält, ist auch ein quadratisches Wachstum der Anzahl der Löcher zu erwarten. 
+\bigskip
+
+Als Reprojection-Fehler einer Abbildung wird die Distanz zwischen einem gemessenem Punkt und einem korrespondierendem projizierten Punkt bezeichnet. 
+
+Im Falle der Rückwärtsentfaltung sind die gemessenen Punkte die Bildpositionen der Samples im Ursprungsbild. Da die Geometrie des Kegels bekannt ist, wissen wir wo die Samples auf dem entfalteten Bild sein müssen (siehe Parametrisierung der Mantelfläche \ref{eq:paramLateral} in Kapitel \ref{ch:theory}). Wir können nun diese Positionen mit Hilfe der Abbildung zur Entfaltung und der Projektionsmatrix zurück auf das Ursprungsbild abbilden. Diese Punkte sind die projizierten Punkte. Da die Abbildung von der Mantelfläche zur Kegeloberfläche exakt ist, ist der Reprojection-Fehler der Rückwärtsentfaltung alleine durch die Projektionsmatrix definiert. 
+
+Bei der Vorwärtsentfaltung sind die gemessenen Punkte gegeben durch die bekannten Sample-Positionen auf der Mantelfläche. Die Projizierten erhält man, nach der Abbildung der detektierten Sample-Positionen des Ursprungsbild auf die Mantelfläche. Der Reprojection-Fehler ist also alleine durch die Genaugkeit der Sample-Detektion definiert und somit bei diesem Verfahren immer nahe null. 
+
+Obwohl das Endergebnis, bedingt durch die Löcher, bei der Vorwärtsentfaltung optisch schlechter ist, ist der Reprojection-Fehler also bei der Vorwärtsentfaltung immer kleiner. 
+Als Vergleich zwischen den beiden Verfahren eignet sich der Reprojection-Fehler also nicht.
+
+Wir entscheiden uns rein optisch und auf Grund der schlechteren Laufzeit bei der Vorwärtsentfaltung für die Rückwärtsentfaltung. 
+Alle weiteren Auswertungen beziehen sich von nun an auf die Rückwärtsentfaltung.
+
 \section{Einfluss der intrinsischen Kalibrierung}
+Ein wichtiger Einflussfaktor auf die Qualität der Entfaltung ist die intrinsische Kamerakalibrierung, die vor der eigentlichen Kegelkalibrierung stattfindet. Ihre Hauptaufgabe besteht darin, die Linsenverzerrungen der Kamera zu kompensieren. 
+
+Wir messen den Einfluss der Kamerakalibrierung mit Hilfe des Reprojection-Fehlers. Dazu betrachten wir fünf verschiedene Bilder, die ein Mal mit und ein Mal ohne intrinsische Kalibrierung entfaltet werden. Bei beiden Gruppen wird anschließend jeweils der Reprojection-Fehler bestimmt und verglichen. Die Ergebnisse sind in \ref{fig:influenceCalib} zu sehen. In der linken Abbildung sind hierbei die Fehler im kalibrierten Fall zu erkennen, im Linken die Unkalibrierten. In der Abbildung ist dabei ein Kreuz bei $(u,v)$, falls die Abweichung des projizierten Punktes in $x$-Richtung $u$, sowie in $y$-Richtung $v$ beträgt. 
 
 \begin{figure}[!htb]
 	\centering
@@ -27,7 +41,8 @@ warum kann man nicht richtig vergleichen
 	\label{fig:influenceCalib}
 \end{figure}
 
-prjektionsfehler ohne kalib ist wesentlich größer, da die implizitie intrinsiche kalib durch die svd keine verzerrung entfernt
+
+Es ist klar zu erkennen, dass die Reprojection-Fehler bei den Bildern ohne intrinsische Kamerakalibrierung wesentlich größer ist. Der starke Einfluss kommt unter Anderem daher, dass wir ein Weitwinkelkamera mit starker Tonnenverzerrungen eingesetzt haben. Ohne eine Modellierung der Linsenverzerrungen weichen die Abstände zwischen den Sample-Positionen stark von der Realität ab. Die Projektionsmatrix wird mit fehlerhaften Daten bestimmt. 
 
 \section{Einfluss der Rotation der Kamera}
 Um den Einfluss der Rotation der Kamera zu untersuchen, wurde der Kegel mit Kalibrierungsmuster in Blender gerendert, da die Kameraposition dann genau bekannt ist und äußere Faktoren wie Lichtverhältnisse und inhomogene Hintergründe kontrolliert werden können. 
@@ -49,7 +64,7 @@ Um den Einfluss der Rotation der Kamera zu untersuchen, wurde der Kegel mit Kali
 \end{figure}
 
 
-Es werden anschließend Bilder erzeugt, in denen in 1° Schritten die Kamera von 0° bis 12° um die $X$-Achse rotiert wird. Für jedes dieser Bilder wird anschließend eine Rückwärtsentfaltung durchgeführt und der Reprojection-Fehler bestimmt. Abbildung \ref{fig:influenceRot} zeigt, dass der Reprojection-Fehler rotationsinvariant ist. 
+Es werden anschließend Bilder erzeugt, in denen in 1° Schritten die Kamera von 0° bis 12° um die $X$-Achse rotiert wird. Für jedes dieser Bilder wird anschließend eine Rückwärtsentfaltung durchgeführt und der durchschnittliche Reprojection-Fehler bestimmt. Abbildung \ref{fig:influenceRot} zeigt, dass der Reprojection-Fehler relativ rotationsinvariant ist. 
 
 
 \begin{figure}[!htb]
@@ -60,16 +75,14 @@ Es werden anschließend Bilder erzeugt, in denen in 1° Schritten die Kamera von
 \end{figure}
 
 
-
-
-
 \section{Laufzeit der Entfaltung}
+
 
 Raspberry Pi 2 Model B:
 \begin{itemize}
 	\item 900MHz ARM Cortex-A7 CPU
 	\item 1GB RAM
-	\item GCC-4.??? Release
+	\item GCC-4.9.2
 	\item Opencv 2.4.13
 \end{itemize}
 
@@ -99,7 +112,7 @@ robustheit reverse warping? bestimmung der keypoints?
 
 
 \section{Evaluierung des RANSAC zur Ellipsendetektion}
-
+Die robuste Ellipsendetektion ist ein wichtiger Schritt bei der Entfaltung. Bei beiden Verfahren werden die bestimmten Ellipsen genutzt um Korrespondenzen zwischen den Sample-Positionen und Punkten auf dem Kegel im Weltkoordinatensystem herzustellen. Bei der Vorwärtsentfaltung werden die Ellipsen darüber hinaus benötigt, um für die restlichen Pixel geeignet 3D-Koordinaten interpolieren zu können. Es ist also von großem Interesse wie gut die Ellipsendetektion mittels RANSAC funktioniert.  
 
 
 \begin{figure}[!htb]

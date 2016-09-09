@@ -1,5 +1,5 @@
 function[] = deformableTemplates()
-    I = imread('../img/topOnlyLines.png');
+    I = imread('../img/v2_pattern/topOnlyLines.png');
     I = rgb2gray(I);
     I = imresize(I, [1000 1000]);
     %imshow(I);
@@ -10,8 +10,8 @@ function[] = deformableTemplates()
     [dx,dy] = imgradientxy(I);
     Gdir = atan2(dy,dx);
 
-    orientation = imgaussfilt(Gdir, 3);
-    magnitude = imgaussfilt(magnitude, 3);
+    orientation = imgaussfilt(Gdir, 7);
+    magnitude = imgaussfilt(magnitude, 7);
 
     canny = edge(I, 'Canny', 0.5);
     %imshowpair(orientation,angleHSV(orientation,canny),'montage');
@@ -63,7 +63,7 @@ function[] = deformableTemplates()
     %readMultiple(orientation, ellipse(initEllipse,p([0:samples-1])))
     %bla = ata(ellipse(initEllipse,p([0:samples-1])) - [initEllipse(1)*ones(1,samples);zeros(1,samples)] - [zeros(1,samples);initEllipse(2)*ones(1,samples)])
 %
-    [A,B] = meshgrid(1:1:150, 1:1:150);
+    [A,B] = meshgrid(200:1:400, 200:1:400);
     X = ones(size(A))*500;
     Y = ones(size(A))*500;
     T = zeros(size(X));
@@ -80,6 +80,7 @@ function[] = deformableTemplates()
 
     surf(A,B,VALS);
     figure;
+    return;
     
 
     res = zeros(size(magnitude));
@@ -194,17 +195,16 @@ function[val] = e3Deriv(params)
 end
 
 function[val] = e(params, magnitude, orientation)
-%     val = e1(params, magnitude) + ...
-%         e2(params, orientation) +...
-%         e3(params);
-    val = e1(params, magnitude) + e3(params);
+     val = e1(params, magnitude) + ...
+         e2(params, orientation) +...
+         e3(params);
 end
 
 function[val] = eDeriv(params, ddx, ddy)
-%     val = e1Deriv(params,ddx,ddy) + ...
-%         e2Deriv(params) + ...
-%         e3Deriv(params);
-    val = e1Deriv(params,ddx,ddy) + e3(params);
+     val = e1Deriv(params,ddx,ddy) + ...
+         e2Deriv(params) + ...
+         e3Deriv(params);
+%    val = e1Deriv(params,ddx,ddy) + e3(params);
 end
 
 function[eVal, eDerivVal] = bothEandEDeriv(params, magnitude, orientation, ddx, ddy)

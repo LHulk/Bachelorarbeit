@@ -154,7 +154,17 @@
        </layout>
       </item>
       <item>
-       <widget class="QProgressBar" name="progressBar">
+       <widget class="QLabel" name="labelStatusMain">
+        <property name="styleSheet">
+         <string notr="true">color: red</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QProgressBar" name="progressBarMain">
         <property name="value">
          <number>0</number>
         </property>

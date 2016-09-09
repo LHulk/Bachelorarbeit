@@ -32,15 +32,15 @@ CalibrationWizard::CalibrationWizard(QWidget *parent) :
 	ui->labelBlobStatus->setText("");
 
 
-	cv::FileStorage fs("cameraSettings.txt", cv::FileStorage::READ);
+	/*cv::FileStorage fs("cameraSettings.txt", cv::FileStorage::READ);
 	if(!fs.isOpened())
 		exit(0);
 	fs["cameraMatrix"] >> this->cameraMatrix;
 	fs["distCoeffs"] >> this->distCoeffs;
-	fs.release();
+	fs.release();*/
 
-	//this->cameraMatrix = cv::Mat::eye(3, 3, CV_32F);
-	//this->distCoeffs = cv::Mat::zeros(5, 1, CV_32F);
+	this->cameraMatrix = cv::Mat::eye(3, 3, CV_32F);
+	this->distCoeffs = cv::Mat::zeros(5, 1, CV_32F);
 
 	std::ostringstream stream;
 	stream << "Camera Matrix: \n" << cameraMatrix << "\n\n" << "Distortion coefficients: \n" << distCoeffs;
