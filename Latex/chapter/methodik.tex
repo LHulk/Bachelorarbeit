@@ -1,24 +1,24 @@
 %!TEX root = bachelor.tex
 \chapter{Methodik}
 \label{ch:method}
-
+\todo{überarbeiten}
 In diesem Kapitel stellen wir ein Verfahren vor, dass ermöglicht anhand eines Bildes (siehe Einleitung).
 
 Zunächst gehen wir auf das verwendete Kalibrierungsmuster ein, woraufhin die genaue Vorgehensweise zur Entfaltung erläutert wird. 
 
 Die geometrischen Eigenschaften des Kegelstumpfs $(r, R, \Delta H)$ können gemessen und somit als bekannt angenommen werden. 
-Darüber hinaus nehmen wir an, dass sich das Zentrum des kleineren Kreises im links-händigen Weltkoordinatensystem an der Positon $(0,0,0)$ (siehe Abbildung \ref{fig:coneFrustum}) befindet. Durch diese Einschränkung gehen jegliche absolute Größenverhältnisse verloren. Die Larven können jedoch weiterhin relativ zu einander verglichen werden. 
+Darüber hinaus nehmen wir an, dass sich das Zentrum des kleineren Kreises im links-händigen Weltkoordinatensystem an der Positon $(0,0,0)$ (siehe Abbildung \ref{fig:coneFrustum} in Kapitel \ref{s:cone}) befindet. Durch diese Einschränkung gehen jegliche absolute Größenverhältnisse verloren. Die Larven können jedoch weiterhin relativ zu einander verglichen werden. 
 
 
 \section{Kalibrierungsmuster}
 \label{s:calibrationPattern}
 Um eine Beziehung zwischen Bildpunkten und Kegelpunkten herstellen zu können, ist ein Kalibrierungsmuster notwendig.
 
-Die Wahl des Kalibrierungsmusters spielt dabei eine entscheidende Rolle bei der Robustheit und Präzision der Entfaltung. Es muss gewährleistet sein, dass die charakteristischen Merkmale des Musters, auch bei leichten Abweichungen der Kamera vom Lot und schlechteren Beleuchtungssituationen zuverlässig erkannt werden. Das Muster muss darüber hinaus so entworfen sein, dass beim Zusammenlegen im Kegel, dessen geometrische Eigenschaften nicht verfälscht, sondern realitätsgetreu wiedergeben werden. 
+Die Wahl des Kalibrierungsmusters spielt dabei eine entscheidende Rolle bei der Robustheit und Präzision der Entfaltung. Es muss gewährleistet sein, dass die charakteristischen Merkmale des Musters auch bei leichten Abweichungen der Kamera vom Lot und schlechteren Beleuchtungssituationen zuverlässig erkannt werden. Das Muster muss darüber hinaus so entworfen sein, dass beim Zusammenlegen im Kegel, dessen geometrische Eigenschaften nicht verfälscht, sondern realitätsgetreu wiedergeben werden. 
 
-Wir haben uns für ein Muster entscheiden, dass in äquidistanten Abständen $\Delta R$, beginnend mit dem kleinen Radius $r$ des Kegelstumpfs (siehe Abbildung \ref{fig:coneFrustum}) Kreislinien und in gleichen Winkelabständen $\Delta \alpha$ auf der Seitenhöhe Liniensegmente besitzt. Das zusammengelegte Muster ist in Abbildung \ref{fig:calibrationPatternTop} zu sehen, beziehungsweise das entfaltete in \ref{fig:calibrationPattern}. Die Anzahl der Kreislinien wird mit $n$ gekennzeichnet, die Anzahl sichtbarer Liniensegmente im Kegel mit $m$. Zu beachten ist, dass bedingt durch das Entfalten, in \ref{fig:calibrationPattern}  ein Liniensegment doppelt zu sehen ist. Die schwarzen Kreise bezeichnen wir als Samples. 
+Wir haben uns für ein Muster entscheiden, dass in äquidistanten Abständen $\Delta R$, beginnend mit dem kleinen Radius $r$ des Kegelstumpfs (siehe Abbildung \ref{fig:coneFrustum}) Kreislinien und in gleichen Winkelabständen $\Delta \alpha$ auf der Seitenhöhe Liniensegmente besitzt. Das zusammengelegte Muster ist in Abbildung \ref{fig:calibrationPatternTop} zu sehen, beziehungsweise das entfaltete in \ref{fig:calibrationPattern}. Die Anzahl der Kreislinien wird mit $n$ gekennzeichnet, die Anzahl sichtbarer Liniensegmente im Kegel mit $m$. Zu beachten ist, dass bedingt durch das Entfalten, in Abbildung \ref{fig:calibrationPattern}  ein Liniensegment doppelt zu sehen ist. Die schwarzen Kreise bezeichnen wir als Samples. 
 
-Dadurch dass die Geometrie des Kegels bekannt ist, kann jedem Sample nun ein Punkt auf dem Kegel im Weltkoordinatensystem zugeordnet werden. Da ein Kegel beliebig um die $Y$ Achse rotiert werden, kann ist diese Abbildung zunächst nicht eindeutig. Dazu nehmen wir an, dass das Liniensegment mit dem kleinsten Winkel zur $X$-Achse mit dem Kegelwinkel $\theta = 0$ korrespondiert (siehe \ref{eq:paramFrustum}).
+Dadurch dass die Geometrie des Kegels bekannt ist, kann jedem Sample nun ein Punkt auf dem Kegel im Weltkoordinatensystem zugeordnet werden. Da ein Kegel beliebig um die $Y$-Achse rotiert werden kann, ist diese Zuordnung zunächst nicht eindeutig. Dazu nehmen wir an, dass das Liniensegment mit dem kleinsten Winkel zur $X$-Achse mit dem Kegelwinkel $\theta = 0$ korrespondiert (siehe \ref{eq:paramFrustum}).
 
 \begin{figure}[!htb]
 	\centering
@@ -35,19 +35,14 @@ Dadurch dass die Geometrie des Kegels bekannt ist, kann jedem Sample nun ein Pun
 	\label{fig:calibrationPattern}
 \end{figure}
 
+Zur Konstruktion des Musters benötigt man $\Delta S$ und $s$, die man aus der Geometrie des Kegels errechnen kann und außerdem den Öffnungswinkel, der gegeben ist als $\alpha = 2\pi\frac{R}{S}$ (siehe \ref{eq:paramLateral} in Kapitel \ref{s:cone}).
 
 \subsection{Anzahl der Samples}
 Die Anzahl der Samples sollte groß genug sein, um möglichst viel geometrische Informationen des Kegels zu erhalten, aber klein genug, dass eine Detektion der Samples problemlos möglich ist. Insbesondere auf dem innersten Kreis, macht sich eine zu hohe Sampleanzahl negativ bemerkbar, da der Abstand zueinander sehr klein wird, was eine Detektion erschwert. Des Weiteren sollte noch ein möglichst großer Teil der Kreislinien zu sehen bleiben, da diese für die Ellipsendetektion benötigt werden. 
 
 
-\todo{warum gerade dieses muster? warum ist das so gut? wie berechnet man das muster? welche eigenschaften hat es?}
-
-
-Bilder von kegel mit muster drin?
-
 \section{Intrinsische Kamerakalibrierung}
-\todo{hier mit linsenverzerrungen}
-Bedingt durch die Wahl einer Weitwinkelkamera, enthält die Linse der Kamera eine starke tonnenförmige (nach außen gewölbte) Verzerrung. Ohne eine intrinsische Kamerakalibrierung würde. Es werden nur die intrinsischen Parameter benötigt.
+Bedingt durch die Wahl einer Weitwinkelkamera, enthält die Linse der Kamera eine starke tonnenförmige (nach außen gewölbte) Verzerrung (siehe Abbildung \ref{fig:calib}). Diese muss herausgerechnet werden, da sonst Abstände im Bild nicht mehr der Realität entsprechen und dadurch die Präzision der Entfaltung stark abnimmt (siehe Kapitel \ref{ch:analysis}). Es wird also zunächst eine Kamerakalibrierung durchgeführt, wobei wir nur an den intrinsischen Parametern, inklusive Verzerrungskoeffzienten, interessiert sind, um das Bild anschließend entzerren zu können. 
 
 
 \begin{figure}[!htb]
@@ -76,11 +71,11 @@ Um ein Sample korrekt detektieren zu können, muss sich der Punkt farblich stark
 
 \begin{itemize}
 	\item \textbf{Fläche:} zu kleine Blobs werden verworfen
-	\item \textbf{Rundheit:} zu unrude Blobs werden verworfen. Rundheit ist hier definiert als $circ = \frac{4\pi\cdot \textrm{Fläche}}{\left(\textrm{Umfang}\right)^2}\in[0,1]$, wobei ein Kreis mit $circ = 1$ maximal rund ist. 
+	\item \textbf{Rundheit:} zu unrude Blobs werden verworfen. Rundheit ist hier definiert als $circ = \frac{4\pi\cdot \textrm{Fläche}}{\left(\textrm{Umfang}\right)^2}\in[0,1]$, wobei also ein Kreis mit $circ = 1$ maximal rund ist. 
 	\item  \textbf{Konvexität:} zu unkonvexe Blobs werden verworfen. Konvextität ist hier definiert als $conv = \frac{\textrm{Fläche Blob}}{\textrm{Fläche konvexe Hülle}}$
 \end{itemize}
 
-In Abbildung \ref{fig:blobDetect} ist beispielhaft links ein Grauwertbild und rechts die detektierten Blobs auf dem gleichen Bild nach der Kameraentzerrung zu sehen.
+In Abbildung \ref{fig:blobDetect} ist beispielhaft links ein Grauwertbild und rechts die detektierten Blobs (grün) auf dem gleichen Bild nach der Kameraentzerrung zu sehen.
 
 
 \begin{figure}[!htb]
@@ -105,7 +100,7 @@ In Abbildung \ref{fig:blobDetect} ist beispielhaft links ein Grauwertbild und re
 Nachdem die Sample-Positionen bestimmt wurden, muss für jeden Sample entschieden werden, auf welcher der Kreislinien er liegt. Da die Kreise, bedingt durch perspektivische Verzerrung, zu  Ellipsen werden, wird eine Verfahren 
 benötigt, dass Ellipsen erkennt. 
 
-Zunächst werden die Kanten mit Hilfe von Canny (\ref{s:canny}) detektiert (siehe Abbildung \ref{fig:canny}). 
+Zunächst werden die Kanten mit Hilfe von Canny (siehe Kapitel \ref{s:canny}) detektiert (siehe Abbildung \ref{fig:canny}). 
 
 \begin{figure}[!htb]
 	\centering
@@ -125,10 +120,10 @@ Zunächst werden die Kanten mit Hilfe von Canny (\ref{s:canny}) detektiert (sieh
 	\label{fig:canny}
 \end{figure}
 
-Anschließend versuchen wir möglichst genau das Zentrum der innersten Ellipsen zu bestimmen.
-Wir benutzen dafür Hough-Transformationen, um Linien im Canny-Bild zu detektieren.
+Anschließend versuchen wir möglichst genau das Zentrum der innersten Ellipsen zu schätzen.
+Wir benutzen dafür Hough-Transformationen (siehe Kapitel \ref{s:hough}), um Linien im Kantenbild zu detektieren.
 Es werden anschließend die Schnittpunkte aller Liniensegmente bestimmt. Bedingt durch Ungenauigkeiten beim Ausschneiden und Zusammenlegen im Kegel und perspektivischer Verzerrung, schneiden sich nicht alle Liniensegmente in einem Punkt.
-Darüber hinaus werden, auf Grund der Liniendicke auf dem Kalibrierungsmuster, durch Canny viele Linien doppelt erkannt\footnote{Dies ist kein Widerspruch zur Eindeutigkeit von Canny-Kanten (siehe \ref{s:canny}), da dickere Linien zwei Kanten besitzen. Stellt man sich ein relativ breites Liniensegment vor, so gibt es einmal den Übergang vom Hintergrund auf die Linie, sowie den Übergang von der Linie wieder auf den Hintergrund}. Auch ein inhomogener Hintergrund, erschwert die Schnittpunktsbestimmung. Um also möglichst robust einen Kandidaten auszuwählen, wird zuerst der Median der $x$-Koordinaten der Schnittpunkte und dann der Median der $y$-Koordinaten bestimmt. Die erhaltenen Koordinaten bilden den Schnittpunkt (siehe Abbildung \ref{fig:houghLines}).
+Darüber hinaus werden, auf Grund der Liniendicke auf dem Kalibrierungsmuster, durch Canny viele Linien als doppelt Linien gekennzeichnet\footnote{Dies ist kein Widerspruch zur Eindeutigkeit von Canny-Kanten (siehe \ref{s:canny}). Stellt man sich ein relativ breites Liniensegment vor, so gibt es einmal den Übergang vom Hintergrund auf die Linie, sowie den Übergang von der Linie wieder auf den Hintergrund}. Auch ein inhomogener Hintergrund, erschwert die Schnittpunktsbestimmung. Um also möglichst robust einen Kandidaten auszuwählen, wird zuerst der Median der $x$-Koordinaten der Schnittpunkte und dann der Median der $y$-Koordinaten bestimmt. Die erhaltenen Koordinaten bilden den Schnittpunkt (siehe Abbildung \ref{fig:houghLines}).
 
 \begin{figure}[!htb]
 	\centering
@@ -160,7 +155,7 @@ Trifft ein Strahl ein weißes Pixel, wird dessen Position gekennzeichnet, trifft
 
 Mit Hilfe der Postionen der weißen Pixel, wird anschließend durch RANSAC (siehe Kapitel \ref{s:ransac}) eine Ellipse geschätzt. 
 
-Es wird konkret für sechs zufällig ausgewählte Punkte das lineare Gleichungssystem:
+Es wird konkret für sechs zufällig ausgewählte Punkte das lineare Gleichungssystem
 \[
 \begin{pmatrix}
 x_1^2 & y_1^2 & x_1y_1 & x_1 & y_1 & 1\\
@@ -174,10 +169,13 @@ a \\ b \\ c \\ d \\ e \\ f
 \end{pmatrix}
 \]
 
-gelöst, was auf der Gleichung \ref{eq:ellipseQuadratic} aus Kapitel \ref{s:ellipse} basiert. Nach dem Lösen wird geprüft ob, es sich tatsächlich um eine Ellipse handelt und mittels Hauptachsentransformation (siehe Kapitel \ref{s:ellipse}) in die Ellipsenform $(x_0,y_0,a,b,\phi)$ umgewandelt. 
+gelöst, was auf der Gleichung \ref{eq:ellipseQuadratic} aus Kapitel \ref{s:ellipse} basiert. Nach dem Lösen wird geprüft, ob es sich tatsächlich um eine Ellipse handelt und mittels Hauptachsentransformation (siehe Kapitel \ref{s:ellipse}) in die Ellipsenform $(x_0,y_0,a,b,\phi)$ umgewandelt. Wir verwerfen anschließend Ellipsen mit, dessen Hauptachse wesentlich größer ist, als ihre Nebenachse, da wir eher wenig gestauchte Ellipsen erwarten. 
 
 
-Um die, für RANSAC benötigte, Distanz zu berechnen, wird das Verfahren aus Kapitel \ref{sc:distPointEllipse} genutzt, was die exakte euklidische Distanz eines Punktes zu einer Ellipse bestimmt. Ein Verfahren wie das Verfahren der kleinsten Quadraten funktioniert hier nicht, da die weißen Pixel bezüglich einer zu bestimmenden Ellipse, ausreißerbehaftet sind. Wird zum Beispiel auf Grund schlechter Lichtverhältnisse eine Kreislinie nicht deutlich aufgenommen, kann es in dem Kantenbild (Abbildung \ref{fig:canny}) zu "`Löchern"' in den Kreislinien kommen und folglich treffen die ausgesendeten Strahlen die nächst äußere Kreislinie (siehe Abbildung \ref{fig:rayCastR}). Da die Laufzeit nicht im Vordergrund steht, kann eine großzügige Schätzung des Fehleranteils von $\epsilon = 0.4$ mit einer gewünschten Wahrscheinlichkeit $p = 0.9999$ gewählt werden, was zu einer Mindestanzahl an Iterationen von circa $200$ führt (siehe Kapitel \ref{s:ransac}). Die letztendlich bestimmten Ellipsen sind beispielhaft in Abbildung \ref{fig:detectedEllipses} zu sehen.  
+Um die, für RANSAC benötigte, Distanz zu berechnen, wird das Verfahren aus Kapitel \ref{sc:distPointEllipse} genutzt, was die exakte euklidische Distanz eines Punktes zu einer Ellipse approxmiert. 
+Ein Verfahren wie das Verfahren der kleinsten Quadraten anstelle von RANSAC funktioniert hier nicht, da die weißen Pixel bezüglich einer zu bestimmenden Ellipse, ausreißerbehaftet sind. Wird zum Beispiel auf Grund schlechter Lichtverhältnisse eine Kreislinie nicht deutlich aufgenommen, kann es in dem Kantenbild (Abbildung \ref{fig:canny}) zu "`Löchern"' in den Kreislinien kommen und folglich treffen die ausgesendeten Strahlen die nächst äußere Kreislinie (siehe Abbildung \ref{fig:rayCastR}). 
+
+Da die Laufzeit nicht im Vordergrund steht, kann eine großzügige Schätzung des Fehleranteils von $\epsilon = 0.4$ mit einer gewünschten Wahrscheinlichkeit $p = 0.9999$ gewählt werden, was zu einer Mindestanzahl an Iterationen von circa $200$ führt (siehe Kapitel \ref{s:ransac}). Die letztendlich bestimmten Ellipsen sind beispielhaft in Abbildung \ref{fig:detectedEllipses} zu sehen.  
 
 
 \begin{figure}[!htb]
@@ -215,9 +213,16 @@ Zunächst wird für jeden Punkt diejenige Kreislinie ausgewählt, dessen zugehö
 Mit Hilfe dieser Zuordnung können die Ellipsen aus Kapitel \ref{s:ellipseDetection} erneut geschätzt werden. Diesmal wird das Verfahren der kleinsten Quadrate genutzt, da nur die ausreißerfreihen Samples als Messdaten dienen und wir eine optimale Lösung für alle Samples anstreben.  
 
 Um nun die Samples auch ihren Liniensegmenten zuzuordnen, wird zunächst der Mittelpunkt der Samples auf der innersten Ellipse bestimmt. Anschließend werden die Samples auf der innersten Ellipsen nach dem Winkel der Verbindungslinien zwischen Sample und Mittelpunkt mit der $X$-Achse sortiert. 
-Die restlichen Samples können nicht nach dem gleichen Schema sortiert werden, da der bestimme Mittelpunkt nicht der genaue Schnittpunkt aller Liniensegmente ist. Der Winkel zwischen der Samples auf einem Liniensegment und des bestimmen Mittelpunkts ist also nicht identisch. 
-Stattdessen wird für jedes Sample  auf den darauffolgenden Ellipsen, das Sample auf der vorherigen Ellipse mit der kürzesten Distanz bestimmt. 
+Die restlichen Samples können nicht nach dem gleichen Schema sortiert werden, da der bestimme Mittelpunkt nicht der genaue Schnittpunkt aller Liniensegmente ist. Der Mittelpunkt liegt also nicht auf der Verlängerung eines Liniensegments. Die Winkel der Verbindungslinien der Samples (auf einem gemeinsamen Liniensegment) und dem Mittelpunkt mit der $X$-Achse sind nicht identisch (siehe Abbildung \ref{fig:sampleMappingProblem}).
 
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=.9]{images/sampleMappingProblem.eps}
+	\caption{Winkel zwischen Samples und Mittelpunkt $C$ sind nicht identisch}
+	\label{fig:sampleMappingProblem}
+\end{figure}
+
+Stattdessen wird für jedes Sample auf den darauffolgenden Ellipsen das Sample auf der vorherigen Ellipse mit der kürzesten Distanz bestimmt. 
 Die Samples können nun entsprechend sortiert werden. Die zugeordneten Liniensegmente sind exemplarisch in Abbildung \ref{fig:lineMapping} zu sehen. 
 
 
@@ -242,7 +247,7 @@ Die Samples können nun entsprechend sortiert werden. Die zugeordneten Linienseg
 
 \section{Weltkoordinaten bestimmen}
 
-Aus dem vorherigen Kapitel wissen wir nun für jedes Sample den Ort auf dem Kegel. Wir können die 3D-Koordinaten also folgendermaßen angeben:
+Mit Hilfe der Parametrisierung des Kegelstumpfs aus Kapitel \ref{s:canny} können wir die 3D-Koordinaten eines Samples folgendermaßen angeben:
 
 Ohne Beschränkung der Allgemeinheit, seien die Ellipsen $i = 0,\dotsc,n - 1$ aufsteigend nach ihrer "`Größe"'\footnote{Etwas formaler, könnte man die Ellipsen hier nach ihrem Flächeninhalt sortieren. Für Ellipsen $E_0(x_0,y_0,a_0, b_0, \theta_0)$ und $E_1(x_1,y_1,a_1, b_1,\theta_1)$ gilt $E_0 \leq E_1$ g.d.w. $\pi\cdot a_0 \cdot b_0 \leq \pi \cdot a_1 \cdot b_1$} sortiert, so wie es das Verfahren in \ref{s:ellipseDetection} beschreibt.
 Außerdem seien die Liniensegmente $j = 0,\dotsc,m - 1$ aufsteigend nach Winkel mit der $X$-Achse, wie in \ref{s:pointMapping} beschrieben, sortiert. 
@@ -267,10 +272,11 @@ h_i &= \frac{i}{n}\cdot\Delta H &\forall i\in[0,n-1]\\
 \end{equation*}
 
 \section{Entfaltung}
+\label{s:unfolding}
 Die eigentliche Entfaltung des Kegels kann mit zwei unterschiedlichen Ansätzen realisiert werden. 
 Die erste Möglichkeit ist die \textit{Vorwärtsentfaltung}. Hierbei wird für jedes Pixel auf dem Kegelbild eine 3D-Koordinate durch geeignete Interpolation bestimmt und dann auf die Mantelfläche abgebildet. Beim zweiten Ansatz, der \textit{Rückwärtsentfaltung}, wird ein Punkt von der Mantelfläche zurück auf den Kegel abgebildet und von dort mit einer Projektionsmatrix auf die Bildebene projiziert und dann interpoliert. 
 
-Im folgenden wird genauer auf beide Verfahren eingegangen, sowie deren Probleme erläutert. \todo{hier schon erläutern oder erst in späteren kapiteln?}
+Im folgenden wird genauer auf beide Verfahren eingegangen, sowie deren Probleme erläutert.
 
 \subsection{Vorwärtsentfaltung}
 Bei der \textit{Vorwärtsentfaltung} muss wie oben erwähnt zu jedem Pixel die zugehörige 3D Koordinate im Weltkoordinatensystem berechnet werden. Da bisher jedoch nur die Positionen der Samples bekannt sind muss hier 
@@ -295,7 +301,7 @@ $\frac{\phi_L - \phi_P}{\phi_L - \phi_R}$
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=.6]{images/radialInterpolation.eps}
-	\caption{Interpolation}
+	\caption{Interpolation der 3D-Koordinaten}
 	\label{fig:radialInterpolation}
 \end{figure}
 
@@ -303,13 +309,13 @@ $\frac{\phi_L - \phi_P}{\phi_L - \phi_R}$
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=.7]{images/3d_interpol.eps}
-	\caption{Interpolation}
+	\caption{interpolierter Kegel}
 	\label{fig:3DInterpol}
 \end{figure}
 
 Analog werden die auf Liniensegmenten befindlichen Punkte einfach linear interpoliert. Die Punkte, die sich auf Kreislinien befinden werden über Winkel interpoliert. 
 
-Jedes Pixel hat nun 3D-Koordinaten im Kegel erhalten, die beispielhaft in Abbildung \ref{fig:3DInterpol} zu sehen sind. \todo{gehören Probleme schon hier her? oder erst bei analyse?}
+Jedes Pixel hat nun 3D-Koordinaten im Kegel erhalten, die beispielhaft in Abbildung \ref{fig:3DInterpol} zu sehen sind.
 Anhand der Abbildung lässt sich das erste Problem bei der Vorwärtsentfaltung feststellen. Zwischen den Samples auf einer Kreislinie sollten die interpolierte Positionen nach außen gewölbt sein, da ein Kegel rund ist. Da wir jedoch Interpolieren und nicht Extrapolieren, gehen die Werte nie über die zur Interpolation genutzten Werte hinaus. Konkreter kann eine interpolierte Position keine größeren oder kleineren $X$ und $Z$ Koordinaten erhalten, als die der genutzten Samples. Diese wäre jedoch notwendig, sodass die Rundung des Kegels erhalten bleibt. Die Oberfläche des Kegels scheint eckig. 
 
 Neben der außerdem sehr hohen Laufzeit, bedingt durch die komplexe Interpolation, ergibt sich noch ein weiteres Problem, dass sich erst bei der Entfaltung ergibt. 
@@ -328,7 +334,7 @@ Da wir von dem Ursprungsbild aus auf das entfaltete Bild abbilden, ist außerdem
 	\begin{subfigure}{.5\textwidth}
 		\centering
 		\includegraphics[angle=-90, width=.9\textwidth]{images/coneRaspUnWarpForward.png}
-		\caption{entfaltetes Bild}
+		\caption{entfaltetes Bild (um 90° im Uhrzeigersinn gedreht)}
 	\end{subfigure}
 	\caption{Vorwärtsentfaltung}
 	\label{fig:forwardUnfold}
@@ -337,6 +343,7 @@ Da wir von dem Ursprungsbild aus auf das entfaltete Bild abbilden, ist außerdem
 Es bietet sich dann jedoch an, direkt die Umkehrabbildung zu nutzen, was die Motivation hinter der Rückwärtsentfaltung ist.
 
 \subsection{Rückwärtsentfaltung}
+\todo{das ist zu knapp}
 Bei der Rückwärtsentfaltung gehen wir von dem entfalteten Bild aus und bestimmen zunächst mit der Umkehrabbildung \ref{eq:LateralToCone} aus Kapitel \ref{s:cone}, die 3D Kegelkoordinaten. Mit Hilfe einer Projektionsmatrix werden diese 3D-Koordinten dann auf Bildkoordinaten abgebildet.
 
 Konkret lösen wir das überbestimmte lineare Gleichungssystem \ref{eq:DLT} aus Kapitel \ref{ch:theory} mittels \textit{Direct Linear Transformation}.
@@ -353,7 +360,7 @@ Die resultierenden Bildkoordinaten sind im Allgemeinen nicht ganzzahlig. Es kann
 	\begin{subfigure}{.5\textwidth}
 		\centering
 		\includegraphics[angle=-90, width=.9\textwidth]{images/coneRaspUnWarpReverse.png}
-		\caption{entfaltetes Bild}
+		\caption{entfaltetes Bild (um 90° im Uhrzeigersinn gedreht)}
 	\end{subfigure}
 	\caption{Rückwärtsentfaltung}
 	\label{fig:reverseUnfold}

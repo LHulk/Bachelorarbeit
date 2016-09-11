@@ -15,7 +15,7 @@ int main()
 
 
 	int sizeEllipse = 500;
-	int sizeError = 200;
+	int sizeError = 500;
 
 	std::vector<cv::Point> points;
 	for(int i = 0; i < sizeEllipse; i++)
@@ -34,16 +34,16 @@ int main()
 	//generate errors
 	for(int i = 0; i < sizeError; i++)
 	{
-		/*cv::Point errorPoint = cv::Point(rng.uniform(0,599), rng.uniform(0,599));
-		cv::circle(img, errorPoint, 2, cv::Scalar(0,255,255), -1);*/
+		cv::Point errorPoint = cv::Point(rng.uniform(0,699), rng.uniform(0,699));
+		cv::circle(img, errorPoint, 2, cv::Scalar(0,255,255), -1);
 
-		double angle = rng.uniform(0.0, 2*CV_PI);
+		/*double angle = rng.uniform(0.0, 2*CV_PI);
 
 		//distort data a bit
 		cv::Point2d offset = cv::Point2d(rng.uniform(0,0), rng.uniform(0,0));
 
 		cv::Point2d errorPoint = eShadow.evalAtPhi(angle) + offset;
-		cv::circle(img, errorPoint, 2, cv::Scalar(0,255,255), -1);
+		cv::circle(img, errorPoint, 2, cv::Scalar(0,255,255), -1);*/
 
 		points.push_back(errorPoint);
 
@@ -53,7 +53,7 @@ int main()
 	cv::imshow("points", img);
 	cv::waitKey(0);
 
-	double p = 0.99;
+	double p = 0.9999;
 	int k = 6;
 	double relativeError = sizeError / static_cast<double>(sizeEllipse + sizeError);
 
@@ -66,7 +66,8 @@ int main()
 
 	Config::usedResHeight = 700;
 	Config::usedResWidth = 700;
-	Ellipse fittedEllipse = Ellipse::robustEllipseFit(points, img.size(), 7.0f, 10.0f, minN);
+	float dist = 1.0f;
+	Ellipse fittedEllipse = Ellipse::robustEllipseFit(points, img.size(), dist, 10.0f, 20);
 	cv::ellipse(img, fittedEllipse.getEllipseAsRotatedRect(), cv::Scalar(0,255,0), 2);
 
 	cv::RotatedRect leastSquareEllipse = cv::fitEllipse(points);

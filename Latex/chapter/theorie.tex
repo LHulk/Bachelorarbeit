@@ -6,7 +6,7 @@ In diesem Kapitel werden einige Grundlagen für die folgende Kapitel eingeführt
 
 
 Wir benutzen ein linkshändiges Koordinatensystem.
-
+\todo{theorie einleitung schreiben}
 
 
 \section{Kegel}
@@ -18,7 +18,7 @@ Wir benutzen ein linkshändiges Koordinatensystem.
 \end{definition}
 
 In der weiteren Arbeit betrachten wir nur gerade Kreiskegel.
-$S$ bezeichne hierbei die Seitenhöhe und ist definiert durch $S = \sqrt{H^2 + R^2}$ (siehe Abbildung \ref{fig:cone}).
+$S$ bezeichnet hierbei die Seitenhöhe und ist definiert durch $S = \sqrt{H^2 + R^2}$ (siehe Abbildung \ref{fig:cone}).
 
 \begin{figure}[!htb]
 	\centering
@@ -58,7 +58,7 @@ mit $u\in [0, H]$ und $\theta \in [0, 2\pi)$
 	\label{fig:coneFrustum}
 \end{figure}
 
-Analog zum Kreiskegel definieren wir einen Kegelstumpf durch folgende Parametrisierung: 
+Analog zum Kreiskegel definieren wir einen Kegelstumpf mit Zentrum $(0,0)$ des kleineren Kreises durch folgende Parametrisierung: 
 \begin{equation} \label{eq:paramFrustum}
 \begin{aligned}
 x &= (r + \frac{u}{\Delta H} (R - r))~cos \theta \\
@@ -138,7 +138,7 @@ L(x,y) = (-(s + \frac{u}{\Delta H}(S-s)) ~sin \phi, (s + \frac{u}{\Delta H} (S-s
 
 für ein passendes $u\in [0, \Delta H]$ und $\phi \in [0, \alpha] \subseteq  [0, 2\pi]$.
 
-Da $L(x,y)$ in Polarkoordinaten gegeben ist, lässt sich der Radius durch $\sqrt{x^2+y^2}$ bestimmen. Wir können den Winkel $\phi$ mit inverser Skalierung also analog durch folgende Hilfsfunktion bestimmen:
+Da $L(x,y)$ in Polarkoordinaten gegeben ist, lässt sich der Radius durch $\sqrt{x^2+y^2}$ bestimmen. Wir können den Winkel $\phi$ mit inverser Skalierung also analog zu oben durch folgende Hilfsfunktion bestimmen:
 
 \begin{equation*}
 \Theta(x,y) := \frac{S}{R} \atant\left(\frac{x}{-\sqrt{x^2+y^2}}, \frac{z}{\sqrt{x^2+y^2}}\right)
@@ -198,7 +198,7 @@ Das Problem lässt sich auch mit Hilfe der äquivalenten sogenannten Normalengle
 	(A^TA)c = A^Ty
 \end{equation*}
 
-lösen, wobei mindestens eine Lösung existiert und die Lösung mit kleinster 2-Norm eindeutig ist. 
+lösen, wobei mindestens eine Lösung existiert und bei mehreren Lösungen, die Lösung mit kleinster 2-Norm ausgewählt wird. 
 
 Gilt darüber hinaus $\text{rang}\left(A\right) = n$ so ist $A^TA$ invertierbar und es gilt 
 
@@ -229,6 +229,7 @@ c = V\Sigma^+U^Ty
 
 \section{Kamerakalibrierung und projektive Geometrie}
 \label{s:calib}
+\todo{ist noch nicht fertig}
 
 \begin{definition}
 	Kamerakalibrierung ist ein Verfahren, bei dem die interne Kamerageometrie und optischen Eigenschaften (intrinische Parameter) 
@@ -357,7 +358,7 @@ Selfcalibrating vs bla bla
 	Ein Blob ist eine glatte zusammenhängende Region in einem Bild, die sich farblich von ihrer Umgebung abhebt \cite{Lindeberg1993}.
 \end{definition}
 
-Ein Blob-Detektor ist also ein Verfahren zum Detektieren solcher Blobs. Die gefunden Blobs können anschließend nach verschiedenen Kriterien, wie Größe, Farbe, Konvexität oder Rundheit gefiltert werden. 
+Ein Blob-Detektor ist also ein Verfahren zum Detektieren solcher Blobs. Die gefunden Blobs können anschließend nach verschiedenen Kriterien, wie beispielsweise Größe, Farbe, Konvexität oder Rundheit gefiltert werden. 
 
 \section{Canny}
 \label{s:canny}
@@ -366,6 +367,7 @@ Es sollten nicht mehr Kanten zurückgegeben werden, als auf dem Bild zu sehen un
 
 \section{Hough-Transformation}
 \label{s:hough}
+\todo{ist noch etwas unklar}
 Hough-Transformation ist ein Verfahren zur Detektion von beliebigen parametrisierbaren Konturen. In dieser Arbeit werden Hough-Transforamtionen benutzt um Geraden zu detektieren. 
 
 Eine beliebige zweidimensionale Gerade kann in Polarkoordinaten folgendermaßen implizit ausgedrückt werden:
@@ -408,7 +410,7 @@ Das Modell mit dem größten Consensus Set wird schließlich ausgewählt.
 Die Anzahl der Iterationen, die mindestens notwendig sind, um mit einer Wahrscheinlichkeit von $p \in [0,1)$, bei einem relativen Ausreißeranteil von $\epsilon \in[0,1)$ und einer Anzahl von $k$ Daten, um das Modell eindeutig zu beschreiben, mindestens einmal eine ausreißerfreie Teilmenge der Messreihe zu erhalten, lässt sich berechnen mit:
 
 \begin{equation}
-\frac{\log{\left(1-p\right)}}{\log{\left(1-\left(1-\epsilon\right)^k\right)}}
+n_{min} = \frac{\log{\left(1-p\right)}}{\log{\left(1-\left(1-\epsilon\right)^k\right)}}
 \end{equation}
 
 
@@ -418,13 +420,13 @@ Die Anzahl der Iterationen, die mindestens notwendig sind, um mit einer Wahrsche
 \label{s:ellipseGeneral}
 
 \begin{definition}[Ellipse]
-	Eine Ellipse wird beschrieben durch diejenigen Punkte, dessen Summe der Abstände zu zwei gegebenen Punkten $f_1$ und $f_2$(Brennpunkte) konstant sind. Der Mittelpunkt der Verbindungslinie der beiden Brennpunkt wird als Zentrum der Ellipse bezeichnet (siehe Abbildung \ref{fig:ellipseDef}). 
+	Eine Ellipse wird beschrieben durch diejenigen Punkte, dessen Summe der Abstände zu zwei gegebenen Punkten $f_1$ und $f_2$ (Brennpunkte) konstant sind. Der Mittelpunkt der Verbindungslinie der beiden Brennpunkt wird als Zentrum der Ellipse bezeichnet (siehe Abbildung \ref{fig:ellipseDef}). 
 	Als Hauptachse $a$ bezeichnen wir die Verbindungslinie von Mittelpunkt durch einen der Brennpunkte bis zum Scheitel $V_1$ (bzw. $V_3$) der Ellipse. Die zu ihr rechtwinklige Verbindungslinie durch den Mittelpunkt bis zu einem der anderen Scheitelpunkte ($V_2$ oder $V_4$) nennen wir Nebenachse $b$.
 \end{definition}
 
 \begin{figure}[!htb]
 	\centering
-	\includegraphics[scale=.8]{images/ellipse_focalDef.eps}
+	\includegraphics[scale=.9]{images/ellipse_focalDef.eps}
 	\caption{Ellipse mit Brennpunkten $f_1, f_2$, Zentrum $C$, Hauptachse $a$, Nebenachse $b$ und Scheitelpunkten $V_1$ und $V_2$}
 	\label{fig:ellipseDef}
 \end{figure}
@@ -469,7 +471,8 @@ ax^2 + by^2 + cxy + dx + ey + f = 0 \quad \text{mit}\quad c^2-4ab < 0
 mit $a,b,c,d,e,f \in \mathbb{R}$. Eine Ellipse lässt sich also durch sechs Punkte eindeutig beschrieben (fünf, wenn man $f$ auf eins skaliert).
 
 
-Die beiden Formen \ref{eq:ellipseRotTrans} und \ref{eq:ellipseQuadratic} sind äquivalent, falls die Ellipse nicht degeneriert ist (ohne Beweis) \cite{Lawrence1972}. Da wir die Umformung von \ref{eq:ellipseRotTrans} nach \ref{eq:ellipseQuadratic} später brauchen, wird sie hier einmal exemplarisch vorgeführt. 
+Die beiden Formen \ref{eq:ellipseRotTrans} und \ref{eq:ellipseQuadratic} sind äquivalent, falls die Ellipse nicht degeneriert ist (ohne Beweis) \cite{Lawrence1972}. Die Umformung von \ref{eq:ellipseRotTrans} nach \ref{eq:ellipseQuadratic} ist mit Hilfe einer Hauptachsentransformation möglich. 
+Da wir diese später brauchen, wird sie hier einmal exemplarisch vorgeführt. 
 
 Zunächst einmal fällt auf, dass der gemischte Term $cxy$ genau dann null ist, wenn die Ellipse nicht rotiert wurde. Im ersten Schritt versuchen wir also die Rotation der Ellipse rückgängig zu machen, um den Rotationswinkel bestimmen zu können.
 
@@ -513,7 +516,7 @@ Es gilt offenbar $S = R$ für ein geeignetes $\theta$, da die Eigenvektoren norm
 \theta = \atant(\sin\theta, \cos\theta) = \atant(S_{2,1}, S_{1,1})
 \end{equation*}
 
-Multipliziert man nun \ref{eq:PCARot} aus ergibt sich:
+Multipliziert man nun \ref{eq:PCARot} aus, ergibt sich:
 
 \begin{equation}\label{eq:ellipseCenter}
 \begin{aligned}
@@ -543,7 +546,7 @@ Obige Gleichung lässt sich anschließend weiter vereinfachen:
 \end{aligned}
 \end{equation}
 
-wobei $\sigma \neq 0$, wenn die Ellipse nicht zum Punkt entartet ist \cite{Lawrence1972}. Vergleicht man nun \ref{eq:PCAKoeff} mit \ref{eq:ellipseNoRotTrans} so sieht man das
+wobei $\sigma \neq 0$, wenn die Ellipse nicht zum Punkt entartet ist \cite{Lawrence1972}. Vergleicht man nun \ref{eq:PCAKoeff} mit \ref{eq:ellipseNoRotTrans} so sieht man das folgendes gelten muss: 
 
 \begin{equation}
 \begin{aligned}
@@ -552,7 +555,7 @@ wobei $\sigma \neq 0$, wenn die Ellipse nicht zum Punkt entartet ist \cite{Lawre
 \end{aligned}
 \end{equation}
 
-Es gilt wie erwartet $a \geq b$, da $\lambda_1 \leq \lambda_2$
+Es gilt wie erwartet $a \geq b$, da $\lambda_1 \leq \lambda_2$.
 
 
 \subsection{Abstand: Punkt zu Ellipse}
@@ -560,7 +563,7 @@ Es gilt wie erwartet $a \geq b$, da $\lambda_1 \leq \lambda_2$
 Das hier beschriebene Verfahren zur Bestimmung der kürzesten euklidischen Distanz eines Punktes zu einer Ellipse stammt aus der Arbeit von David Eberly \cite{Eberly2013}.
 Wir betrachten nur Ellipsen im Ursprung, die achsenausgerichtet sind und darüber hinaus nur Punkte im ersten Quadranten. Ansonsten wir die Ellipse in den Ursprung verschoben und um ihren entgegengesetzten Drehwinkel rotiert. Da die Ellipse dann bezüglich der $X$- und $Y$- Achse symmetrisch ist, kann der Punkt einfach durch Spiegelung in den richtigen Quadranten transformiert werden. Der Abstand ändert sich dadurch nicht. 
 
-Wir bezeichnen von nun an $Q = (y_0, y_1)$ als eine Punkt, dessen Distanz zur Ellipse wir berechnen wollen und $E = (x_0, x_1)$ als denjenigen eindeutigen Punkt, welcher auf der Ellipse liegt und die kürzeste euklidische Distanz vom Punkt $Q$ hat. 
+Wir bezeichnen von nun an $Q = (y_0, y_1)$ als eine Punkt, dessen Distanz zur Ellipse wir berechnen wollen und $E = (x_0, x_1)$ als denjenigen eindeutigen Punkt, welcher auf der Ellipse liegt und die kürzeste euklidische Distanz zum Punkt $Q$ hat. 
 
 Aufgrund dieser Forderungen können wir ohne Beschränkung der Allgemeinheit folgende Aussagen treffen:
 \begin{itemize}
@@ -568,7 +571,7 @@ Aufgrund dieser Forderungen können wir ohne Beschränkung der Allgemeinheit fol
 	\begin{equation}\label{eq:distEqParam} \frac{x_0^2}{a^2} + \frac{x_1^2}{b^2} = 1\end{equation}
 	 mit $a \geq b \geq 0$ beziehungsweise
 	in der parametrischen Form \[\mathcal{E}(\theta) = (a\cos\phi, b\sin\phi)  \tag*{$\phi \in [0, 2\pi)$}\] beschrieben werden.
-	\item Es gilt $y_0,y_1,x_0, x_1 \geq 0$
+	\item Es gilt $y_0,y_1,x_0, x_1 \geq 0$.
 \end{itemize}
 
 Für die quadrierte Distanz von einem beliebigen Punkt $Q$ zu einem Punkt $\mathcal{E}(\theta)$ auf der Ellipse gilt dann
@@ -576,12 +579,12 @@ Für die quadrierte Distanz von einem beliebigen Punkt $Q$ zu einem Punkt $\math
 	F(\theta) = \abs{\mathcal{E}(\theta) - Q}^2.
 \end{equation}
 
-Die Ableitung von $F$
+Wir wollen $F$ minimieren und betrachten die Ableitung:
 \begin{equation}
-F'(\theta) = 2\left(\mathcal{E}(\theta) - Q\right) \cdot \mathcal{E}'(\theta).
+F'(\theta) = 2\left(\mathcal{E}(\theta) - Q\right) \cdot \mathcal{E}'(\theta)
 \end{equation}
 
-wird null, wenn $\left(\mathcal{E}(\theta) - Q\right)$ und $ \mathcal{E}'(\theta)$ zu einander orthogonal sind. Daraus folgt, dass der Vektor von $Q$ zu $E$ senkrecht zur Ellipse stehen muss.  (siehe Abbildung \ref{fig:ellipseDist}). 
+$F'$ wird null, wenn $\left(\mathcal{E}(\theta) - Q\right)$ und $ \mathcal{E}'(\theta)$ zu einander orthogonal sind. Daraus folgt, dass der Vektor von $Q$ zu $E$ senkrecht zur Ellipse stehen muss.  (siehe Abbildung \ref{fig:ellipseDist}). 
 
 
 \begin{figure}[!htb]
@@ -595,7 +598,7 @@ Betrachten wir also die Funktion:
 \begin{equation} \label{eq:ellipseDistEq}
 	G(x_0,x_1) = \frac{x_0^2}{a^2} + \frac{x_1^2}{b^2} - 1.
 \end{equation}
-$(x_0,x_1)$ ist genau dann ein Punkt auf der Ellipse, wenn $G(x_0,x_1) = 0$. Der Gradient von $G$ in $(x_0,x_1)$ ist ein Normalenvektor auf der Ellipse, somit auch der halbe Gradient $\nabla G(x_0,x_1)/2$. Der Vektor von $E$ zu $Q$ muss dieselbe Richtung haben. Es gilt somit:
+$(x_0,x_1)$ ist genau dann ein Punkt auf der Ellipse, wenn $G(x_0,x_1) = 0$. Der Gradient von $G$ in $(x_0,x_1)$ ist ein Normalenvektor auf der Ellipse und somit auch der halbe Gradient $\nabla G(x_0,x_1)/2$. Der Vektor von $E$ zu $Q$ muss dieselbe Richtung haben. Es gilt somit:
 
 \begin{equation}
 	(y_0,y_1) - (x_0, x_1) = t\frac{\nabla G(x_0,x_1)}{2} = t\left(\frac{x_0}{a^2},\frac{x_1}{b^2}\right)

@@ -1,6 +1,6 @@
 #include "Ellipse.h"
 
-static bool isDebug = true;
+static bool isDebug = false;
 
 
 Ellipse::Ellipse()
@@ -158,7 +158,7 @@ std::vector<Ellipse> Ellipse::detectEllipses(const cv::Mat& edgeImage)
         std::vector<cv::Point> collisonPoints = rayCast(currentEdge, currentCenter, 200, debug2);
 
         //Ellipse e = Ellipse(cv::fitEllipse(collisonPoints));
-        Ellipse e = robustEllipseFit(collisonPoints, edgeImage.size(), 7.0f, 1.5f, 200); //100 = 33 , 200 = 40 percent outlier
+		Ellipse e = robustEllipseFit(collisonPoints, edgeImage.size(), 7.0f, 1.5f, 200); //100 = 33 , 200 = 40 percent outlier
 
         cv::ellipse(debug, e.getEllipseAsRotatedRect(), cv::Scalar(0,255,0), 2);
 

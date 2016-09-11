@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70107" creator="Ipe 7.2.5">
-<info created="D:20160829140822" modified="D:20160829140822"/>
+<info created="D:20160829140822" modified="D:20160911174907"/>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
 <path stroke="sym-stroke" fill="sym-stroke" pen="sym-pen">
@@ -220,13 +220,13 @@ h
 <dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
 <dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
 <textsize name="large" value="\large"/>
+<textsize name="small" value="\small"/>
+<textsize name="tiny" value="\tiny"/>
 <textsize name="Large" value="\Large"/>
 <textsize name="LARGE" value="\LARGE"/>
 <textsize name="huge" value="\huge"/>
 <textsize name="Huge" value="\Huge"/>
-<textsize name="small" value="\small"/>
 <textsize name="footnote" value="\footnotesize"/>
-<textsize name="tiny" value="\tiny"/>
 <textstyle name="center" begin="\begin{center}" end="\end{center}"/>
 <textstyle name="itemize" begin="\begin{itemize}" end="\end{itemize}"/>
 <textstyle name="item" begin="\begin{itemize}\item{}" end="\end{itemize}"/>
@@ -278,7 +278,7 @@ h
 </path>
 <text matrix="1 0 0 1 -57.3808 22.3925" transformations="translations" pos="272 672" stroke="black" type="label" width="24.453" height="9.803" depth="0" valign="baseline" size="Large">$\Delta H$</text>
 <text matrix="1 0 0 1 -225.325 20.9927" transformations="translations" pos="272 672" stroke="black" type="label" width="21.18" height="9.803" depth="0" valign="baseline" size="Large">$\Delta S$</text>
-<text matrix="1 0 0 1 -24.4918 2.79907" transformations="translations" pos="228.512 586.84" stroke="black" type="label" width="7.995" height="6.177" depth="0" valign="baseline" size="Large">$u$</text>
+<text matrix="1 0 0 1 -24.4918 2.79907" transformations="translations" pos="228.512 586.84" stroke="black" type="label" width="7.364" height="6.176" depth="2.79" valign="baseline" size="Large">$y$</text>
 <path stroke="black" arrow="normal/normal">
 192 640 m
 103.444 640.815 l
