@@ -1,11 +1,13 @@
 %!TEX root = bachelor.tex
 \chapter{Analyse}
 \label{ch:analysis}
-In diesem Kapitel...\todo{analyse einleitung schreiben}
+\todo{analyse einleitung schreiben}
+In diesem Kapitel...
 
-Die Laufzeitanalysen wurden auf dem Raspberry pi gemessen
+Zunächst werden die beiden Verfahren zur Entzerrung gegenübergestellt. Anschließend untersuchen wir verschiedene Einflüsse auf der Qualität der Entzerrung, woraufhin wir die Laufzeit ermitteln. 
+Zum Schluss Ransac...
 
-Raspberry Pi 2 Model B:
+Die Laufzeitanalysen wurden auf einem Raspberry Pi 2 Model B durchgeführt mit folgenden Eigenschaften:
 \begin{itemize}
 	\item 900MHz ARM Cortex-A7 CPU
 	\item 1GB RAM
@@ -28,11 +30,11 @@ Wie erwartet verhält sich die Anzahl der Löcher quadratisch zur gewählten Aus
 \bigskip
 
 Als Reprojektionsfehler einer Abbildung wird die Distanz zwischen einem gemessenem Punkt und einem korrespondierendem projizierten Punkt bezeichnet. 
+\bigskip
 
-Im Falle der Rückwärtsentfaltung sind die gemessenen Punkte die Bildpositionen der Samples im Ursprungsbild. Da die Geometrie des Kegels bekannt ist, wissen wir wo die Samples auf dem entfalteten Bild sein müssen (siehe Parametrisierung der Mantelfläche \ref{eq:paramLateral} in Kapitel \ref{ch:theory}). Wir können nun diese Positionen mit Hilfe der Abbildung zur Entfaltung und der Projektionsmatrix zurück auf das Ursprungsbild abbilden. Diese Punkte sind die projizierten Punkte. Da die Abbildung von der Mantelfläche zur Kegeloberfläche exakt ist, ist der Reprojektionsfehler der Rückwärtsentfaltung alleine durch die Projektionsmatrix definiert. 
+Im Falle der Rückwärtsentfaltung sind die gemessenen Punkte die Bildpositionen der Samples im Ursprungsbild. Da die Geometrie des Kegels bekannt ist, wissen wir wo sich die  Samples auf dem entfalteten Bild befinden müssen (siehe Parametrisierung der Mantelfläche \ref{eq:paramLateral} in Kapitel \ref{ch:theory}). Wir können nun diese Positionen mit Hilfe der Abbildung zur Entfaltung und der Projektionsmatrix zurück auf das Ursprungsbild abbilden. Diese Punkte sind die projizierten Punkte. Da die Abbildung von der Mantelfläche zur Kegeloberfläche exakt ist, ist der Reprojektionsfehler der Rückwärtsentfaltung alleine durch die Projektionsmatrix bestimmt. 
 
 Bei der Vorwärtsentfaltung sind die gemessenen Punkte gegeben durch die bekannten Sample-Positionen auf der Mantelfläche. Die Projizierten erhält man, nach der Abbildung der detektierten Sample-Positionen des Ursprungsbild auf die Mantelfläche. Der Reprojektionsfehler ist also alleine durch die Genaugkeit der Sample-Detektion definiert und somit bei diesem Verfahren immer nahe null. 
-
 Obwohl das Endergebnis, bedingt durch die Löcher, bei der Vorwärtsentfaltung optisch schlechter ist, ist der Reprojektionsfehler also bei der Vorwärtsentfaltung immer kleiner. 
 Als Vergleich zwischen den beiden Verfahren eignet sich der Reprojektionsfehler also nicht.
 
@@ -43,13 +45,13 @@ Als Vergleich zwischen den beiden Verfahren eignet sich der Reprojektionsfehler 
 	\label{fig:runningTimeComparision}
 \end{figure}
 
-Wir entscheiden uns rein optisch und auf Grund der schlechteren Laufzeit bei der Vorwärtsentfaltung (siehe Abbildung \ref{fig:runningTimeComparision}) für die Rückwärtsentfaltung. 
+Wir entscheiden uns optisch und auf Grund der schlechteren Laufzeit bei der Vorwärtsentfaltung (siehe Abbildung \ref{fig:runningTimeComparision}) für die Rückwärtsentfaltung. 
 Alle weiteren Auswertungen beziehen sich von nun an auf die Rückwärtsentfaltung.
 
 \section{Einfluss der intrinsischen Kalibrierung}
-Ein wichtiger Einflussfaktor auf die Qualität der Entfaltung ist die intrinsische Kamerakalibrierung, die vor der eigentlichen Kegelkalibrierung stattfindet. Ihre Hauptaufgabe besteht darin, die Linsenverzerrungen der Kamera zu kompensieren. 
+Ein wichtiger Einflussfaktor auf die Qualität der Entfaltung ist die intrinsische Kamerakalibrierung, die vor der eigentlichen Kegelkalibrierung stattfindet. Ihre Hauptaufgabe besteht darin, die Linsenverzerrungen der Kamera herauszurechnen. 
 
-Wir messen den Einfluss der Kamerakalibrierung mit Hilfe des Reprojektionsfehlers. Dazu betrachten wir fünf verschiedene Bilder, die ein Mal mit und ein Mal ohne intrinsische Kalibrierung entfaltet werden. Bei beiden Gruppen wird anschließend jeweils der Reprojektionsfehler bestimmt und verglichen. Die Ergebnisse sind in \ref{fig:influenceCalib} zu sehen. In der linken Abbildung sind hierbei die Fehler im kalibrierten Fall zu erkennen, im Linken die Unkalibrierten. In der Abbildung ist dabei ein Kreuz bei $(u,v)$, falls die Abweichung des projizierten Punktes in $x$-Richtung $u$, sowie in $y$-Richtung $v$ beträgt. 
+Wir messen den Einfluss der Kamerakalibrierung mit Hilfe des Reprojektionsfehlers. Dazu betrachten wir fünf verschiedene Bilder, die ein Mal mit und ein Mal ohne intrinsische Kalibrierung entzerrt werden. Bei beiden Gruppen wird anschließend jeweils der Reprojektionsfehler pro Sample bestimmt und verglichen. Die Ergebnisse sind in Abbildung \ref{fig:influenceCalib} zu sehen. In der linken Abbildung sind hierbei die Fehler im kalibrierten Fall zu erkennen, im Linken im Unkalibrierten. In der Abbildung ist dabei ein Kreuz bei $(u,v)$, falls die Abweichung des projizierten Punktes in $x$-Richtung $u$, sowie in $y$-Richtung $v$ beträgt. 
 
 \begin{figure}[!htb]
 	\centering
@@ -59,10 +61,10 @@ Wir messen den Einfluss der Kamerakalibrierung mit Hilfe des Reprojektionsfehler
 \end{figure}
 
 
-Es ist klar zu erkennen, dass die Reprojektionsfehler bei den Bildern ohne intrinsische Kamerakalibrierung wesentlich größer ist. Der starke Einfluss kommt unter Anderem daher, dass wir eine Weitwinkelkamera mit starker Tonnenverzerrungen eingesetzt haben. Ohne eine Modellierung der Linsenverzerrungen weichen die Abstände zwischen den Sample-Positionen stark von der Realität ab. Die Projektionsmatrix wird mit fehlerhaften Daten bestimmt. 
+Es ist klar zu erkennen, dass die Reprojektionsfehler bei den Bildern ohne intrinsische Kamerakalibrierung wesentlich größer ist. Der starke Einfluss kommt unter Anderem daher, dass wir eine Weitwinkelkamera mit starker tonnenförmiger Verzerrung eingesetzt haben. Ohne eine Modellierung der Linsenverzerrungen weichen die Abstände zwischen den Sample-Positionen stark von der Realität ab. Die Projektionsmatrix wird mit fehlerhaften Daten bestimmt. 
 
 \section{Einfluss der Rotation der Kamera}
-Um den Einfluss der Rotation der Kamera zu untersuchen, wurde der Kegel mit Kalibrierungsmuster in Blender gerendert, da die Kameraposition dann genau bekannt ist und äußere Faktoren wie Lichtverhältnisse und inhomogene Hintergründe kontrolliert werden können. 
+Um den Einfluss der Rotation der Kamera untersuchen zu können, wurde der Kegel mit Kalibrierungsmuster gerendert, da die Kameraposition dann exakt bekannt ist und äußere Faktoren wie Lichtverhältnisse und inhomogene Hintergründe kontrolliert werden können. 
 
 \begin{figure}[!htb]
 	\centering
@@ -81,7 +83,7 @@ Um den Einfluss der Rotation der Kamera zu untersuchen, wurde der Kegel mit Kali
 \end{figure}
 
 
-Es werden anschließend Bilder erzeugt, in denen in 1° Schritten die Kamera von 0° bis 12° um die $X$-Achse rotiert wird. Für jedes dieser Bilder wird anschließend eine Rückwärtsentfaltung durchgeführt und der durchschnittliche Reprojektionsfehler bestimmt. Abbildung \ref{fig:influenceRot} zeigt, dass der Reprojektionsfehler relativ rotationsinvariant ist. 
+Es werden anschließend Bilder erzeugt, in denen in 1° Schritten die Kamera von 0° bis 12° um die $X$-Achse rotiert wird. Für jedes dieser Bilder wird anschließend eine Rückwärtsentfaltung durchgeführt und der durchschnittliche Reprojektionsfehler ermittelt. Abbildung \ref{fig:influenceRot} zeigt, dass der Reprojektionsfehler relativ rotationsinvariant ist. 
 
 
 \begin{figure}[!htb]
@@ -93,27 +95,19 @@ Es werden anschließend Bilder erzeugt, in denen in 1° Schritten die Kamera von
 
 
 \section{Laufzeit der Entfaltung}
+Durch den Kalibrierungsprozess erhalten wir zwei Abbildungsmatrizen (siehe Kapitel \ref{ch:implementation}), mit denen wir anschließend eine Reihe von Bildern entzerren möchten. Wir untersuchen dabei die Laufzeit pro gewählter Auflösung, in 50er Schritten, und ermitteln jeweils die Laufzeit gemittelt über 200 Bilder. Untersucht wird die Laufzeit bikubischer, sowie mit linearer Interpolation. 
 
 \begin{figure}[!htb]
 	\centering
-	\includegraphics[width=\textwidth]{images/runningTimePerSlantheight.eps}
+	\includegraphics[width=0.8\textwidth]{images/runningTimePerSlantheight.eps}
 	\caption{Einfluss der Ausgabeauflösung auf die Laufzeit der Entfaltung}
 	\label{fig:influenceRes2}
 \end{figure}
 
 
 
-
-robustheit reverse warping? bestimmung der keypoints?
-
-
-
-
-
-
-
 \section{Evaluierung des RANSAC zur Ellipsendetektion}
-Die robuste Ellipsendetektion ist ein wichtiger Schritt bei der Entfaltung. Bei beiden Verfahren werden die bestimmten Ellipsen genutzt um Korrespondenzen zwischen den Sample-Positionen und Punkten auf dem Kegel im Weltkoordinatensystem herzustellen. Bei der Vorwärtsentfaltung werden die Ellipsen darüber hinaus benötigt, um für die restlichen Pixel geeignete 3D-Koordinaten interpolieren zu können. Es ist also von großem Interesse wie gut die Ellipsendetektion mittels RANSAC funktioniert.  
+Die robuste Ellipsendetektion ist ein wichtiger Schritt bei der Entfaltung. Bei beiden Verfahren werden die bestimmten Ellipsen genutzt um Korrespondenzen zwischen den Sample-Positionen und Punkten auf dem Kegel im Weltkoordinatensystem herzustellen. Bei der Vorwärtsentfaltung werden die Ellipsen darüber hinaus benötigt, um für die Pixel geeignete 3D-Koordinaten interpolieren zu können. Es ist also von großer Bedeutung wie gut die Ellipsendetektion mittels RANSAC funktioniert.  
 
 
 \begin{figure}[!htb]

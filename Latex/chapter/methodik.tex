@@ -1,10 +1,8 @@
 %!TEX root = bachelor.tex
 \chapter{Methodik}
 \label{ch:method}
-\todo{überarbeiten}
-In diesem Kapitel stellen wir ein Verfahren vor, dass ermöglicht anhand eines Bildes (siehe Einleitung).
-
-Zunächst gehen wir auf das verwendete Kalibrierungsmuster ein, woraufhin die genaue Vorgehensweise zur Entfaltung erläutert wird. 
+In diesem Kapitel stellen wir zwei Vorgehensweisen zur Entzerrung von Kegeloberflächen vor. 
+Zunächst gehen wir auf das verwendete Kalibrierungsmuster ein, worauf hin die einzelnen Schritte der Entzerrung erläutert werden. 
 
 Die geometrischen Eigenschaften des Kegelstumpfs $(r, R, \Delta H)$ können gemessen und somit als bekannt angenommen werden. 
 Darüber hinaus nehmen wir an, dass sich das Zentrum des kleineren Kreises im links-händigen Weltkoordinatensystem an der Positon $(0,0,0)$ (siehe Abbildung \ref{fig:coneFrustum} in Kapitel \ref{s:cone}) befindet. Durch diese Einschränkung gehen jegliche absolute Größenverhältnisse verloren. Die Larven können jedoch weiterhin relativ zu einander verglichen werden. 
@@ -42,6 +40,7 @@ Die Anzahl der Samples sollte groß genug sein, um möglichst viel geometrische 
 
 
 \section{Intrinsische Kamerakalibrierung}
+\label{s:intrinsic}
 Bedingt durch die Wahl einer Weitwinkelkamera, enthält die Linse der Kamera eine starke tonnenförmige (nach außen gewölbte) Verzerrung (siehe Abbildung \ref{fig:calib}). Diese muss herausgerechnet werden, da sonst Abstände im Bild nicht mehr der Realität entsprechen und dadurch die Präzision der Entfaltung stark abnimmt (siehe Kapitel \ref{ch:analysis}). Es wird also zunächst eine Kamerakalibrierung durchgeführt, wobei wir nur an den intrinsischen Parametern, inklusive Verzerrungskoeffzienten, interessiert sind, um das Bild anschließend entzerren zu können. 
 
 
@@ -343,11 +342,13 @@ Da wir von dem Ursprungsbild aus auf das entfaltete Bild abbilden, ist außerdem
 Es bietet sich dann jedoch an, direkt die Umkehrabbildung zu nutzen, was die Motivation hinter der Rückwärtsentfaltung ist.
 
 \subsection{Rückwärtsentfaltung}
-\todo{das ist zu knapp}
-Bei der Rückwärtsentfaltung gehen wir von dem entfalteten Bild aus und bestimmen zunächst mit der Umkehrabbildung \ref{eq:LateralToCone} aus Kapitel \ref{s:cone}, die 3D Kegelkoordinaten. Mit Hilfe einer Projektionsmatrix werden diese 3D-Koordinten dann auf Bildkoordinaten abgebildet.
+Bei der Rückwärtsentfaltung gehen wir von dem entzerrten Bild aus, dessen geometrischen Eigenschaften aus der parametrischen Form der Mantelfläche des Kegels bekannt sind und versuchen rückwärts Pixelkandidaten im Ursprungsbild zu bestimmen. 
 
-Konkret lösen wir das überbestimmte lineare Gleichungssystem \ref{eq:DLT} aus Kapitel \ref{ch:theory} mittels \textit{Direct Linear Transformation}.
-Die resultierenden Bildkoordinaten sind im Allgemeinen nicht ganzzahlig. Es kann hier allerdings im Gegensatz zur Vorwärtsentfaltung einfach auf dem Ursprungsbild interpoliert werden. 
+Zunächst bestimmen wir zu den gegebenen 3D-Korrespondenzen der Samples eine Projektionsmatrix wie in Kapitel \ref{s:calib} mittels \textit{Direct Linear Transformation}. Wir machen also eine Kamerakalibrierung, wobei die Kameraverzerrungen schon herausgerechnet wurden (siehe Kapitel \ref{s:intrinsic}). Wir erhalten somit eine Abbildung die aus den 3D-Koordinaten im Kegel auf Bildkoordinaten abbildet. 
+
+Wir benutzen anschließend für jedes Pixel auf dem entzerrten Bild die Umkehrabbildung \ref{eq:LateralToCone} aus Kapitel \ref{s:cone}. Wir erhalten wieder 3D-Kegelkoordinaten. Die Projektionsmatrix kann nun einfach auf diese Punkte angewandt werden und wir erhalten Bildpunkte im Ursprungsbild. 
+
+Die resultierenden Bildpunkte sind im Allgemeinen nicht ganzzahlig. Im Gegensatz zur Vorwärtsentfaltung kann hier jedoch einfach interpoliert werden. 
 
 
 \begin{figure}[!htb]

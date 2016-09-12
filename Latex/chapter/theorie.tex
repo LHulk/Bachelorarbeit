@@ -2,8 +2,7 @@
 \chapter{Theoretische Grundlagen}
 \label{ch:theory}
 
-In diesem Kapitel werden einige Grundlagen für die folgende Kapitel eingeführt. 
-
+In diesem Kapitel werden einige grundlegende Begriffe und Definitionen eingeführt, die in der folgenden Arbeit benötigt werden. 
 
 Wir benutzen ein linkshändiges Koordinatensystem.
 \todo{theorie einleitung schreiben}
@@ -293,11 +292,11 @@ f & 0 & u_0\\
 \end{BMAT}\right),
 \]
 
-wobei $\lambda$ ein beliebiger Skalierungsfaktor ist. $V$ beschreibt die intrinsischen und $R$ und $T$ die extrinsischen Parameter (siehe \cite{Heikkila1997}). $f$ ist hierbei die Brennweite; $u_0$ und $v_0$ die Bildmitte.
+wobei $\lambda$ ein beliebiger Skalierungsfaktor ist. $V$ beschreibt die intrinsischen und $R$ und $T$ die extrinsischen Parameter (siehe \cite{Heikkila1997}). $f$ ist hierbei die Brennweite; $(u_0, v_0)$ die Bildmitte.
 
 %Zunächst wird also das Weltkoordinatensystem wie in Abbildung \ref{fig:extrinsic} mit einer Rotation und einer Translation in das Kamerakoordinatensystem überführt. Anschließend wird 
  
- Zu gegebenen Punktenpaaren $(x_k,y_k), k = 1,\dotsc,m$ kann diese Matrix wie folgt gelöst werden:
+ Zu gegebenen Punktpaaren $(x_k,y_k), k = 1,\dotsc,m$ kann diese Matrix wie folgt gelöst werden:
  
  \begin{equation*}
  \begin{aligned}
@@ -324,7 +323,7 @@ u_1 \\ v_1 \\ \vdots \\ u_m \\ v_m
 \end{equation}
 
 wobei $a_{34}$ auf eins skaliert wird.  Es handelt sich hierbei um ein überbestimmtes lineares Gleichungssystem, was mittels der Methode der kleinsten Quadrate (siehe Kapitel \ref{s:LSQ}) gelöst werden kann. 
-Diese Verfahren wird auch als \textit{Direct Linear Transformation}(DLT) bezeichnet.
+Diese Verfahren wird auch als \textit{Direct Linear Transformation} (DLT) bezeichnet.
  
 Das beschriebene Verfahren vernachlässigt dabei Linsenverzerrungen. Solche Verzerrungen entstehen entweder als Produktionsfehler günstiger Linsen, oder bewusst beispielsweise bei Weitwinkelkameras. Verzerrungen können in der Regel nicht linear modelliert werden. Der Ansatz über DLT funktioniert hier dementsprechend nicht. 
  
@@ -347,7 +346,7 @@ Die vier Schritt der Kamerakalibrierung sind nach Tsai\cite{Tsai1987}:
 
 
 
-Selfcalibrating vs bla bla
+Selfcalibrating vs...
 
 
 
@@ -362,12 +361,12 @@ Ein Blob-Detektor ist also ein Verfahren zum Detektieren solcher Blobs. Die gefu
 
 \section{Canny}
 \label{s:canny}
-Der Canny-Algorithmus\cite{Canny1986} ist ein Verfahren zur Kantendetektion. Im Gegensatz zu anderen Verfahren wie Sobel, oder Prewitt, versucht Canny die Fehlerrate der Kantendetektion minimal zu halten. 
-Es sollten nicht mehr Kanten zurückgegeben werden, als auf dem Bild zu sehen und es sollten auch keine Kanten übersehen werden. Darüber hinaus markiert Canny die Kanten möglichst exakt, minimiert also die Distanz eines markierten Punktes zur eigentlichen Kante. Zuletzt gewährleistet Canny außerdem die Eindeutigkeit einer Kante. Das bedeutet, dass eine Kante nicht mehrmals markiert wird.
+Der Canny-Algorithmus \cite{Canny1986} ist ein Verfahren zur Kantendetektion. Im Gegensatz zu anderen Verfahren wie Sobel, oder Prewitt, versucht Canny die Fehlerrate der Kantendetektion minimal zu halten. 
+Darüber hinaus markiert Canny die Kanten möglichst exakt, minimiert also die Distanz eines markierten Punktes zum eigentlich Zentrum der Kante. 
+Zuletzt gewährleistet Canny außerdem die Eindeutigkeit einer Kante. Das bedeutet, dass eine Kante nicht mehrmals markiert wird.
 
 \section{Hough-Transformation}
 \label{s:hough}
-\todo{ist noch etwas unklar}
 Hough-Transformation ist ein Verfahren zur Detektion von beliebigen parametrisierbaren Konturen. In dieser Arbeit werden Hough-Transforamtionen benutzt um Geraden zu detektieren. 
 
 Eine beliebige zweidimensionale Gerade kann in Polarkoordinaten folgendermaßen implizit ausgedrückt werden:
@@ -382,7 +381,7 @@ Eine Gerade wird somit als ein Punkt $(d,\phi)$ in den Parameterraum (auch Hough
 
 Um eine Gerade eindeutig zu definieren benötigt man, wie auch bei der klassischen Defintionen $y = mx + b$, zwei Punkte. Nimmt man nur einen, so lässt sich jedoch die Auswahl von $\phi$ und $d$ einschränken. Hat man beispielsweise einen Punkt $(x_k,y_k)$ gegeben so lässt sich die Gleichung \ref{eq:HoughLines} nach $d$ umstellen und man erhält eine sinusförmige Funktion in Abhängigkeit von $\phi$. 
 
-Um beliebige Geraden detektieren zu können, werden $\phi$ und $d$ passen diskretisiert:
+Um nun beliebige Geraden detektieren zu können, werden $\phi$ und $d$ zunächst passend diskretisiert:
 \begin{equation*}
 	\begin{aligned}
 		\phi_i &= \phi_{min} + \frac{i}{n} \cdot (\phi_{max} - \phi_{min}) \quad&\forall &i\in [0,n]\\
@@ -393,8 +392,8 @@ Um beliebige Geraden detektieren zu können, werden $\phi$ und $d$ passen diskre
 Es wird nun ein Akkumulator $\mathcal{H}(\phi, d)$ für alle $\phi_i$ und $d_j$ auf null gesetzt.
 
 Als Nächstes wird ein Kantentbild mittels Canny erzeugt und jene Pixel $(x_k,y_k)$ betrachtet, die nicht null sind.
-Zu einen gegebenen Pixel wir nun für alle diskreten Winkel $\phi_i$ ein $d_i$ ausgerechnet und entsprechend im Akkumulator  $\mathcal{H}$ der Wert an der Stelle $(\phi_i, d_i)$ erhöht. 
-Am Ende des Verfahrens such man im Akkumulator nach Häufungspunkten. Jeder Häufungspunkt steht dort für eine Gerade. 
+Zu einen gegebenen Pixel wir nun für alle diskreten Winkel $\phi_i$ ein Wert für $d$ ausgerechnet und auf den nächsten diskreten Wert $d_j$ gerundet. Anschließend wird im Akkumulator  $\mathcal{H}$ der Wert an der Stelle $(\phi_i, d_j)$ erhöht. Für jeden Kantenpunkt werden sinusförmige diskrete Funktionen in den Hough-Raum abgebildet. Die Werte im Akkumulator werden oft auch als Votes bezeichnet.
+Am Ende des Verfahrens such man im Akkumulator nach Häufungspunkten. Jeder Häufungspunkt steht dort für einen Geradenkandidaten.
 
 
 \section{RANSAC}

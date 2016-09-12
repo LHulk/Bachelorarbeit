@@ -4,7 +4,7 @@
 
 \section{Parallelisierung}
 
-eigentlich quatsch, weil raspberr pi
+eigentlich quatsch, weil auf raspberry pi
 
 \section{Verbesserung der Linien-Detektion}
 Um die Linien-Detektion etwas genauer zu machen, könnte man die Gradientenrichtung des Kantenbilds miteinbeziehen. Dies reduziert die Anzahl falscher Votes und verbessert darüber hinaus die Laufzeit \cite{Gorman1976}. 
@@ -35,16 +35,15 @@ Solch eine Triangulation ist beispielhaft in Abbildung \ref{fig:delaunayTriag} a
 
 
 \section{Verbesserung der Rückwärtsentfaltung}
-Aktuell wird die Projektionsmatrix bei der Rückwärtsentfaltung durch \textit{Direct Linear Transformation} bestimmt. Dieses Verfahren minimiert jedoch nicht den Reprojection-Fehler. Besser wäre hier deshalb ein iteratives Verfahren, wie der Levenberg–Marquardt-Algorithmus. 
-Im Gegensatz dazu könnte auch ein RANSAC-Ansatz verwendet werden. Statt eine optimale Lösung für alle detektierte Samples zu bestimmen, berechnet man wiederholt für sechs Punkte\footnote{6 Punkte sind mindestens notwendig um eine Projektionsmatrix bestimmen zu können, da es elf unbekannte gibt (siehe Kapitel \ref{s:calib}).} eine Projektionsmatrix und untersucht dann den Reprojection-Fehler für alle anderen Punkte. 
+Aktuell wird die Projektionsmatrix bei der Rückwärtsentfaltung durch \textit{Direct Linear Transformation} bestimmt. Dieses Verfahren minimiert jedoch nicht den Reprojektionsfehler. Besser wäre hier deshalb ein iteratives Verfahren, wie der Levenberg–Marquardt-Algorithmus (konkret für Projektionsmatrizen beschrieben in \cite{Hartley2000}). %wurde beschrieben in hartley und zisserman 
+Im Gegensatz dazu könnte auch ein RANSAC-Ansatz verwendet werden. Statt eine optimale Lösung für alle detektierte Samples zu bestimmen, berechnet man wiederholt für sechs Punkte\footnote{sechs Punkte sind mindestens notwendig um eine Projektionsmatrix bestimmen zu können, da es elf unbekannte gibt (siehe Kapitel \ref{s:calib}).} eine Projektionsmatrix und untersucht dann den Reprojektionsfehler für alle anderen Punkte und wählt schließlich die Projektionsmatrix mit dem größten Consensus Set aus. 
 
 
 
-\section{andere Ansätze}\todo{wie kommt das hier rein?}
-\textit{Deformable Templates} ist ein Verfahren bei dem eine analytische Kurve, wie beispielsweise eine Ellipse, mittels Optimierung einer Energiefunktion, 
+\section{andere Ansätze}\todo{wie am besten einbetten?}
+\textit{Analytical Deformable Templates} ist ein Verfahren zur Detektion von analytischen Kurve, wie beispielsweise einer Ellipse, mittels Optimierung einer Energiefunktion. 
 
-
-Wir betrachten dazu folgende Funktion, deren Nullstellen wie in Kapitel \ref{s:ellipse}, eine um $\theta$ gedrehte Ellipse, mit Zentrum $(x_0,y_0)$ und Haupt- und Nebenachse $a$ und $b$ beschreibt. 
+Wir betrachten dazu folgende Funktion, deren Nullstellen wie in Kapitel \ref{s:ellipse}, eine um $\theta$ gedrehte Ellipse, mit Zentrum $(x_0,y_0)$ und Haupt- und Nebenachse $a$ und $b$ beschreiben. 
 \begin{equation*}
 	G(x,y) = \frac{((x - x_0)\cos\theta + (y - y_0)\sin\theta)^2}{a^2} + \frac{((x - x_0)\sin\theta - (y - y_0)\cos\theta)^2}{b^2} - 1
 \end{equation*}
@@ -64,8 +63,10 @@ E_S &= \gamma\frac{1}{n}\sum_{i=0}^{n-2}\abs{p_i - p_{i+1}},
 \end{aligned}
 \end{equation*}
 
-wobei $n$ die Anzahl der Punkte auf dem Ellipsenrand sind. $p_i$ ist definiert durch die parametrische Darstellung einer beliebigen Ellipse und ...\todo{ergänzen}
-Man wählt dabei als Startwert eine Ellipse, deren Zentrum dem Bildzentrum entspricht und deren Hauptachse und Nebenachse möglichst größ ist und bestimmt dann numerisch, beispielsweise durch Gradient Descent, ein Minimum der Funktion. Der Term $E_M$ wird minimal, wenn entlang der Ellipse die Kantenstärke (\textit{\textbf{M}agnitude}) groß ist. Der Term $E_A$ wird minimal wenn die Winkel der Normalenvektoren ähnlich zu denen der Kanten sind (\textit{\textbf{A}ngle}) und $E_S$ wird minimal, wenn die Distanz aufeinanderfolgender Ellipsepunkte klein wird, also die Ellipse als ganzes klein wird (\textit{\textbf{S}ize}). Der Term lässt die Ellipse also schrumpfen. $\alpha, \beta$ und $\gamma$ steuern hierbei den Einluss der einzelnen Terme. Das Problem bei diesem Ansatz, ist dass die Funktion auch nach starker Gaussglättung, schnell in kleine lokale Minima läuft, obwohl ein wesentlicher stärkeres Minimum in näherer Umgebung wäre. Darüber hinaus muss für ein robustes Optimierungsverfahren der Gradient und im besten Fall sogar die Hesse-Matrix zur Verfügung gestellt werden. 
+wobei $n$ die Anzahl der Punkte auf dem Ellipsenrand sind. $p_i$ ist definiert als der $i$-te Punkt auf der Ellipse (siehe parametrische Darstellung einer Ellipse).
+Man wählt dabei als Startwert eine Ellipse, deren Zentrum dem Bildzentrum entspricht und deren Hauptachse und Nebenachse möglichst größ sind und bestimmt dann numerisch, beispielsweise durch Gradient Descent, ein Minimum der Funktion. Der Term $E_M$ wird minimal, wenn entlang der Ellipse die Kantenstärke (\textit{\textbf{M}agnitude}) groß ist. Der Term $E_A$ wird minimal wenn die Winkel der Normalenvektoren ähnlich zu denen der Kanten sind (\textit{\textbf{A}ngle}) und $E_S$ wird minimal, wenn die Distanz aufeinanderfolgender Ellipsepunkte klein wird, also die Ellipse als ganzes klein wird (\textit{\textbf{S}ize}). Der Term lässt die Ellipse also schrumpfen. $\alpha, \beta$ und $\gamma$ steuern hierbei den Einluss der einzelnen Terme. Das Minimum der Funktion sollte die äußerste Ellipse im Kalibirierungsmuster sein. Anschließend wird diese Ellipse vom Bild entfernt und man sucht wiederholt Minima der Funktion bis alle Ellipse detektiert wurden. 
+
+Das Problem bei diesem Ansatz, ist dass die Funktion, auch nach starker Gaussglättung, schnell in kleine lokale Minima läuft, obwohl ein wesentlicher stärkeres Minimum in näherer Umgebung wäre. Darüber hinaus muss für ein robustes Optimierungsverfahren der Gradient und im besten Fall sogar die Hesse-Matrix zur Verfügung gestellt werden. 
 
 In Abbildung \ref{fig:deformable} sieht man beispielhaft einen Auschnitt der Energiefunktion, wobei in diesem Fall zwecks Veranschaulichung nur die Haupt- und Nebenachse der Ellipse variable sind. Das Zentrum bleibt das Zentrum des Bildes und der Winkel $\theta$ ist konstant null. Trotz dieser Einschränkungen lässt sich gut erkennen, dass circa bei $a = b = 300$ ein starkes Minimum liegt. Es gibt jedoch neben diesem Minimum in näherer Umgebung kleine irrelevante Minima, wie beispielsweise in $(360, 260)$. Solche "`Becken"' erschweren die Suche nach der nächsten Ellipse erheblich.
 
@@ -80,7 +81,7 @@ In Abbildung \ref{fig:deformable} sieht man beispielhaft einen Auschnitt der Ene
 
 
 
-\todo{Literatur checken, ins besondere seitenangaben}
+\todo{Literatur überprüfen, insbesondere Seitenangaben}
 
 
 
