@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70107" creator="Ipe 7.2.5">
-<info created="D:20160827215528" modified="D:20160831125900"/>
+<info created="D:20160827215528" modified="D:20160914102826"/>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
 <path stroke="sym-stroke" fill="sym-stroke" pen="sym-pen">
@@ -220,13 +220,13 @@ h
 <dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
 <dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
 <textsize name="large" value="\large"/>
+<textsize name="small" value="\small"/>
+<textsize name="tiny" value="\tiny"/>
 <textsize name="Large" value="\Large"/>
 <textsize name="LARGE" value="\LARGE"/>
 <textsize name="huge" value="\huge"/>
 <textsize name="Huge" value="\Huge"/>
-<textsize name="small" value="\small"/>
 <textsize name="footnote" value="\footnotesize"/>
-<textsize name="tiny" value="\tiny"/>
 <textstyle name="center" begin="\begin{center}" end="\end{center}"/>
 <textstyle name="itemize" begin="\begin{itemize}" end="\end{itemize}"/>
 <textstyle name="item" begin="\begin{itemize}\item{}" end="\end{itemize}"/>
@@ -293,7 +293,7 @@ h
 <text matrix="-0.999992 -0.00403069 0.00403069 -0.999992 528.762 1220.95" transformations="translations" pos="272 608" stroke="black" type="label" width="15.297" height="11.764" depth="0" valign="baseline" size="LARGE">$H$</text>
 <text matrix="-0.999992 -0.00403069 0.00403069 -0.999992 499.299 1254.78" transformations="translations" pos="304 528" stroke="black" type="label" width="12.972" height="11.764" depth="0" valign="baseline" size="LARGE">$R$</text>
 <text matrix="-0.999992 -0.00403069 0.00403069 -0.999992 518.624 1254.91" transformations="translations" pos="352 672" stroke="black" type="label" width="11.369" height="11.764" depth="0" valign="baseline" size="LARGE">$S$</text>
-<text matrix="1 0 0 1 -53.7096 -5.46199" transformations="translations" pos="270.984 460.526" stroke="black" type="label" width="12.221" height="11.764" depth="0" valign="baseline" size="LARGE">$T$</text>
+<text matrix="1 0 0 1 -37.7096 -5.46199" transformations="translations" pos="270.984 460.526" stroke="black" type="label" width="12.221" height="11.764" depth="0" valign="baseline" size="LARGE">$T$</text>
 <path stroke="black" arrow="normal/normal">
 256 464 m
 416 464 l
@@ -309,5 +309,6 @@ h
 <text matrix="1 0 0 1 9.46746 5.32544" transformations="translations" pos="384 448" stroke="black" type="label" width="7.982" height="6.177" depth="0" valign="baseline" size="Large">$x$</text>
 <text matrix="1 0 0 1 -59.1716 254.438" transformations="translations" pos="320 528" stroke="black" type="label" width="7.364" height="6.176" depth="2.79" valign="baseline" size="Large">$y$</text>
 <text matrix="1 0 0 1 16 -272" transformations="translations" pos="288 784" stroke="black" type="label" width="8.598" height="7.412" depth="0" valign="baseline" size="LARGE">$z$</text>
+<use name="mark/disk(sx)" pos="247.957 711.429" size="normal" stroke="black"/>
 </page>
 </ipe>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70107" creator="Ipe 7.2.5">
-<info created="D:20160827215528" modified="D:20160829132859" tex="pdftex"/>
+<info created="D:20160827215528" modified="D:20160914102100" tex="pdftex"/>
 <preamble>\usepackage[utf8]{inputenc}</preamble>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
@@ -221,13 +221,13 @@ h
 <dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
 <dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
 <textsize name="large" value="\large"/>
+<textsize name="small" value="\small"/>
+<textsize name="tiny" value="\tiny"/>
 <textsize name="Large" value="\Large"/>
 <textsize name="LARGE" value="\LARGE"/>
 <textsize name="huge" value="\huge"/>
 <textsize name="Huge" value="\Huge"/>
-<textsize name="small" value="\small"/>
 <textsize name="footnote" value="\footnotesize"/>
-<textsize name="tiny" value="\tiny"/>
 <textstyle name="center" begin="\begin{center}" end="\end{center}"/>
 <textstyle name="itemize" begin="\begin{itemize}" end="\end{itemize}"/>
 <textstyle name="item" begin="\begin{itemize}\item{}" end="\end{itemize}"/>
@@ -347,14 +347,6 @@ h
 306.926 750.557 m
 90.9238 747.863 l
 </path>
-<path matrix="1 0 0 1 -0.207176 -0.828705" stroke="black" fill="white">
-301.119 745.828 m
-301.063 741.587 l
-306.364 741.587 l
-</path>
-<path matrix="1 0 0 1 0.478099 0" stroke="black" fill="black">
-0.657084 0 0 0.657084 303.121 743.306 e
-</path>
 <path stroke="black">
 560 768 m
 576 768 l
@@ -370,5 +362,16 @@ h
 </path>
 <text matrix="1 0 0 1 1.53846 -41.5385" transformations="translations" pos="608 704" stroke="black" type="label" width="76.942" height="9.962" depth="2.79" valign="baseline" size="Large">Kegelstumpf</text>
 <text matrix="1 0 0 1 -15.2308 -37.5385" transformations="translations" pos="624 448" stroke="black" type="label" width="101.722" height="9.962" depth="2.79" valign="baseline" size="Large">Ergänzungskegel</text>
+<use matrix="-51.0013 0 0 -6.60818 15645.14 5620.12" name="mark/disk(sx)" pos="300.903 738.816" size="normal" stroke="black"/>
+<group matrix="1.28377 0 0 1.16017 -87.237 -119.452">
+<path matrix="1.28028 0 0 1.31971 -86.1661 -238.437" stroke="black">
+297.051 745.791 m
+297.051 736.042 l
+</path>
+<path matrix="1.28028 0 0 1.31971 -86.1661 -238.437" stroke="black">
+296.902 736.042 m
+307.426 736.042 l
+</path>
+</group>
 </page>
 </ipe>

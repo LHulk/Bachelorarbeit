@@ -243,8 +243,8 @@ Ellipse Ellipse::robustEllipseFit(const std::vector<cv::Point>& points, cv::Size
 
         Ellipse currentEllipse = solveEllipseEquation(ellipsePoints);
 
-        bool passedCheck = checkBoundaries(currentEllipse, szImg, maxAtoBRatio);
-		if(!passedCheck) continue;
+	   //bool passedCheck = checkBoundaries(currentEllipse, szImg, maxAtoBRatio);
+		//if(!passedCheck) continue;
 
         if(isDebug)
         {
@@ -257,7 +257,7 @@ Ellipse Ellipse::robustEllipseFit(const std::vector<cv::Point>& points, cv::Size
 
 
         //count inliers
-		bool isBadEllipse = false;
+		//bool isBadEllipse = false;
         size_t numInliers = 0;
         for(const auto& pt : shuffledPoints)
         {
@@ -270,19 +270,19 @@ Ellipse Ellipse::robustEllipseFit(const std::vector<cv::Point>& points, cv::Size
             }
 			else
 			{
-				if(std::find(ellipsePoints.begin(), ellipsePoints.end(), pt) != ellipsePoints.end())
+				/*if(std::find(ellipsePoints.begin(), ellipsePoints.end(), pt) != ellipsePoints.end())
 				{
 					isBadEllipse = true;
 					break;
-				}
+				}*/
 					
 				cv::circle(debug, pt, 2, cv::Scalar(0, 0, 255), -1);
 			}
 
         }
 
-		if(isBadEllipse)
-			continue;
+		//if(isBadEllipse)
+		//	continue;
 
         if(numInliers >= maxNumInliers)
         {
