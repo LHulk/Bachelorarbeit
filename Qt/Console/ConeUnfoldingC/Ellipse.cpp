@@ -238,26 +238,26 @@ Ellipse Ellipse::robustEllipseFit(const std::vector<cv::Point>& points, cv::Size
 
         std::mt19937 generator(random_dev());
         std::shuffle(shuffledPoints.begin(), shuffledPoints.end(), generator);
-        std::vector<cv::Point> ellipsePoints = std::vector<cv::Point>(shuffledPoints.begin(), shuffledPoints.begin() + 6);
+		std::vector<cv::Point> ellipsePoints = std::vector<cv::Point>(shuffledPoints.begin(), shuffledPoints.begin() + 6);
 
 
         Ellipse currentEllipse = solveEllipseEquation(ellipsePoints);
 
 	   //bool passedCheck = checkBoundaries(currentEllipse, szImg, maxAtoBRatio);
-		//if(!passedCheck) continue;
+	   //if(!passedCheck) continue;
 
-        if(isDebug)
+		/*if(isDebug)
         {
             cv::ellipse(debug, currentEllipse.getEllipseAsRotatedRect(), cv::Scalar(0,255,255),1);
             for(const auto& pt : ellipsePoints)
                 cv::circle(debug, pt, 3, cv::Scalar(255, 255, 0), -1);
             cv::circle(debug, currentEllipse.getCenter(), 2, cv::Scalar(0, 255, 255), -1);
 
-        }
+		}*/
 
 
         //count inliers
-		//bool isBadEllipse = false;
+		bool isBadEllipse = false;
         size_t numInliers = 0;
         for(const auto& pt : shuffledPoints)
         {
@@ -270,19 +270,19 @@ Ellipse Ellipse::robustEllipseFit(const std::vector<cv::Point>& points, cv::Size
             }
 			else
 			{
-				/*if(std::find(ellipsePoints.begin(), ellipsePoints.end(), pt) != ellipsePoints.end())
+				if(std::find(ellipsePoints.begin(), ellipsePoints.end(), pt) != ellipsePoints.end())
 				{
 					isBadEllipse = true;
 					break;
-				}*/
+				}
 					
 				cv::circle(debug, pt, 2, cv::Scalar(0, 0, 255), -1);
 			}
 
         }
 
-		//if(isBadEllipse)
-		//	continue;
+		if(isBadEllipse)
+			continue;
 
         if(numInliers >= maxNumInliers)
         {

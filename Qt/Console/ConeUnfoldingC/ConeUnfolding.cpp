@@ -64,8 +64,6 @@ ConeUnfolding::ConeUnfolding()
 	EdgeDetection::canny(grey, cannys, orientations, Config::cannyLow, Config::cannyHigh, 3, 2.0);
 	EdgeDetection::sobel(grey, sobel, orientations, 3, 0.0f);
 
-	std::cout << "finished" << std::endl;
-	return;
 
 	cv::Mat original = grey.clone();
 

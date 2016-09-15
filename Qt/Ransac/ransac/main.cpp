@@ -24,46 +24,54 @@ int main()
 	cv::Mat img = cv::Mat::zeros(700, 700, CV_8UC3);
 
 	//for(int i = 0; i < )
-	Ellipse e = Ellipse(350, 350, 300, 300, 0);
-	//Ellipse eShadow = Ellipse(350, 350, 300, 250, 0);
+	Ellipse e = Ellipse(350, 350, 200, 100, 0);
+	Ellipse eShadow = Ellipse(350, 350, 280, 180, 0);
 	//cv::ellipse(img, e.getEllipseAsRotatedRect(), cv::Scalar(0,255,0), 2);
 	//cv::ellipse(img, eShadow.getEllipseAsRotatedRect(), cv::Scalar(0,255,0), 2);
 
 	int sizeEllipse = 500;
-	std::vector<cv::Point> points;
+
 	std::string str1 = "[";
 	std::string str2 = "[";
-	for(int i = 0; i < sizeEllipse; i++)
+
+	//for(int i = 0; i <= 700; i+=10)
+	for(float i = 0; i <= 0.6; i+=0.01)
 	{
-		double angle = rng.uniform(0.0, 2*CV_PI);
+		std::vector<cv::Point> points;
+		img = cv::Mat::zeros(700, 700, CV_8UC3);
 
-		//distort data a bit
-		//cv::Point2d offset = cv::Point2d(rng.uniform(0,0), rng.uniform(0,0));
-		cv::Point2d offset = cv::Point2d(0,0);
+		for(int i = 0; i < sizeEllipse; i++)
+		{
+			double angle = rng.uniform(0.0, 2*CV_PI);
 
-		cv::Point2d ellipsePoint = e.evalAtPhi(angle) + offset;
-		cv::circle(img, ellipsePoint, 2, cv::Scalar(0,255,255), -1);
+			//distort data a bit
+			//cv::Point2d offset = cv::Point2d(rng.uniform(0,0), rng.uniform(0,0));
+			cv::Point2d offset = cv::Point2d(0,0);
 
-		points.push_back(ellipsePoint);
-	}
+			cv::Point2d ellipsePoint = e.evalAtPhi(angle) + offset;
+			cv::circle(img, ellipsePoint, 2, cv::Scalar(0,255,255), -1);
 
-	for(int i = 0; i <= 1000; i++)
-	{
-		int sizeError = i;
+			points.push_back(ellipsePoint);
+		}
+
+
+		//int sizeError = i;
+		int sizeError = i*sizeEllipse/(1-i);
 
 		//generate errors
 		for(int i = 0; i < sizeError; i++)
 		{
-			cv::Point errorPoint = cv::Point(rng.uniform(0,699), rng.uniform(0,699));
-			cv::circle(img, errorPoint, 2, cv::Scalar(0,255,255), -1);
+			/*cv::Point errorPoint = cv::Point(rng.uniform(0,699), rng.uniform(0,699));
+			cv::circle(img, errorPoint, 2, cv::Scalar(0,255,255), -1);*/
 
-			/*double angle = rng.uniform(0.0, 2*CV_PI);
+			double angle = rng.uniform(0.0, 2*CV_PI);
 
 			//distort data a bit
-			cv::Point2d offset = cv::Point2d(rng.uniform(0,0), rng.uniform(0,0));
+			//cv::Point2d offset = cv::Point2d(rng.uniform(0,0), rng.uniform(0,0));
+			cv::Point2d offset = cv::Point2d(0,0);
 
 			cv::Point2d errorPoint = eShadow.evalAtPhi(angle) + offset;
-			cv::circle(img, errorPoint, 2, cv::Scalar(0,255,255), -1);*/
+			cv::circle(img, errorPoint, 2, cv::Scalar(0,255,255), -1);
 
 			points.push_back(errorPoint);
 
@@ -84,27 +92,25 @@ int main()
 
 		//cv::imwrite("ransac50_0.png", img);
 
-		std::cout << i << ": with min it: " << minN << std::endl;
+		std::cout << i << " rel e with " << sizeError << " errors " <<": with min it: " << minN << std::endl;
 
 		Config::usedResHeight = 700;
 		Config::usedResWidth = 700;
 		float dist = 1.0f;
-		Ellipse fittedEllipse = Ellipse::robustEllipseFit(points, img.size(), dist, 10.0f, (minN > 0) ? minN : 1);
-		//cv::ellipse(img, fittedEllipse.getEllipseAsRotatedRect(), cv::Scalar(0,255,0), 2);
 
-		//std::cout << distTo(e, fittedEllipse) << std::endl;
+		Ellipse fittedEllipse = Ellipse::robustEllipseFit(points, img.size(), dist, 10.0f, (minN > 0) ? minN + 20 : 1);
 		str1 += std::to_string(distTo(e, fittedEllipse)) + ",";
 
-
 		Ellipse leastSquareEllipse = cv::fitEllipse(points);
-		//cv::ellipse(img, leastSquareEllipse.getEllipseAsRotatedRect(), cv::Scalar(255, 255, 0), 2);
-
-		//std::cout << distTo(e, leastSquareEllipse) << std::endl;
 		str2 += std::to_string(distTo(e, leastSquareEllipse)) + ",";
 
-		//cv::imshow("fitted", img);
+		cv::ellipse(img, fittedEllipse.getEllipseAsRotatedRect(), cv::Scalar(0,255,0), 2);
+		cv::ellipse(img, leastSquareEllipse.getEllipseAsRotatedRect(), cv::Scalar(255, 255, 0), 2);
+		cv::imshow("fitted", img);
+		cv::waitKey(0);
+
 		//cv::imwrite("ransac50_1.png", img);
-		//cv::waitKey(0);
+
 	}
 
 	str1 += "];"; str2 += "];";

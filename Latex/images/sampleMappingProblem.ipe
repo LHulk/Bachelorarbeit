@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70107" creator="Ipe 7.2.5">
-<info created="D:20160911173441" modified="D:20160911173441"/>
+<info created="D:20160911173441" modified="D:20160914204444"/>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
 <path stroke="sym-stroke" fill="sym-stroke" pen="sym-pen">
@@ -220,13 +220,13 @@ h
 <dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
 <dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
 <textsize name="large" value="\large"/>
+<textsize name="small" value="\small"/>
+<textsize name="tiny" value="\tiny"/>
 <textsize name="Large" value="\Large"/>
 <textsize name="LARGE" value="\LARGE"/>
 <textsize name="huge" value="\huge"/>
 <textsize name="Huge" value="\Huge"/>
-<textsize name="small" value="\small"/>
 <textsize name="footnote" value="\footnotesize"/>
-<textsize name="tiny" value="\tiny"/>
 <textstyle name="center" begin="\begin{center}" end="\end{center}"/>
 <textstyle name="itemize" begin="\begin{itemize}" end="\end{itemize}"/>
 <textstyle name="item" begin="\begin{itemize}\item{}" end="\end{itemize}"/>
@@ -254,8 +254,7 @@ h
 <page>
 <layer name="alpha"/>
 <view layers="alpha" active="alpha"/>
-<use layer="alpha" name="mark/disk(sx)" pos="240 640" size="large" stroke="black"/>
-<text matrix="1 0 0 1 -4.96876 -12.4219" transformations="translations" pos="252.072 636.453" stroke="black" type="label" width="13.296" height="11.764" depth="0" valign="baseline" size="LARGE">$C$</text>
+<text layer="alpha" matrix="1 0 0 1 70.3907 -22.111" transformations="translations" pos="252.072 636.453" stroke="black" type="label" width="13.296" height="11.764" depth="0" valign="baseline" size="LARGE">$C$</text>
 <group>
 <path stroke="black" pen="fat">
 64 768 m
@@ -267,26 +266,29 @@ h
 <use name="mark/disk(sx)" pos="160 672" size="large" stroke="black"/>
 <use name="mark/disk(sx)" pos="192 640" size="large" stroke="black"/>
 </group>
-<path stroke="black" dash="dashed">
-128 704 m
-240 640 l
-</path>
+<use name="mark/disk(sx)" pos="320 608" size="large" stroke="black"/>
 <path stroke="black" dash="dashed">
 192 640 m
-240 640 l
+320 608 l
 </path>
-<path stroke="black" dash="dashed">
-160 672 m
-240 640 l
-240 640 l
+<path stroke="black" arrow="normal/normal">
+64 608 m
+368 608 l
 </path>
-<path stroke="black" dash="dashed">
-96 736 m
-240 640 l
-</path>
+<text matrix="1 0 0 1 278.292 20.4547" transformations="translations" pos="80 592" stroke="black" type="label" width="9.579" height="7.412" depth="0" valign="baseline" size="LARGE">$x$</text>
 <path stroke="black" dash="dashed">
 64 768 m
-240 640 l
+320 608 l
 </path>
+<path stroke="black">
+236.625 628.844 m
+85.9405 0 0 85.9405 320 608 234.059 608 a
+</path>
+<path stroke="black">
+218.22 671.612 m
+120.024 0 0 120.024 320 608 199.976 608 a
+</path>
+<text matrix="1 0 0 1 -2.54808 -0.31851" transformations="translations" pos="251.348 613.839" stroke="black" type="label" width="10.842" height="4.294" depth="1.49" valign="baseline">$\alpha_1$</text>
+<text matrix="1 0 0 1 -6.68871 -3.82212" transformations="translations" pos="215.993 622.757" stroke="black" type="label" width="10.842" height="4.294" depth="1.49" valign="baseline">$\alpha_2$</text>
 </page>
 </ipe>

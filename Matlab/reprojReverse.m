@@ -25,29 +25,33 @@ y5 = [-0.300079,-0.290894,-0.093994,-0.197540,0.375854,0.667419,-0.145721,-0.427
 
 
 subplot(1,2,1);
-scatter(calibx1, caliby1, 'x', 'MarkerEdgeColor', 'r');
+scatter(calibx1, caliby1, 'x', 'MarkerEdgeColor', 'b');
 hold on;
 scatter(calibx2, caliby2, 'x', 'MarkerEdgeColor', 'b');
 hold on;
-scatter(calibx3, caliby3, 'x', 'MarkerEdgeColor', [0.7 0.5 0.0]);
+scatter(calibx3, caliby3, 'x', 'MarkerEdgeColor', 'b');
 hold on;
-scatter(calibx4, caliby4, 'x', 'MarkerEdgeColor', 'm');
+scatter(calibx4, caliby4, 'x', 'MarkerEdgeColor', 'b');
 hold on;
-scatter(calibx5, caliby5, 'x', 'MarkerEdgeColor', [0.0, 0.6, 0.2]);
+scatter(calibx5, caliby5, 'x', 'MarkerEdgeColor', 'b');
 axis([-4 4 -4 4])
-legend('Bild 1', 'Bild 2', 'Bild 3', 'Bild 4', 'Bild 5', 'Bild 6' );
+xlabel('x');
+ylabel('y');
+%legend('Bild 1', 'Bild 2', 'Bild 3', 'Bild 4', 'Bild 5', 'Bild 6' );
 
 subplot(1,2,2);
-scatter(x1, y1, 'x', 'MarkerEdgeColor', 'r');
+scatter(x1, y1, 'x', 'MarkerEdgeColor', 'b');
 hold on;
 scatter(x2, y2, 'x', 'MarkerEdgeColor', 'b');
 hold on;
-scatter(x3, y3, 'x', 'MarkerEdgeColor', [0.7 0.5 0.0]);
+scatter(x3, y3, 'x', 'MarkerEdgeColor', 'b');
 hold on;
-scatter(x4, y4, 'x', 'MarkerEdgeColor', 'm');
+scatter(x4, y4, 'x', 'MarkerEdgeColor', 'b');
 hold on;
-scatter(x5, y5, 'x', 'MarkerEdgeColor', [0.0, 0.6, 0.2]);
+scatter(x5, y5, 'x', 'MarkerEdgeColor', 'b');
 axis([-4 4 -4 4])
-legend('Bild 1', 'Bild 2', 'Bild 3', 'Bild 4', 'Bild 5', 'Bild 6' );
+xlabel('x');
+ylabel('y');
+%legend('Bild 1', 'Bild 2', 'Bild 3', 'Bild 4', 'Bild 5', 'Bild 6' );
 end
 

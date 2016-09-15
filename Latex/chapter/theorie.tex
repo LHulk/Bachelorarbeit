@@ -242,9 +242,8 @@ Zu beachten ist, dass dieses Vorgehen auch bei Matrizen $A$ mit $\text{rang}\lef
 
 
 
-\section{Kamerakalibrierung und projektive Geometrie}
+\section{Kamerakalibrierung}
 \label{s:calib}
-\todo{ist noch nicht fertig}
 
 %\begin{definition}
 %	Kamerakalibrierung ist ein Verfahren, bei dem die interne Kamerageometrie und optischen Eigenschaften (intrinische Parameter) 
@@ -344,10 +343,9 @@ u_1 \\ v_1 \\ \vdots \\ u_m \\ v_m
 wobei $a_{34}$ auf eins skaliert wird. Dies ist erlaubt, da wir in homogenen Koordinaten rechnen und dies durch die perspektivischen Division kompensiert wird.  Es handelt sich hierbei für $m \geq 6$ um ein überbestimmtes lineares Gleichungssystem, was mittels der Methode der kleinsten Quadrate (siehe Kapitel \ref{s:LSQ}) und durch eine Singulärwertzerlegung gelöst werden kann. 
 Diese Verfahren wird auch als \textit{Direct Linear Transformation} (DLT) bezeichnet.
  
-Das beschriebene Verfahren vernachlässigt dabei Linsenverzerrungen. Solche Verzerrungen entstehen entweder als Produktionsfehler günstiger Linsen, oder bewusst beispielsweise bei Weitwinkelkameras. Verzerrungen können in der Regel nicht linear modelliert werden. Der Ansatz über DLT funktioniert hier dementsprechend nicht. 
+Das beschriebene Verfahren vernachlässigt dabei Linsenverzerrungen. Solche Verzerrungen entstehen entweder als Produktionsfehler günstiger Linsen, oder werden durch spezielle Linsen, wie bei Weitwinkelkameras, begünstigt.  Verzerrungen können in der Regel nicht linear modelliert werden. Der Ansatz über DLT funktioniert hier dementsprechend nicht. 
 
-Es wird grundsätzlich zwischen zwei Typen von Verzerrung unterschieden: radiale Verzerrung und tangentiale Verzerrung. Bei der 
-Radiale Verzerrung entsteht dabei durch eine Skalierung des Abstand eines Bildpunktes zum Fokus. Wird der Abstand vergrößert spricht man von einer tonnenförmigen Verzerrung (siehe Abbildung \ref{fig:barrel}), wird er verkleinert von einer kissenförmigen Verzerrung (siehe Abbildung \ref{fig:cushion}).
+Es wird grundsätzlich zwischen zwei Typen von Verzerrungen unterschieden: radiale Verzerrung und tangentiale Verzerrung. Radialen Verzerrung entsteht durch eine Skalierung des Abstand eines Bildpunktes zum Fokus. Wird der Abstand vergrößert spricht man von einer tonnenförmigen Verzerrung (siehe Abbildung \ref{fig:barrel}), wird er verkleinert von einer kissenförmigen Verzerrung (siehe Abbildung \ref{fig:cushion}).
 Radiale Verzerrung kann wie folgt modelliert werden:
 
 \[
@@ -357,9 +355,10 @@ Radiale Verzerrung kann wie folgt modelliert werden:
 \end{aligned}
 \]
 
-wobei $k_1$ und $k_2$ die Koeffizienten der radialen Verzerrung sind \cite{Zhang2002}.
+wobei $(x,y)$ ein verzerrter Bildpunkt, $(\hat{x}^{(r)}, \hat{y}^{(r)})$ der entzerrte Punkt und $k_1$ und $k_2$ die Koeffizienten der radialen Verzerrung sind \cite{Zhang2002}.
 
-Tangentiale Verzerrung ist auf einen fehlerhaften 
+Tangentiale Verzerrung ist auf eine fehlerhafte Fertigung zurückzuführen und entsteht beispielsweise wenn sich eine Linse nicht parallel zur Bildebene befindet. 
+Sie kann modelliert werden durch:
 \[
 \begin{aligned}
 \hat{x}^{(t)} &= \left[2p_1xy + p_2\left((x^2 + y^2) + 2x^2\right)\right] \\
@@ -367,7 +366,7 @@ Tangentiale Verzerrung ist auf einen fehlerhaften
 \end{aligned}
 \]
 
-wobei $p_1$ und $p_2$ die Koeffizienten der tangentialen Verzerrung sind \cite{Heikkila1997}.
+wobei $(x,y)$ wieder ein verzerrter Bildpunkt, $(\hat{x}^{(t)}, \hat{y}^{(t)})$ der entzerrte Punkt und$p_1$ und $p_2$ die Koeffizienten der tangentialen Verzerrung sind \cite{Heikkila1997}.
 
 \begin{figure}[!htb]
 	\centering
@@ -403,11 +402,11 @@ wobei $p_1$ und $p_2$ die Koeffizienten der tangentialen Verzerrung sind \cite{H
 
 Ein Blob-Detektor ist also ein Verfahren zum Detektieren solcher Blobs. Die gefunden Blobs können anschließend nach verschiedenen Kriterien, wie beispielsweise Größe, Farbe, Konvexität oder Rundheit gefiltert werden. 
 
-\section{Canny}
-\label{s:canny}
-Der Canny-Algorithmus \cite{Canny1986} ist ein Verfahren zur Kantendetektion. Im Gegensatz zu anderen Verfahren wie Sobel, oder Prewitt, versucht Canny die Fehlerrate der Kantendetektion minimal zu halten. 
-Darüber hinaus markiert Canny die Kanten möglichst exakt, minimiert also die Distanz eines markierten Punktes zum eigentlich Zentrum der Kante. 
-Zuletzt gewährleistet Canny außerdem die Eindeutigkeit einer Kante. Das bedeutet, dass eine Kante nicht mehrmals markiert wird.
+%\section{Canny}
+%\label{s:canny}
+%Der Canny-Algorithmus \cite{Canny1986} ist ein Verfahren zur Kantendetektion. Im Gegensatz zu anderen Verfahren wie Sobel, oder Prewitt, versucht Canny die Fehlerrate der Kantendetektion minimal zu halten. 
+%Darüber hinaus markiert Canny die Kanten möglichst exakt, minimiert also die Distanz eines markierten Punktes zum eigentlich Zentrum der Kante. 
+%Zuletzt gewährleistet Canny außerdem die Eindeutigkeit einer Kante. Das bedeutet, dass eine Kante nicht mehrmals markiert wird.
 
 \section{Hough-Transformation}
 \label{s:hough}
@@ -416,7 +415,7 @@ Hough-Transformation ist ein Verfahren zur Detektion von beliebigen parametrisie
 Eine beliebige zweidimensionale Gerade kann in Polarkoordinaten folgendermaßen implizit ausgedrückt werden:
 
 \begin{equation}\label{eq:HoughLines}
-x\cos\phi + y\sin\phi - d = 0,
+x\cos\phi + y\sin\phi = d,
 \end{equation}
 
 wobei $\phi \in [0,2\pi)$ der Winkel der Geraden mit der $X$-Achse und $d \geq 0$ der Radius, also der euklidische Abstand der Geraden zum Ursprung des Koordinatensystems ist.
@@ -426,18 +425,36 @@ Eine Gerade wird somit als ein Punkt $(d,\phi)$ in den Parameterraum (auch Hough
 Um eine Gerade eindeutig zu definieren benötigt man, wie auch bei der klassischen Defintionen $y = mx + b$, zwei Punkte. Nimmt man nur einen, so lässt sich jedoch die Auswahl von $\phi$ und $d$ einschränken. Hat man beispielsweise einen Punkt $(x_k,y_k)$ gegeben so lässt sich die Gleichung \ref{eq:HoughLines} nach $d$ umstellen und man erhält eine sinusförmige Funktion in Abhängigkeit von $\phi$. 
 
 Um nun beliebige Geraden detektieren zu können, werden $\phi$ und $d$ zunächst passend diskretisiert:
-\begin{equation*}
+\[
 	\begin{aligned}
 		\phi_i &= \phi_{min} + \frac{i}{n} \cdot (\phi_{max} - \phi_{min}) \quad&\forall &i\in [0,n]\\
 		d_j &= d_{min} + \frac{j}{m} \cdot  (d_{max} - d_{min}) &\forall &j\in [0,m]
 	\end{aligned}
-\end{equation*}
+\]
+
+
 
 Es wird nun ein Akkumulator $\mathcal{H}(\phi, d)$ für alle $\phi_i$ und $d_j$ auf null gesetzt.
+Als Nächstes wird ein Kantentbild mittels Canny \cite{Canny1986} erzeugt. Die Kantenpixel werden mit $(x_k,y_k)$ für $k = 0,\dotsc,l$ identifiziert. Das eigentliche Verfahren funktioniert nach folgendem Schema:
 
-Als Nächstes wird ein Kantentbild mittels Canny erzeugt und jene Pixel $(x_k,y_k)$ betrachtet, die nicht null sind.
-Zu einen gegebenen Pixel wir nun für alle diskreten Winkel $\phi_i$ ein Wert für $d$ ausgerechnet und auf den nächsten diskreten Wert $d_j$ gerundet. Anschließend wird im Akkumulator  $\mathcal{H}$ der Wert an der Stelle $(\phi_i, d_j)$ erhöht. Für jeden Kantenpunkt werden sinusförmige diskrete Funktionen in den Hough-Raum abgebildet. Die Werte im Akkumulator werden oft auch als Votes bezeichnet.
-Am Ende des Verfahrens such man im Akkumulator nach Häufungspunkten. Jeder Häufungspunkt steht dort für einen Geradenkandidaten.
+\begin{algorithm}
+	\caption{Hough-Transformation}\label{euclid}
+	\begin{algorithmic}[1]
+		\For{$k = 0 ~\textbf{to}~ l$} \Comment{für alle Kantenpunkte}
+		\For{$i = 0 ~\textbf{to}~ n$} \Comment{für alle diskreten Winkel $\phi_i$}
+		\State $d \gets x\cos\phi_i + y\sin\phi_i$
+		\State $d_i \gets \textbf{round}(d)$ \Comment{runde $d$ zum nächsten diskreten $d_i$}
+		\State  $\mathcal{H}(\phi_i, d_i) \gets \mathcal{H}(\phi_i, d_i) + 1$
+		\EndFor
+		\EndFor
+	\end{algorithmic}
+\end{algorithm}
+
+Die Werte im Akkumulator werden oft auch als Votes bezeichnet. Am Ende des Verfahrens such man im Akkumulator nach Häufungspunkten. Jeder Häufungspunkt steht dort für einen Geradenkandidaten.
+
+
+%Zu einen gegebenen Pixel wir nun für alle diskreten Winkel $\phi_i$ ein Wert für $d$ ausgerechnet und auf den nächsten diskreten Wert $d_j$ gerundet. Anschließend wird im Akkumulator  $\mathcal{H}$ der Wert an der Stelle $(\phi_i, d_j)$ erhöht. Für jeden Kantenpunkt werden sinusförmige diskrete Funktionen in den Hough-Raum abgebildet. Die Werte im Akkumulator werden oft auch als Votes bezeichnet.
+%Am Ende des Verfahrens such man im Akkumulator nach Häufungspunkten. Jeder Häufungspunkt steht dort für einen Geradenkandidaten.
 
 
 \section{RANSAC}
@@ -526,10 +543,12 @@ Die Gleichung \ref{eq:ellipseQuadratic} kann umgeformt werden zu:
 \Leftrightarrow u^TMu +\begin{pmatrix}d & e\end{pmatrix}u + f = 0 \\
 \end{aligned}
 \end{equation*} 
-Der gemischte Term wird alleine durch $M = \begin{pmatrix}a & \frac{c}{2} \\ \frac{c}{2} & b\end{pmatrix}$ bestimmt. Da die Matrix $M$ symmetrisch ist, ist sie orthogonal diagonalisierbar. Des Weiteren hat $M$ zwei von null verschiedene Eigenwerte, denn 
+Der gemischte Term wird alleine durch $M = \begin{pmatrix}a & \frac{c}{2} \\ \frac{c}{2} & b\end{pmatrix}$ bestimmt. Die Matrix $M$ ist invertierbar, denn
 \[
 \det M = ab - \dfrac{c^2}{4}
-\] ist nur dann gleich null, wenn $c^2 - 4ab = 0$, was ein Widerspruch zur Annahme in \ref{eq:ellipseQuadratic} ist. $M$ hat somit eine von null verschiedene Determinante und somit vollen Rang, hat also zwei von null verschiedene Eigenwerte. Insbesondere gibt es also zwei Eigenvektoren von $M$, die zueinander orthogonal sind.
+\] ist nur dann gleich null, wenn $c^2 - 4ab = 0$, was ein Widerspruch zur Annahme in \ref{eq:ellipseQuadratic} ist. $M$ hat somit eine von null verschiedene Determinante und somit vollen Rang, hat also zwei von null verschiedene Eigenwerte \cite[S. 199]{Bosch2006}. Insbesondere gibt es also zwei Eigenvektoren von $M$, die zueinander orthogonal sind \cite[S. 198]{Bosch2006}.
+
+Da die Matrix $M$ außerdem symmetrisch ist, ist sie orthogonal diagonalisierbar \cite[S. 278]{Bosch2006}.
 
 Es gilt $M = S^TDS$, wobei $S\in\mathbb{R}^{2\times2}$ eine orthogonale Matrix mit den normierten Eigenvektoren als Zeilen und $D = \text{diag}(\lambda_1, \lambda_2)\in\mathbb{R}^{2\times2}$ eine Diagonalmatrix mit den beiden Eigenwerten von $M$ auf der Diagonalen ist. Ohne Beschränkung der Allgemeinheit gelte $\lambda_1 <= \lambda_2$, andernfalls vertausche die Eigenvektoren in $S$. 
 
@@ -540,11 +559,12 @@ So gilt:
 \begin{aligned}
 &u^T(S^TDS)u +\begin{pmatrix}d & e\end{pmatrix}\underbrace{(S^TS)}_{=\ind}u + f = 0 \\
 \Leftrightarrow\quad &(Su)^TD(Su) +\begin{pmatrix}d & e\end{pmatrix}S^T(Su) + f = 0 \\
-\Leftrightarrow\quad &v^{T}Dv +\begin{pmatrix}d & e\end{pmatrix}S^Tv + f = 0 
+\Leftrightarrow\quad &v^{T}Dv +\begin{pmatrix}d & e\end{pmatrix}S^Tv + f = 0 \\
+\Leftrightarrow\quad &\lambda_1v_1^2 + \lambda_2v_2^2 +\begin{pmatrix}d & e\end{pmatrix}S^Tv + f = 0 
 \end{aligned}
 \end{equation}
 
-Man kann leicht nachrechnen, dass der gemischte Teil somit eliminiert wurde. Durch Anwenden der Transformation $S$ wurde $u$ also in das Koordinatensystem, in dem die Ellipse achsenausgerichtet ist,  transformiert.
+mit $v = (v_1,v_2)^T$. Man sieht, dass der gemischte Teil somit eliminiert wurde. Durch Anwenden der Transformation $S$ wurde $u$ also in das Koordinatensystem, in dem die Ellipse achsenausgerichtet ist,  transformiert.
 
 Eine Rotationsmatrix mit Rotationswinkel $\theta$ ist definiert durch: 
 \begin{equation}
@@ -559,7 +579,7 @@ Es gilt offenbar $S = R$ für ein geeignetes $\theta$, da die Eigenvektoren norm
 \theta = \atant(\sin\theta, \cos\theta) = \atant(S_{2,1}, S_{1,1})
 \end{equation*}
 
-Multipliziert man nun \ref{eq:PCARot} aus, ergibt sich:
+Formt man nun Gleichung \ref{eq:PCARot} weiter um, ergibt sich:
 
 \begin{equation}\label{eq:ellipseCenter}
 \begin{aligned}
@@ -574,12 +594,12 @@ Multipliziert man nun \ref{eq:PCARot} aus, ergibt sich:
 
 da $\lambda_1, \lambda_2 \neq 0$. 
 
-Das Zentrum der transformierten Ellipse kann nun aus \ref{eq:ellipseCenter} einfach abgelesen werden. Um das Zentrum der eigentlichen Ellipse zu bestimmen, muss mit der inversen Rotation $S^T$ multipliziert werden:
-\begin{equation*}
+Vergleichen wir diese Gleichung mit Gleichung \ref{eq:ellipseNoRotTrans}, so können wir das Zentrum der transformierten Ellipse $(x'_0, y'_0)$ aus Gleichung \ref{eq:ellipseCenter} einfach ablesen. Um das Zentrum der eigentlichen Ellipse zu bestimmen, müssen wir mit der inversen Rotation $S^T$ multiplizieren:
+\[
 (x_0, y_0)^T = S^T(x'_0, y'_0)^T
-\end{equation*}
+\]
 
-Obige Gleichung lässt sich anschließend weiter vereinfachen: 
+Die Gleichung \ref{eq:ellipseCenter} lässt sich anschließend weiter vereinfachen: 
 
 
 \begin{equation} \label{eq:PCAKoeff}
@@ -589,7 +609,7 @@ Obige Gleichung lässt sich anschließend weiter vereinfachen:
 \end{aligned}
 \end{equation}
 
-wobei $\sigma \neq 0$, wenn die Ellipse nicht zum Punkt entartet ist \cite{Lawrence1972}. Vergleicht man nun \ref{eq:PCAKoeff} mit \ref{eq:ellipseNoRotTrans} so sieht man das folgendes gelten muss: 
+wobei $\sigma \neq 0$, wenn die Ellipse nicht zum Punkt entartet ist (folgt aus dem Determinanten-Kriterium \cite{Lawrence1972}). Vergleichen wir nun die beiden Gleichungen \ref{eq:PCAKoeff}, sowie \ref{eq:ellipseNoRotTrans}, so können folgende Beziehung herleiten: 
 
 \begin{equation}
 \begin{aligned}
@@ -598,7 +618,7 @@ wobei $\sigma \neq 0$, wenn die Ellipse nicht zum Punkt entartet ist \cite{Lawre
 \end{aligned}
 \end{equation}
 
-Es gilt wie erwartet $a \geq b$, da $\lambda_1 \leq \lambda_2$.
+Wir dürfen hierbei die Wurzel ziehen, da $\frac{\sigma}{\lambda_i} > 0$ für nicht entartete reele\footnote{Man kann Ellipsen auch mit imaginären Achsen definieren \cite{Lawrence1972}.}  Ellipsen (folgt aus dem Determinanten-Kriterium \cite{Lawrence1972}). Da die Transformation in das Koordinatensystem der Ellipse nur Rotationen enthielt,  bleiben die Längen der Hauptachsen erhalten. Es gilt wie erwartet $a \geq b$, da $\lambda_1 \leq \lambda_2$. 
 
 
 \subsection{Abstand: Punkt zu Ellipse}
@@ -623,11 +643,11 @@ Für die quadrierte Distanz von einem beliebigen Punkt $Q$ zu einem Punkt $\math
 \end{equation}
 
 Wir wollen $F$ minimieren und betrachten die Ableitung:
-\begin{equation}
+\begin{equation}\label{eq:perp}
 F'(\theta) = 2\left(\mathcal{E}(\theta) - Q\right) \cdot \mathcal{E}'(\theta)
 \end{equation}
 
-$F'$ wird null, wenn $\left(\mathcal{E}(\theta) - Q\right)$ und $ \mathcal{E}'(\theta)$ zu einander orthogonal sind. Daraus folgt, dass der Vektor von $Q$ zu $E$ senkrecht zur Ellipse stehen muss.  (siehe Abbildung \ref{fig:ellipseDist}). 
+$F'$ wird null, wenn $\left(\mathcal{E}(\theta) - Q\right)$ und $ \mathcal{E}'(\theta)$ zu einander orthogonal sind. Daraus folgt, dass der Vektor von $Q$ zu $E$ senkrecht zur Ellipse stehen muss (siehe Abbildung \ref{fig:ellipseDist}). 
 
 
 \begin{figure}[!htb]
@@ -637,11 +657,11 @@ $F'$ wird null, wenn $\left(\mathcal{E}(\theta) - Q\right)$ und $ \mathcal{E}'(\
 	\label{fig:ellipseDist}
 \end{figure}
 
-Betrachten wir also die Funktion:
+Betrachten wir die Funktion $G(z_0,z_1)$ basierend auf der impliziten Darstellung aus Gleichung \ref{eq:distEqParam}
 \begin{equation} \label{eq:ellipseDistEq}
-	G(x_0,x_1) = \frac{x_0^2}{a^2} + \frac{x_1^2}{b^2} - 1.
+	G(z_0,z_1) = \frac{z_0^2}{a^2} + \frac{z_1^2}{b^2} - 1.
 \end{equation}
-$(x_0,x_1)$ ist genau dann ein Punkt auf der Ellipse, wenn $G(x_0,x_1) = 0$. Der Gradient von $G$ in $(x_0,x_1)$ ist ein Normalenvektor auf der Ellipse und somit auch der halbe Gradient $\nabla G(x_0,x_1)/2$. Der Vektor von $E$ zu $Q$ muss dieselbe Richtung haben. Es gilt somit:
+Die Nullstellen von $G$ beschreiben somit die Ellipse. Sei nun solch eine Nullstelle gegeben als $(x_0,y_0)$. Der Gradient $\nabla G$ ist dann in $(x_0,x_1)$ ein Normalenvektor der Ellipse. Somit ist auch der halbe Gradient $\nabla G(x_0,x_1)/2$ ein Normalenvektor. Da aus Gleichung \ref{eq:perp}, die Orthogonalität von $\overrightarrow{QE}$ zur Ellipse folgt,  muss der Vektor  $\overrightarrow{QE}$ ein skalares Vielfaches des halben Gradienten sein. Es gilt somit:
 
 \begin{equation}
 	(y_0,y_1) - (x_0, x_1) = t\frac{\nabla G(x_0,x_1)}{2} = t\left(\frac{x_0}{a^2},\frac{x_1}{b^2}\right)
@@ -689,21 +709,24 @@ Man macht nun eine Fallunterscheidung:
 		d^2 = (x_0 - y_0)^2 + x_1^2 = b^2\left(1 - \frac{y_0^2}{a^2 - b^2}\right)
 	\]
 	\item Der letzte Fall, den wir betrachten müssen, ist der allgemeinste Fall. Es gilt $y_0 > 0$, sowie $y_1 > 0$. Da wir uns nur im ersten Quadranten bewegen, gilt darüber hinaus $x_0, x_1 \geq 0$. Mit diesen Eigenschaften und \ref{eq:ellipseDistY} lässt sich folgende Einschränkung für $t$ herleiten:
-	\begin{equation}
+\[
 	\begin{aligned}
 	& 0 < y_0 = x_0\left(1 + \frac{t}{a^2}\right)\\
 	\Leftrightarrow\quad& -1\cdot a^2 < t.
 	\end{aligned}
-	\end{equation}
+\]
 	Analog ergibt sich mit $y_1\colon -b^2 < t$. Da $a\geq b$ gilt, reicht es, sich nur die zweite Ungleichung anzuschauen, da sie die erste impliziert. Setzt man nun \ref{eq:ellipseDistX} in \ref{eq:ellipseDistEq} ein, erhält man:
 	
-	\begin{equation}
-		F(t) = \left(\frac{ay_0}{t+a^2}\right)^2 + \left(\frac{by_1}{t+b^2}\right)^2 - 1
-	\end{equation}
+\[
+	\begin{aligned}
+		F(t) &= \left(\frac{a^2y_0}{a\left(t+a^2\right)}\right)^2 + \left(\frac{b^2y_1}{b\left(t+b^2\right)}\right)^2 - 1 \\
+		&= \left(\frac{ay_0}{t+a^2}\right)^2 + \left(\frac{by_1}{t+b^2}\right)^2 - 1
+	\end{aligned}
+\]
 	
-	Man kann nun zeigen, dass diese Funktion auf dem gesamten Intervall $[-b^2,\infty)$ monoton fällt und links gekrümmt ist. Darüber hinaus gilt:
+	Durch Untersuchung der Ableitungen kann nun zeigen, dass diese Funktion auf dem gesamten Intervall $[-b^2,\infty)$ monoton fällt und links gekrümmt ist \cite{Eberly2013}. Darüber hinaus gilt:
 	\[
-	\lim\limits_{t \searrow -b^2}{F(t)}	= +\infty, \quad\lim\limits_{t \rightarrow \infty}{F(t)}	= 1.
+	\lim\limits_{t \searrow -b^2}{F(t)}	= +\infty, \quad\lim\limits_{t \rightarrow \infty}{F(t)}	= -1.
 	\]
 	Da $F$ stetig ist, muss es also eine Nullstelle geben, die aufgrund des Monotonie- und Krümmungsverhaltens sogar eindeutig ist. Die Nullstelle lässt sich beispielsweise durch Intervallschachtelung oder Newton-Verfahren bestimmen. 
 \end{enumerate}
@@ -712,13 +735,10 @@ Man macht nun eine Fallunterscheidung:
 \section{Analytical Deformable Templates}
 \label{s:anaDef}
 \textit{Analytical Deformable Templates} ist ein Verfahren zur Detektion von analytischen Kurven. 
-Ein Template ist dabei definiert durch eine Menge von Parametern, die apriori-Wissen über die erwartete Form ermöglichen. 
-Als Beispiel sei eine  Ellipse genannt, die durch ihr Zentrum, ihren Achsen und den Drehwinkel $(x_0,y_0,a,b,\phi)$ definiert werden kann.
-Es wird dann eine Energiefunktion konstruiert, die Terme enthält, die das definierte Template 
-
- die  mittels Optimierung einer Energiefunktion. 
-\todo{etwas mehr ausführen}
-
+Ein Template ist dabei definiert durch eine Menge von Parametern, die a priori Wissen über die erwartete Form ermöglichen. 
+Als Beispiel sei eine  Ellipse genannt, die durch ihr Zentrum, ihren beiden Achsen und den Drehwinkel $(x_0,y_0,a,b,\phi)$ definiert ist.
+Es wird dann eine Energiefunktion konstruiert, dessen Terme eine Anziehung des Templates an Hauptmerkmale (wie Kantenstärke, Kantenorientierung, Farbintensität, etc. ) des Bildes hervorrufen. 
+Die Energiefunktion wird dabei durch numerische Verfahren, wie dem Gradientenverfahren, minimiert \cite{Yuille1992}. 
 
 
 

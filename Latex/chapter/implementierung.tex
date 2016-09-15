@@ -31,10 +31,10 @@ Bei der Vowärtsentfaltung gilt:
 dst(map_x(x,y), map_y(x,y)) = src(x,y),
 \]
 
-wobei $map_x$ und $map_y$ die Abbildungsmatrizen sind und die gleiche Größe wie das Ursprungsbild haben. Da wird bei der Entfaltung die Größe des Ergebnisbildes benötigen, und wir diese bei der Erstellung der Abbildungsmatrizen berechnet haben, sind Breite und Höhe, in $map_x(0,0)$, respektive $map_y(0,0)$, kodiert. Wir verlieren damit die Information $dst(0,0)$ im Ergebnisbild. Dieses Pixel ist aber ohnehin null (siehe zum Beispiel Abbildung \ref{fig:forwardUnfold} in Kapitel \ref{s:unfolding}). 
+wobei $map_x$ und $map_y$ die Abbildungsmatrizen sind und die gleiche Größe wie das Ursprungsbild haben. Für ein Pixel $(x,y)$ auf dem Ursprungsbild $src$ geben die Matrizen $map_x$, sowie $map_y$ an, auf welche Position ein das Pixel auf dem entzerrten Bild abgebildet wird. $map_x(x,y)$ bestimmt dabei die $x$-Koordinate, $map_y(x,y)$ die $y$-Koordinate. Da wir bei der Entfaltung die Größe des Ergebnisbildes benötigen, und wir diese bei der Erstellung der Abbildungsmatrizen berechnet haben, sind Breite und Höhe, in $map_x(0,0)$, respektive $map_y(0,0)$ kodiert. Für das Pixel an der Position $(0,0)$ auf dem Ursprungsbild ist anschließend keine Auswertung der Matrizen mehr möglich. Dieses Pixel ist jedoch ohnehin nicht Teil des Kalibrierungsmusters.
 
 Bei der Rückwärtsentfaltung gilt:
 \[
 dst(x,y) = src((map_x(x,y),map_y(x,y)),
 \]
-wobei $map_x$ und $map_y$ wieder die Abbildungsmatrizen sind und hier die  gleiche Größe wie das entfaltete Bild haben. Eine Kodierung wie bei der Vowärtsentfaltung ist hier also nicht notwendig.
+wobei $map_x$ und $map_y$ wieder die Abbildungsmatrizen sind, die analog zur Vorwärtsenfaltung aufgebaut sind. Der grundlegende Unterschied ist hier, dass die wir von einem Pixel auf dem entzerrten Bild auf eine Position auf dem Ursprungsbild schließen. Die Abbildungsmatrizen haben hier die  gleiche Größe wie das entfaltete Bild. Eine Kodierung wie bei der Vowärtsentfaltung ist hier also nicht notwendig.

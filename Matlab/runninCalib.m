@@ -11,7 +11,7 @@ xlabel('Auflösung der Seitenhöhe in Pixel');
 ylabel('Laufzeit der Kalibrierung in ms');
 
 axis([0 1330 5000 20000 ])
-breakyaxis([7000, 18000]);
+set(gca,'YTickLabel',num2str(get(gca,'YTick').'))
 
 
 end

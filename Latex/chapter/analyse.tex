@@ -17,27 +17,45 @@ Die Laufzeitanalysen wurden auf einem Raspberry Pi 2 Model B durchgeführt mit f
 
 
 \section{Vergleich Vorwärtsentfaltung und Rückwärtsentfaltung}
-In Kapitel \ref{ch:method} haben wir festgestellt, dass das entfaltete Bild mittels Vorwärtsentfaltung Löcher enthält. Es ist hierbei von Interesse wie sich die Anzahl der Löcher bei einer Änderung der Auflösung verhält. Der Einfluss der Ausgabeauflösung auf die Anzahl der Löcher lässt sich in Abbildung \ref{fig:influenceRes} ablesen. 
+Untersucht man die interpolierten Weltkoordinaten bei der Vorwärtsentfaltung, stellt man fest, dass die Oberfläche des Kegels eckig scheint, wie in Abbildung \ref{fig:3DInterpol} zu sehen. Zur Veranschaulichung wird hierbei nur ein Bruchteil der interpolierten Werte gezeigt. Zwischen den Samples auf einer Kreislinie sollten die interpolierte Positionen nach außen gewölbt sein, da ein Kegel rund ist. Da wir jedoch interpolieren und nicht extrapolieren, gehen die Werte nie über die zur Interpolation genutzten Werte hinaus. Konkreter kann eine interpolierte Position keine größeren oder kleineren $X$ und $Z$ Koordinaten erhalten, als die der genutzten Samples. Diese wäre jedoch notwendig, sodass die Rundung des Kegels erhalten bleibt.
 
 \begin{figure}[!htb]
 	\centering
+	\includegraphics[scale=.7]{images/3d_interpol.eps}
+	\caption{interpolierter Kegel}
+	\label{fig:3DInterpol}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[angle=-90, width=.7\textwidth]{images/coneRaspUnWarpForwardHigh.png}
+	\caption{Vorwärtsentfaltung}
+	\label{fig:forwardHoles}
+\end{figure}
+
+Darüber hinaus zeigt sich ein weiteres Problem nach der Entfaltung. Die Entfaltung geschieht über die Abbildung \ref{eq:coneToLateral}, die in Kapitel \ref{s:cone} konstruiert wurde. 
+Damit im entfalteten Bild nicht 1mm einem Pixel entspricht, müssen die erhaltenen Werte skaliert werden. Wir wollen dabei entsprechend einer gewünschten Auflösung der entrollen Seitenhöhe skalieren. 
+Auch schon bei kleinen Skalierungen entstehen auffällige Risse im entfalteten Bild, die in Abbildung \ref{ref:forwardHoles} exemplarisch zu sehen sind. Grund dafür ist, dass jedes Pixel aus dem Ursprungsbild auf eine 2D-Koordinate der Mantelfläche abgebildet wird. Auch nach einer Skalierung handelt es sich bei diesen Werten im Allgemeinen nicht um ganzzahlige Werte. Es muss im entfalteten Bild gerundet werden. Auch wenn Rundungsfehler nicht entständen, fehlte es auf Grund der starken Stauchung, in den inneren, kleineren Regionen (siehe Abbildung \ref{fig:forwardHoles} in rot) des Ursprungsbild an genügend Bildinformation. Solche Risse, beziehungsweise nicht erreichte Pixel auf dem entfalteten Bild, bezeichnen als Defekte. 
+
+Da wir von dem Ursprungsbild aus auf das entfaltete Bild abbilden, ist außerdem eine Interpolation auf dem Ursprungsbild nicht möglich, da wir vorher nicht genau wissen, wo Defekte entstehen. Man müsste als entweder auf dem resultierendem Bild interpolieren (siehe Kapitel \ref{ch:summary}), oder zu gegebenen Defekten über die Umkehrabbildung auf dem Ursprungsbild interpolieren. 
+Es bietet sich dann jedoch an, direkt die Umkehrabbildung zu nutzen, was die Motivation hinter der Rückwärtsentfaltung ist.
+
+Wir möchten untersuchen wie sich die Anzahl der Defekte bei einer einer Änderung der Ausgabeauflösung verhält. Diese Beziehung lässt sich in Abbildung \ref{fig:influenceRes} ablesen. 
+\begin{figure}[!htb]
+	\centering
 	\includegraphics[width=\textwidth]{images/numberOfHoles.eps}
-	\caption{Einfluss der Ausgabeauflösung auf die Anzahl der Löcher}
+	\caption{Einfluss der Ausgabeauflösung auf die Anzahl der Defekte}
 	\label{fig:influenceRes}
 \end{figure}
 
-Wie erwartet verhält sich die Anzahl der Löcher quadratisch zur gewählten Ausgabeaufösung. Der Informationsgehalt (Pixelanzahl) des Ursprungsbild bleibt natürlich trotz erhöhter Ausgabeauflösung konstant. Da sich die Auflösung der Seitenhöhe quadratisch zur Gesamtanzahl der Pixel verhält, ist auch ein quadratisches Wachstum der Anzahl der Löcher zu erwarten. 
-\bigskip
+Wie erwartet verhält sich die Anzahl der Defekte quadratisch zur gewählten Ausgabeaufösung. Der Informationsgehalt (Pixelanzahl) des Ursprungsbild bleibt natürlich trotz erhöhter Ausgabeauflösung konstant. Da sich die Auflösung der Seitenhöhe quadratisch zur Gesamtanzahl der Pixel verhält, ist auch ein quadratisches Wachstum der Anzahl der Defekte zu erwarten. 
 
-Als Reprojektionsfehler einer Abbildung wird die Distanz zwischen einem gemessenem Punkt und einem korrespondierendem projizierten Punkt bezeichnet. 
-\bigskip
+Obwohl die Laufzeit der Kalibrierung nicht im Vordergrund steht, vergleichen wir die Laufzeit beider Verfahren bei verschiedenen Auflösungen der Seitenhöhe. Da der Großteil des Kalibrierungsprozesses bei beiden Verfahren identisch ist, vergleichen wir den Teil, der sich unterscheidet. Das heißt wir messen bei der Vorwärtsentfaltung die Laufzeit für die Interpolation und die anschließende Abbildung auf die Mantelfläche, und bei der Rückwärtsentfaltung die Laufzeit für die Abbildung auf die Kegelkoordinaten, die Bestimmung der Projektionsmatrix und die anschließende Abbildung auf die Bildkoordinaten, inklusive Interpolation.
 
-Im Falle der Rückwärtsentfaltung sind die gemessenen Punkte die Bildpositionen der Samples im Ursprungsbild. Da die Geometrie des Kegels bekannt ist, wissen wir wo sich die  Samples auf dem entfalteten Bild befinden müssen (siehe Parametrisierung der Mantelfläche \ref{eq:paramLateral} in Kapitel \ref{ch:theory}). Wir können nun diese Positionen mit Hilfe der Abbildung zur Entfaltung und der Projektionsmatrix zurück auf das Ursprungsbild abbilden. Diese Punkte sind die projizierten Punkte. Da die Abbildung von der Mantelfläche zur Kegeloberfläche exakt ist, ist der Reprojektionsfehler der Rückwärtsentfaltung alleine durch die Projektionsmatrix bestimmt. 
 
-Bei der Vorwärtsentfaltung sind die gemessenen Punkte gegeben durch die bekannten Sample-Positionen auf der Mantelfläche. Die Projizierten erhält man, nach der Abbildung der detektierten Sample-Positionen des Ursprungsbild auf die Mantelfläche. Der Reprojektionsfehler ist also alleine durch die Genaugkeit der Sample-Detektion definiert und somit bei diesem Verfahren immer nahe null. 
-Obwohl das Endergebnis, bedingt durch die Löcher, bei der Vorwärtsentfaltung optisch schlechter ist, ist der Reprojektionsfehler also bei der Vorwärtsentfaltung immer kleiner. 
-Als Vergleich zwischen den beiden Verfahren eignet sich der Reprojektionsfehler also nicht.
+Wie in Abbildung \ref{fig:runningTimeComparision} zu sehen, ist der Aufwand bei beiden Verfahren über die Auflösung weitestgehend konstant. Dies da dadurch zu begründen, dass sich die Eingabeauflösung nicht ändert. Der Interpolationsaufwand bei der Rückwärtsentfaltung bleibt gleich und es wird anschließend die gleiche Anzahl Pixel auf die Mantelfläche abgebildet. Nur der Ort der Projektion wird entsprechend der Ausgabeauflösung skaliert. Analog \todo{warum ist die vorwärtsentfaltung konstant???}
 
+Es fällt jedoch auf, dass die Laufzeit der Rückwärtsentfaltung im Mittel um einen Faktor von drei schneller ist als die der Vorwärtsentfaltung, was auf die komplexe Interpolation zurückzuführen ist, die bei der Vorwärtsentfaltung notwendig ist. 
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[width=\textwidth]{images/runningTimeCalibration.eps}
@@ -45,13 +63,24 @@ Als Vergleich zwischen den beiden Verfahren eignet sich der Reprojektionsfehler 
 	\label{fig:runningTimeComparision}
 \end{figure}
 
-Wir entscheiden uns optisch und auf Grund der schlechteren Laufzeit bei der Vorwärtsentfaltung (siehe Abbildung \ref{fig:runningTimeComparision}) für die Rückwärtsentfaltung. 
-Alle weiteren Auswertungen beziehen sich von nun an auf die Rückwärtsentfaltung.
+
+\bigskip
+
+Als Reprojektionsfehler einer Abbildung wird die Distanz zwischen einem gemessenem Punkt und einem korrespondierendem (durch die Abbildung) projizierten Punkt bezeichnet. 
+
+
+Im Falle der Rückwärtsentfaltung sind die gemessenen Punkte die Bildpositionen der Samples im Ursprungsbild. Da die Geometrie des Kegels bekannt ist, wissen wir wo sich die  Samples auf dem entfalteten Bild befinden müssen (siehe Parametrisierung der Mantelfläche \ref{eq:paramLateral} in Kapitel \ref{ch:theory}). Wir können nun diese Positionen mit Hilfe der Abbildung zur Entfaltung und der Projektionsmatrix zurück auf das Ursprungsbild abbilden. Diese Punkte sind die projizierten Punkte. Da die Abbildung von der Mantelfläche zur Kegeloberfläche exakt ist, ist der Reprojektionsfehler der Rückwärtsentfaltung alleine durch die Projektionsmatrix bestimmt. 
+
+Bei der Vorwärtsentfaltung sind die gemessenen Punkte gegeben durch die bekannten Sample-Positionen auf der Mantelfläche. Die Projizierten erhält man, nach der Abbildung der detektierten Sample-Positionen des Ursprungsbild auf die Mantelfläche. Der Reprojektionsfehler ist also alleine durch die Genaugkeit der Sample-Detektion definiert und somit bei diesem Verfahren immer nahe null. 
+Obwohl das Endergebnis, bedingt durch die Löcher, bei der Vorwärtsentfaltung optisch schlechter ist, ist der Reprojektionsfehler also bei der Vorwärtsentfaltung immer kleiner. 
+Als Vergleich zwischen den beiden Verfahren eignet sich der Reprojektionsfehler also nicht.
+
+Auf Grund der wesentlich schlechteren Laufzeit, sowie auf Grund der Defekte, die sich sogar quadratisch zur Ausgabeauflösung verhalten, beziehen sich alle folgenden Auswertungen nur noch auf die Rückwärtsentfaltung. 
 
 \section{Einfluss der intrinsischen Kalibrierung}
 Ein wichtiger Einflussfaktor auf die Qualität der Entfaltung ist die intrinsische Kamerakalibrierung, die vor der eigentlichen Kegelkalibrierung stattfindet. Ihre Hauptaufgabe besteht darin, die Linsenverzerrungen der Kamera herauszurechnen. 
 
-Wir messen den Einfluss der Kamerakalibrierung mit Hilfe des Reprojektionsfehlers. Dazu betrachten wir fünf verschiedene Bilder, die ein Mal mit und ein Mal ohne intrinsische Kalibrierung entzerrt werden. Bei beiden Gruppen wird anschließend jeweils der Reprojektionsfehler pro Sample bestimmt und verglichen. Die Ergebnisse sind in Abbildung \ref{fig:influenceCalib} zu sehen. In der linken Abbildung sind hierbei die Fehler im kalibrierten Fall zu erkennen, im Linken im Unkalibrierten. In der Abbildung ist dabei ein Kreuz bei $(u,v)$, falls die Abweichung des projizierten Punktes in $x$-Richtung $u$, sowie in $y$-Richtung $v$ beträgt. 
+Wir messen den Einfluss der Kamerakalibrierung mit Hilfe des Reprojektionsfehlers. Dazu betrachten wir fünf verschiedene Bilder, die ein Mal mit und ein Mal ohne intrinsische Kalibrierung entzerrt werden. Bei beiden Gruppen wird anschließend jeweils der Reprojektionsfehler pro Sample bestimmt und verglichen. Die Ergebnisse sind in Abbildung \ref{fig:influenceCalib} zu sehen. In der linken Abbildung sind hierbei die Fehler im kalibrierten Fall zu erkennen, im Linken im Unkalibrierten. In der Abbildung ist dabei ein Kreuz an der Stelle $(u,v)$, falls die Abweichung des projizierten Punktes in $x$-Richtung $u$, sowie in $y$-Richtung $v$ beträgt. 
 
 \begin{figure}[!htb]
 	\centering
@@ -61,10 +90,10 @@ Wir messen den Einfluss der Kamerakalibrierung mit Hilfe des Reprojektionsfehler
 \end{figure}
 
 
-Es ist klar zu erkennen, dass die Reprojektionsfehler bei den Bildern ohne intrinsische Kamerakalibrierung wesentlich größer ist. Der starke Einfluss kommt unter Anderem daher, dass wir eine Weitwinkelkamera mit starker tonnenförmiger Verzerrung eingesetzt haben. Ohne eine Modellierung der Linsenverzerrungen weichen die Abstände zwischen den Sample-Positionen stark von der Realität ab. Die Projektionsmatrix wird mit fehlerhaften Daten bestimmt. 
+Es ist klar zu erkennen, dass die Reprojektionsfehler bei den Bildern ohne intrinsische Kamerakalibrierung wesentlich größer ist. Der starke Einfluss kommt unter Anderem daher, dass wir eine Weitwinkelkamera mit starker tonnenförmiger Verzerrung eingesetzt haben. Ohne eine Modellierung der Linsenverzerrungen weichen die Abstände zwischen den Sample-Positionen stark von der Realität ab. Die Projektionsmatrix wird mit fehlerhaften Daten bestimmt. Die eigentlichen Sample-Positionen auf dem entzerrten Bild, werden also nicht korrekt auf die Sample-Positionen im Ursprungsbild abgebildet. 
 
 \section{Einfluss der Rotation der Kamera}
-Um den Einfluss der Rotation der Kamera untersuchen zu können, wurde der Kegel mit Kalibrierungsmuster gerendert, da die Kameraposition dann exakt bekannt ist und äußere Faktoren wie Lichtverhältnisse und inhomogene Hintergründe kontrolliert werden können. 
+Um den Einfluss der Rotation der Kamera untersuchen zu können, wurde der Kegel mit Kalibrierungsmuster gerendert, da die Kameraposition dann exakt bekannt ist und äußere Faktoren wie Lichtverhältnisse und inhomogene Hintergründe kontrolliert werden können. In Abbildung \ref{fig:blender} ist bei zwei unterschiedlichen Winkeln der gerenderte Kegel zu sehen. 
 
 \begin{figure}[!htb]
 	\centering
@@ -83,7 +112,7 @@ Um den Einfluss der Rotation der Kamera untersuchen zu können, wurde der Kegel 
 \end{figure}
 
 
-Es werden anschließend Bilder erzeugt, in denen in 1° Schritten die Kamera von 0° bis 12° um die $X$-Achse rotiert wird. Für jedes dieser Bilder wird anschließend eine Rückwärtsentfaltung durchgeführt und der durchschnittliche Reprojektionsfehler ermittelt. Abbildung \ref{fig:influenceRot} zeigt, dass der Reprojektionsfehler relativ rotationsinvariant ist. 
+Es werden anschließend Bilder erzeugt, in denen in 1° Schritten die Kamera von 0° bis 12° um die $X$-Achse rotiert wird. Für jedes dieser Bilder wird anschließend eine Rückwärtsentfaltung durchgeführt und der durchschnittliche Reprojektionsfehler ermittelt. Abbildung \ref{fig:influenceRot} zeigt, dass der Reprojektionsfehler relativ rotationsinvariant ist. Ab einem Winkel von  12°, werden die Samples teilweise vom Blob-Detektor nicht mehr erkannt und müssten per Hand eingetragen werden. \todo{rotation}
 
 
 \begin{figure}[!htb]
@@ -95,7 +124,7 @@ Es werden anschließend Bilder erzeugt, in denen in 1° Schritten die Kamera von
 
 
 \section{Laufzeit der Entfaltung}
-Durch den Kalibrierungsprozess erhalten wir zwei Abbildungsmatrizen (siehe Kapitel \ref{ch:implementation}), mit denen wir anschließend eine Reihe von Bildern entzerren möchten. Wir untersuchen dabei die Laufzeit pro gewählter Auflösung, in 50er Schritten, und ermitteln jeweils die Laufzeit gemittelt über 200 Bilder. Untersucht wird die Laufzeit bikubischer, sowie mit linearer Interpolation. 
+Durch den Kalibrierungsprozess erhalten wir zwei Abbildungsmatrizen (siehe Kapitel \ref{ch:implementation}), mit denen wir anschließend eine Reihe von Bildern entzerren möchten. Wir untersuchen dabei die Laufzeit pro gewählter Auflösung, in 50er Schritten, und ermitteln jeweils die Laufzeit gemittelt über 200 Bilder. Untersucht wird die Laufzeit mit bikubischer, sowie mit linearer Interpolation. 
 
 \begin{figure}[!htb]
 	\centering
@@ -107,12 +136,12 @@ Durch den Kalibrierungsprozess erhalten wir zwei Abbildungsmatrizen (siehe Kapit
 \section{Evaluierung Deformable Templates} \todo{umbennen}
 Das Problem bei diesem Ansatz, ist dass die Funktion, auch nach starker Gaussglättung, schnell in kleine lokale Minima läuft, obwohl ein wesentlicher stärkeres Minimum in näherer Umgebung wäre. Darüber hinaus muss für ein robustes Optimierungsverfahren der Gradient und im besten Fall sogar die Hesse-Matrix zur Verfügung gestellt werden. 
 
-In Abbildung \ref{fig:deformable} sieht man beispielhaft einen Auschnitt der Energiefunktion, wobei in diesem Fall zwecks Veranschaulichung nur die Haupt- und Nebenachse der Ellipse variable sind. Das Zentrum bleibt das Zentrum des Bildes und der Winkel $\theta$ ist konstant null. Trotz dieser Einschränkungen lässt sich gut erkennen, dass circa bei $a = b = 300$ ein starkes Minimum liegt. Es gibt jedoch neben diesem Minimum in näherer Umgebung kleine irrelevante Minima, wie beispielsweise in $(360, 260)$. Solche "`Becken"' erschweren die Suche nach der nächsten Ellipse erheblich.
+In Abbildung \ref{fig:deformable} sieht man beispielhaft einen Auschnitt der Energiefunktion, wobei in diesem Fall zwecks Veranschaulichung nur die Haupt- und Nebenachse der Ellipse variable sind. Das Zentrum bleibt das Zentrum des Bildes und der Winkel $\theta$ ist konstant null. Trotz dieser Einschränkungen lässt sich gut erkennen, dass circa bei $a = b = 300$ ein starkes Minimum liegt. Es gibt jedoch neben diesem Minimum in näherer Umgebung kleine irrelevante Minima, wie beispielsweise in $(360, 260)$. Solche "`Becken"' (in rot) erschweren die Suche nach der nächsten Ellipse erheblich.
 
 
 \begin{figure}[!htb]
 	\centering
-	\includegraphics[scale=.4]{images/deformable.png}
+	\includegraphics[scale=.4]{images/deformableHighlighted.png}
 	\caption{Deformable Templates: Ausschnitt der Energiefunktion für variable Haupt- und Nebenachse}
 	\label{fig:deformable}
 \end{figure}
@@ -143,24 +172,32 @@ In unserem Verfahren ist eine Gleichverteilung der Ausreißer unwahrscheinlich. 
 \begin{figure}[!htb]
 	\begin{subfigure}{.5\textwidth}
 		\centering
-		\includegraphics[width=.9\textwidth]{images/ransacShadow25_0.png}
-	\end{subfigure}%
-	\begin{subfigure}{.5\textwidth}
-		\centering
-		\includegraphics[width=.9\textwidth]{images/ransacShadow25_1.png}
-	\end{subfigure}
-	\begin{subfigure}{.5\textwidth}
-		\centering
-		\vspace{0.2cm}
 		\includegraphics[width=.9\textwidth]{images/ransacShadow40_0.png}
+		\caption{gestörte Messdaten}
 	\end{subfigure}%
 	\begin{subfigure}{.5\textwidth}
 		\centering
-		\vspace{0.2cm}
 		\includegraphics[width=.9\textwidth]{images/ransacShadow40_1.png}
+		\caption{detekt. Ellipsen: RANSAC (grün), LSQ (cyan)}
 	\end{subfigure}
-	\caption{Vergleich RANSAC und LSQ bei Schattenellipsen mit $p = 0.99$ und $\epsilon = 0.25$ (oben), $\epsilon = 0.4$ unten, links gestörte Messdaten, rechts detektierte Ellipsen RANSAC (grün), LSQ (cyan)}
+	\caption{Vergleich RANSAC und LSQ bei Schattenellipsen mit $p = 0.99$ und $\epsilon = 0.4$}
 	\label{fig:blubb}
+\end{figure}
+
+
+\begin{figure}[!htb]
+	\begin{subfigure}{.8\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{images/ransacEval0.eps}
+		\caption{gestörte Messdaten}
+	\end{subfigure}
+	\begin{subfigure}{.8\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{images/ransacEval1.eps}
+		\caption{detekt. Ellipsen: RANSAC (grün), LSQ (cyan)}
+	\end{subfigure}
+	\caption{Vergleich RANSAC und LSQ bei Schattenellipsen mit $p = 0.99$ und $\epsilon = 0.4$}
+	\label{fig:blubbs}
 \end{figure}
 
 
