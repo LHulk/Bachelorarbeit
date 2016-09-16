@@ -17,7 +17,7 @@ Die Wahl des Kalibrierungsmusters spielt dabei eine entscheidende Rolle bei der 
 
 Wir haben uns für ein Muster entscheiden, dass in äquidistanten Abständen $\Delta R$, beginnend mit dem kleinen Radius $r$ des Kegelstumpfs (siehe Abbildung \ref{fig:coneFrustum}) Kreislinien und in gleichen Winkelabständen $\Delta \alpha$ auf der Seitenhöhe Liniensegmente besitzt. Das zusammengelegte Muster ist in Abbildung \ref{fig:calibrationPatternTop} skizziert, beziehungsweise das entfaltete in \ref{fig:calibrationPattern}. Die Anzahl der Kreislinien wird mit $n$ gekennzeichnet, die Anzahl sichtbarer Liniensegmente im Kegel mit $m$. Zu beachten ist, dass bedingt durch das Entfalten, in Abbildung \ref{fig:calibrationPattern}  ein Liniensegment doppelt zu sehen ist. Die schwarzen Kreise bezeichnen wir als Samples. 
 
-Dadurch dass die Geometrie des Kegels bekannt ist, kann jedem Sample ein Punkt auf dem Kegel im Weltkoordinatensystem zugeordnet werden. Da ein Kegel beliebig um die $Y$-Achse rotiert werden kann, ist diese Zuordnung zunächst nicht eindeutig. Dazu nehmen wir an, dass das Liniensegment mit dem kleinsten Winkel zur $X$-Achse mit dem Kegelwinkel $\theta = 0$ korrespondiert (siehe Gleichung \ref{eq:paramFrustum} in Kapitel \ref{s:cone}).
+Dadurch dass die Geometrie des Kegels bekannt ist, kann jedem Sample ein Punkt auf dem Kegel im Weltkoordinatensystem zugeordnet werden. Da ein Kegel beliebig um die $y$-Achse rotiert werden kann, ist diese Zuordnung zunächst nicht eindeutig. Dazu nehmen wir an, dass das Liniensegment mit dem kleinsten Winkel zur $x$-Achse mit dem Kegelwinkel $\theta = 0$ korrespondiert (siehe Gleichung \ref{eq:paramFrustum} in Kapitel \ref{s:cone}).
 
 \begin{figure}[!htb]
 	\centering
@@ -116,10 +116,10 @@ benötigt, dass Ellipsen erkennt.
 	\begin{subfigure}{.5\textwidth}
 		\centering
 		\includegraphics[width=.9\textwidth]{images/canny.png}
-		\caption{Canny-Kanten}
+		\caption{Kantenbild}
 		\label{fig:afterCanny}
 	\end{subfigure}
-	\caption{Canny-Kantendetektion auf Grauwertbild}
+	\caption{Canny-Kantendetektion}
 	\label{fig:canny}
 \end{figure}
 
@@ -243,7 +243,7 @@ Man wählt dabei als Startwert eine Ellipse, deren Zentrum dem Bildzentrum entsp
 Nach der Bestimmung der Ellipsen muss jede Sample-Position der zugehörigen Kreislinie, sowie dem zugehörigen Liniensegment zugeordnet werden, um seine Position auf dem Kegel bestimmen zu können. 
 Zunächst wird für jeden Punkt diejenige Kreislinie ausgewählt, dessen zugehörige Ellipse die kürzeste Distanz zu ihm hat (siehe Abbildung \ref{fig:ellipseMapping}).
 
-Um nun die Samples auch ihren Liniensegmenten zuzuordnen, wird zunächst der Mittelpunkt der Samples auf der innersten Ellipse bestimmt. Anschließend werden die Samples auf der innersten Ellipsen nach dem Winkel der Verbindungslinien zwischen Sample und Mittelpunkt mit der $X$-Achse sortiert. 
+Um nun die Samples auch ihren Liniensegmenten zuzuordnen, wird zunächst der Mittelpunkt der Samples auf der innersten Ellipse bestimmt. Anschließend werden die Samples auf der innersten Ellipsen nach dem Winkel der Verbindungslinien zwischen Sample und Mittelpunkt mit der $x$-Achse sortiert. 
 Die restlichen Samples können nicht nach dem gleichen Schema sortiert werden, da der bestimme Mittelpunkt nicht der genaue Schnittpunkt aller Liniensegmente ist. 
 Das Problem ist in Abbildung \ref{fig:sampleMappingProblem1} am Beispiel eines Liniensegments für zwei Samples illustriert. Das bestimme Zentrum $C$ liegt nicht auf der Verlängerung des Liniensegments.  Die Winkel der Verbindungslinien zum Zentrum $\alpha_1$, sowie $\alpha_2$ unterscheiden sich. Bei einer Sortierung nach Winkel ist nicht mehr gewährleistet, dass die Samples zu einer Verbindungslinie gehören, da die Winkel der Samples eines Liniensegments beliebig voneinander abweichen können.  Damit dieses Verfahren funktioniert müsste die Situation aus Abbildung \ref{fig:sampleMappingProblem2} für alle Liniensegmente gelten, das heißt der Winkel (hier: $\beta$) ist für alle Verbindungslinien identisch. 
 
@@ -266,7 +266,7 @@ Das Problem ist in Abbildung \ref{fig:sampleMappingProblem1} am Beispiel eines L
 \end{figure}
 
 Stattdessen wird für jedes Sample auf den darauffolgenden Ellipsen das Sample auf der vorherigen Ellipse mit der kürzesten Distanz bestimmt. 
-Die Samples können nun entsprechend sortiert werden. Die zugeordneten Liniensegmente sind exemplarisch in Abbildung \ref{fig:lineMapping} zu sehen. Darüber hinaus lässt sich hier erkennen, dass das Liniensegment mit dem kleinsten Winkel zur $X$-Achse das erste Liniensegment (rot) ist. Das Liniensegment wird später unsere Bezugspunkt zur Entzerrung sein, also diejenige Kante, an der der Kegel entrollt wird. 
+Die Samples können nun entsprechend sortiert werden. Die zugeordneten Liniensegmente sind exemplarisch in Abbildung \ref{fig:lineMapping} zu sehen. Darüber hinaus lässt sich hier erkennen, dass das Liniensegment mit dem kleinsten Winkel zur $x$-Achse das erste Liniensegment (rot) ist. Das Liniensegment wird später unsere Bezugspunkt zur Entzerrung sein, also diejenige Kante, an der der Kegel entrollt wird. 
 
 
 \begin{figure}[!htb]
@@ -296,7 +296,7 @@ Wir können nun jedem Sample eine Kreislinie, sowie ein Liniensegment zuordnen. 
 Mit Hilfe der Parametrisierung des Kegelstumpfs können wir die 3D-Koordinaten eines Samples folgendermaßen angeben:
 
 Ohne Beschränkung der Allgemeinheit, seien die Ellipsen $i = 0,\dotsc,n - 1$ aufsteigend nach ihrer "`Größe"'\footnote{Etwas formaler, könnte man die Ellipsen hier nach ihrem Flächeninhalt sortieren. Für Ellipsen $E_0(x_0,y_0,a_0, b_0, \theta_0)$ und $E_1(x_1,y_1,a_1, b_1,\theta_1)$ gilt $E_0 \leq E_1$ g.d.w. $\pi\cdot a_0 \cdot b_0 \leq \pi \cdot a_1 \cdot b_1$} sortiert.
-Außerdem seien die Liniensegmente $j = 0,\dotsc,m - 1$ aufsteigend nach Winkel mit der $X$-Achse, wie in \ref{s:pointMapping} beschrieben, sortiert. 
+Außerdem seien die Liniensegmente $j = 0,\dotsc,m - 1$ aufsteigend nach Winkel mit der $x$-Achse, wie in \ref{s:pointMapping} beschrieben, sortiert. 
 Eine Sample kann also eindeutig durch ein Tupel $(i,j) \in [0,n-1]\times [0,m-1]$ identifiziert werden und $(x_{ij},y_{ij},z_{ij})$ bezeichne seine Koordinaten im Weltkoordinatensystem. 
 
 Analog zur parametrischen Darstellung von Kegelstümpfen (Gleichung \ref{eq:paramFrustum}) in Kapitel \ref{s:cone} ergibt sich:
@@ -353,7 +353,7 @@ P_W = \left(\frac{\phi_L - \phi_P}{\phi_L - \phi_R}\right) R_W + \left(1 - \frac
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=.6]{images/radialInterpolation.eps}
-	\caption{Interpolation der 3D-Koordinaten}
+	\caption{Interpolation der 3D-Koordinaten mittels vier Sample-Nachbarn}
 	\label{fig:radialInterpolation}
 \end{figure}
 

@@ -2,9 +2,9 @@
 \chapter{Implementierung}
 \label{ch:implementation}
 
-Zwecks Vereinfachung des Kalibrierungsprozesses wurde ein Assistent in Form einer graphischen Benutzerschnittstelle programmiert. 
+Zwecks Vereinfachung des Kalibrierungsprozesses wurde ein Assistent in Form einer graphischen Benutzerschnittstelle implementiert. 
 
-Im ersten Schritt des Assistenten wird dabei optional eine intrinsische Kamerakalibrierung durchgeführt (siehe Abbildung \ref{fig:wizard1}). 
+Im ersten Schritt des Assistenten wird dabei optional, wie in Abbildung \ref{fig:wizard1} zu sehen, eine intrinsische Kamerakalibrierung durchgeführt. 
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.9\textwidth]{images/GUI/calibWizard1_1.PNG}
@@ -12,7 +12,7 @@ Im ersten Schritt des Assistenten wird dabei optional eine intrinsische Kameraka
 	\label{fig:wizard1}
 \end{figure}
 
-Anschließend wird die eigentliche Kegelkalibrierung ausgeführt. Dabei wird zunächst das Kalibrierungsbild geladen und gegebenenfalls nach einer stattgefundenen intrinsischen Kalibrierung entzerrt. Es werden nun die Sample-Positionen detektiert und der Nutzer hat die Möglichkeit zu überprüfen, ob alle Positionen korrekt detektiert wurden und andernfalls fehlerhafte Punkte zu entfernen und / oder Punkte hinzuzufügen. Im Anschluss werden die Ellipsen und Liniensegmente bestimmt und Punktkorrespondenzen hergestellt (siehe Abbildung \ref{fig:wizard2}).
+Anschließend wird die eigentliche Kegelkalibrierung durchgeführt. Dabei wird zunächst das Kalibrierungsbild geladen und gegebenenfalls nach einer stattgefundenen intrinsischen Kalibrierung entzerrt. Es werden nun die Sample-Positionen detektiert und der Nutzer hat die Möglichkeit zu überprüfen, ob alle Positionen korrekt detektiert wurden und andernfalls fehlerhafte Punkte zu entfernen und / oder Punkte hinzuzufügen. Im Anschluss werden die Ellipsen und Liniensegmente bestimmt und Punktkorrespondenzen hergestellt (siehe Abbildung \ref{fig:wizard2}).
 
 \begin{figure}[!htb]
 	\centering

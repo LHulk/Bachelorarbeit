@@ -17,7 +17,7 @@ Die Laufzeitanalysen wurden auf einem Raspberry Pi 2 Model B durchgeführt mit f
 
 
 \section{Vergleich Vorwärtsentfaltung und Rückwärtsentfaltung}
-Untersucht man die interpolierten Weltkoordinaten bei der Vorwärtsentfaltung, stellt man fest, dass die Oberfläche des Kegels eckig scheint, wie in Abbildung \ref{fig:3DInterpol} zu sehen. Zur Veranschaulichung wird hierbei nur ein Bruchteil der interpolierten Werte gezeigt. Zwischen den Samples auf einer Kreislinie sollten die interpolierte Positionen nach außen gewölbt sein, da ein Kegel rund ist. Da wir jedoch interpolieren und nicht extrapolieren, gehen die Werte nie über die zur Interpolation genutzten Werte hinaus. Konkreter kann eine interpolierte Position keine größeren oder kleineren $X$ und $Z$ Koordinaten erhalten, als die der genutzten Samples. Diese wäre jedoch notwendig, sodass die Rundung des Kegels erhalten bleibt.
+Untersucht man die interpolierten Weltkoordinaten bei der Vorwärtsentfaltung, stellt man fest, dass die Oberfläche des Kegels eckig scheint, wie in Abbildung \ref{fig:3DInterpol} zu sehen. Zur Veranschaulichung wird hierbei nur ein Bruchteil der interpolierten Werte gezeigt. Zwischen den Samples auf einer Kreislinie sollten die interpolierte Positionen nach außen gewölbt sein, da ein Kegel rund ist. Da wir jedoch interpolieren und nicht extrapolieren, gehen die Werte nie über die zur Interpolation genutzten Werte hinaus. Konkreter kann eine interpolierte Position keine größeren oder kleineren $X-$ und $Z-$Koordinaten erhalten, als die der genutzten Samples. Diese wäre jedoch notwendig, sodass die Rundung des Kegels erhalten bleibt.
 
 \begin{figure}[!htb]
 	\centering
@@ -34,10 +34,10 @@ Untersucht man die interpolierten Weltkoordinaten bei der Vorwärtsentfaltung, s
 \end{figure}
 
 Darüber hinaus zeigt sich ein weiteres Problem nach der Entfaltung. Die Entfaltung geschieht über die Abbildung \ref{eq:coneToLateral}, die in Kapitel \ref{s:cone} konstruiert wurde. 
-Damit im entfalteten Bild nicht 1mm einem Pixel entspricht, müssen die erhaltenen Werte skaliert werden. Wir wollen dabei entsprechend einer gewünschten Auflösung der entrollen Seitenhöhe skalieren. 
-Auch schon bei kleinen Skalierungen entstehen auffällige Risse im entfalteten Bild, die in Abbildung \ref{ref:forwardHoles} exemplarisch zu sehen sind. Grund dafür ist, dass jedes Pixel aus dem Ursprungsbild auf eine 2D-Koordinate der Mantelfläche abgebildet wird. Auch nach einer Skalierung handelt es sich bei diesen Werten im Allgemeinen nicht um ganzzahlige Werte. Es muss im entfalteten Bild gerundet werden. Auch wenn Rundungsfehler nicht entständen, fehlte es auf Grund der starken Stauchung, in den inneren, kleineren Regionen (siehe Abbildung \ref{fig:forwardHoles} in rot) des Ursprungsbild an genügend Bildinformation. Solche Risse, beziehungsweise nicht erreichte Pixel auf dem entfalteten Bild, bezeichnen als Defekte. 
+Damit im entfalteten Bild nicht 1mm einem Pixel entspricht, müssen die erhaltenen Werte skaliert werden. Wir wollen dabei entsprechend einer gewünschten Auflösung der entzerrten Seitenhöhe skalieren. 
+Auch schon bei kleineren Skalierungen entstehen auffällige Risse im entfalteten Bild, die in Abbildung \ref{fig:forwardHoles} exemplarisch zu sehen sind. Grund dafür ist, dass jedes Pixel aus dem Ursprungsbild auf eine 2D-Koordinate der Mantelfläche abgebildet wird. Auch nach einer Skalierung handelt es sich bei diesen Werten im Allgemeinen nicht um ganzzahlige Werte. Es muss im entfalteten Bild gerundet werden. Auch wenn Rundungsfehler nicht entständen, fehlte es auf Grund der starken Stauchung, in den inneren, kleineren Regionen (siehe Abbildung \ref{fig:forwardHoles} in rot) des Ursprungsbild an genügend Bildinformation. Solche Risse, beziehungsweise nicht erreichte Pixel auf dem entfalteten Bild, bezeichnen wir als Defekte. 
 
-Da wir von dem Ursprungsbild aus auf das entfaltete Bild abbilden, ist außerdem eine Interpolation auf dem Ursprungsbild nicht möglich, da wir vorher nicht genau wissen, wo Defekte entstehen. Man müsste als entweder auf dem resultierendem Bild interpolieren (siehe Kapitel \ref{ch:summary}), oder zu gegebenen Defekten über die Umkehrabbildung auf dem Ursprungsbild interpolieren. 
+Da wir von dem Ursprungsbild aus auf das entfaltete Bild abbilden, ist außerdem eine Interpolation auf dem Ursprungsbild nicht möglich, da wir vorher nicht wissen, wo Defekte entstehen. Man müsste also entweder auf dem resultierendem Bild interpolieren (siehe Kapitel \ref{ch:summary}), oder zu gegebenen Defekten über die Umkehrabbildung auf dem Ursprungsbild interpolieren. 
 Es bietet sich dann jedoch an, direkt die Umkehrabbildung zu nutzen, was die Motivation hinter der Rückwärtsentfaltung ist.
 
 Wir möchten untersuchen wie sich die Anzahl der Defekte bei einer einer Änderung der Ausgabeauflösung verhält. Diese Beziehung lässt sich in Abbildung \ref{fig:influenceRes} ablesen. 
@@ -58,7 +58,7 @@ Wie in Abbildung \ref{fig:runningTimeComparision} zu sehen, ist der Aufwand bei 
 Es fällt jedoch auf, dass die Laufzeit der Rückwärtsentfaltung im Mittel um einen Faktor von drei schneller ist als die der Vorwärtsentfaltung, was auf die komplexe Interpolation zurückzuführen ist, die bei der Vorwärtsentfaltung notwendig ist. 
 \begin{figure}[!htb]
 	\centering
-	\includegraphics[width=\textwidth]{images/runningTimeCalibration.eps}
+	\includegraphics[width=0.9\textwidth]{images/runningTimeCalibration.eps}
 	\caption{Laufzeitvergleich zwischen Vorwärtsentfaltung (blau) und Rückwärtsentfaltung (rot)}
 	\label{fig:runningTimeComparision}
 \end{figure}
@@ -72,7 +72,7 @@ Als Reprojektionsfehler einer Abbildung wird die Distanz zwischen einem gemessen
 Im Falle der Rückwärtsentfaltung sind die gemessenen Punkte die Bildpositionen der Samples im Ursprungsbild. Da die Geometrie des Kegels bekannt ist, wissen wir wo sich die  Samples auf dem entfalteten Bild befinden müssen (siehe Parametrisierung der Mantelfläche \ref{eq:paramLateral} in Kapitel \ref{ch:theory}). Wir können nun diese Positionen mit Hilfe der Abbildung zur Entfaltung und der Projektionsmatrix zurück auf das Ursprungsbild abbilden. Diese Punkte sind die projizierten Punkte. Da die Abbildung von der Mantelfläche zur Kegeloberfläche exakt ist, ist der Reprojektionsfehler der Rückwärtsentfaltung alleine durch die Projektionsmatrix bestimmt. 
 
 Bei der Vorwärtsentfaltung sind die gemessenen Punkte gegeben durch die bekannten Sample-Positionen auf der Mantelfläche. Die Projizierten erhält man, nach der Abbildung der detektierten Sample-Positionen des Ursprungsbild auf die Mantelfläche. Der Reprojektionsfehler ist also alleine durch die Genaugkeit der Sample-Detektion definiert und somit bei diesem Verfahren immer nahe null. 
-Obwohl das Endergebnis, bedingt durch die Löcher, bei der Vorwärtsentfaltung optisch schlechter ist, ist der Reprojektionsfehler also bei der Vorwärtsentfaltung immer kleiner. 
+Obwohl das Endergebnis, bedingt durch die Defekte, bei der Vorwärtsentfaltung optisch schlechter ist, ist der Reprojektionsfehler also bei der Vorwärtsentfaltung immer kleiner. 
 Als Vergleich zwischen den beiden Verfahren eignet sich der Reprojektionsfehler also nicht.
 
 Auf Grund der wesentlich schlechteren Laufzeit, sowie auf Grund der Defekte, die sich sogar quadratisch zur Ausgabeauflösung verhalten, beziehen sich alle folgenden Auswertungen nur noch auf die Rückwärtsentfaltung. 
@@ -112,7 +112,7 @@ Um den Einfluss der Rotation der Kamera untersuchen zu können, wurde der Kegel 
 \end{figure}
 
 
-Es werden anschließend Bilder erzeugt, in denen in 1° Schritten die Kamera von 0° bis 12° um die $X$-Achse rotiert wird. Für jedes dieser Bilder wird anschließend eine Rückwärtsentfaltung durchgeführt und der durchschnittliche Reprojektionsfehler ermittelt. Abbildung \ref{fig:influenceRot} zeigt, dass der Reprojektionsfehler relativ rotationsinvariant ist. Ab einem Winkel von  12°, werden die Samples teilweise vom Blob-Detektor nicht mehr erkannt und müssten per Hand eingetragen werden. \todo{rotation}
+Es werden anschließend Bilder erzeugt, in denen in 1° Schritten die Kamera von 0° bis 12° um die $x$-Achse rotiert wird. Für jedes dieser Bilder wird anschließend eine Rückwärtsentfaltung durchgeführt und der durchschnittliche Reprojektionsfehler ermittelt. Abbildung \ref{fig:influenceRot} zeigt, dass der Reprojektionsfehler relativ rotationsinvariant ist. Ab einem Winkel von  12°, werden die Samples teilweise vom Blob-Detektor nicht mehr erkannt und müssten per Hand eingetragen werden. \todo{rotation}
 
 
 \begin{figure}[!htb]

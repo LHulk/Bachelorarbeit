@@ -418,7 +418,7 @@ Eine beliebige zweidimensionale Gerade kann in Polarkoordinaten folgendermaßen 
 x\cos\phi + y\sin\phi = d,
 \end{equation}
 
-wobei $\phi \in [0,2\pi)$ der Winkel der Geraden mit der $X$-Achse und $d \geq 0$ der Radius, also der euklidische Abstand der Geraden zum Ursprung des Koordinatensystems ist.
+wobei $\phi \in [0,2\pi)$ der Winkel der Geraden mit der $x$-Achse und $d \geq 0$ der Radius, also der euklidische Abstand der Geraden zum Ursprung des Koordinatensystems ist.
 
 Eine Gerade wird somit als ein Punkt $(d,\phi)$ in den Parameterraum (auch Hough-Raum) abgebildet. 
 
@@ -481,17 +481,17 @@ n_{min} = \frac{\log{\left(1-p\right)}}{\log{\left(1-\left(1-\epsilon\right)^k\r
 
 \begin{definition}[Ellipse]
 	Eine Ellipse wird beschrieben durch diejenigen Punkte, dessen Summe der Abstände zu zwei gegebenen Punkten $f_1$ und $f_2$ (Brennpunkte) konstant sind. Der Mittelpunkt der Verbindungslinie der beiden Brennpunkt wird als Zentrum der Ellipse bezeichnet (siehe Abbildung \ref{fig:ellipseDef}). 
-	Als Hauptachse $a$ bezeichnen wir die Verbindungslinie von Mittelpunkt durch einen der Brennpunkte bis zum Scheitel $V_1$ (bzw. $V_3$) der Ellipse. Die zu ihr rechtwinklige Verbindungslinie durch den Mittelpunkt bis zu einem der anderen Scheitelpunkte ($V_2$ oder $V_4$) nennen wir Nebenachse $b$.
+	Als Hauptachse $a$ bezeichnen wir die Verbindungslinie von Mittelpunkt durch einen der Brennpunkte bis zum Scheitelpunkt ($V_1$ beziehungsweise $V_3$) der Ellipse. Die zu ihr rechtwinklige Verbindungslinie durch den Mittelpunkt bis zu einem der anderen Scheitelpunkte ($V_2$ beziehungsweise $V_4$) nennen wir Nebenachse $b$.
 \end{definition}
 
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=.9]{images/ellipse_focalDef.eps}
-	\caption{Ellipse mit Brennpunkten $f_1, f_2$, Zentrum $C$, Hauptachse $a$, Nebenachse $b$ und Scheitelpunkten $V_1$ und $V_2$}
+	\caption{Ellipse mit Brennpunkten $f_1, f_2$, Zentrum $C$, Hauptachse $a$, Nebenachse $b$ und Scheitelpunkten $V_1/V_3$ und $V_2/V_4$}
 	\label{fig:ellipseDef}
 \end{figure}
 
-In ihrer einfachsten Form liegt die Ellipse im Zentrum des Koordinatensystems und ihre Haupt- und Nebenachse $a$ und $b$ sind achsenausgerichtet. Das heißt ihre Hauptachse liegt auf der $X$-Achse und ihre Nebenachse auf der $Y$-Achse. Sie kann dann in der impliziten Form
+In ihrer einfachsten Form liegt die Ellipse im Zentrum des Koordinatensystems und ihre Haupt- und Nebenachse $a$ und $b$ sind achsenausgerichtet. Das heißt ihre Hauptachse liegt auf der $x$-Achse und ihre Nebenachse auf der $y$-Achse. Sie kann dann in der impliziten Form
 
 \begin{equation} \label{eq:ellipseNoRotNoTrans}
 \frac{x^2}{a^2} + \frac{y^2}{b^2} = 1
@@ -609,7 +609,7 @@ Die Gleichung \ref{eq:ellipseCenter} lässt sich anschließend weiter vereinfach
 \end{aligned}
 \end{equation}
 
-wobei $\sigma \neq 0$, wenn die Ellipse nicht zum Punkt entartet ist (folgt aus dem Determinanten-Kriterium \cite{Lawrence1972}). Vergleichen wir nun die beiden Gleichungen \ref{eq:PCAKoeff}, sowie \ref{eq:ellipseNoRotTrans}, so können folgende Beziehung herleiten: 
+wobei $\sigma \neq 0$, wenn die Ellipse nicht zum Punkt entartet ist (folgt aus dem Determinantenkriterium \cite{Lawrence1972}). Vergleichen wir nun die beiden Gleichungen \ref{eq:PCAKoeff}, sowie \ref{eq:ellipseNoRotTrans}, so können folgende Beziehung herleiten: 
 
 \begin{equation}
 \begin{aligned}
@@ -618,13 +618,13 @@ wobei $\sigma \neq 0$, wenn die Ellipse nicht zum Punkt entartet ist (folgt aus 
 \end{aligned}
 \end{equation}
 
-Wir dürfen hierbei die Wurzel ziehen, da $\frac{\sigma}{\lambda_i} > 0$ für nicht entartete reele\footnote{Man kann Ellipsen auch mit imaginären Achsen definieren \cite{Lawrence1972}.}  Ellipsen (folgt aus dem Determinanten-Kriterium \cite{Lawrence1972}). Da die Transformation in das Koordinatensystem der Ellipse nur Rotationen enthielt,  bleiben die Längen der Hauptachsen erhalten. Es gilt wie erwartet $a \geq b$, da $\lambda_1 \leq \lambda_2$. 
+Wir dürfen hierbei die Wurzel ziehen, da $\frac{\sigma}{\lambda_i} > 0$ für nicht entartete reele\footnote{Man kann Ellipsen auch mit imaginären Achsen definieren \cite{Lawrence1972}.}  Ellipsen (folgt aus dem Determinantenkriterium \cite{Lawrence1972}). Da die Transformation in das Koordinatensystem der Ellipse nur Rotationen enthielt,  bleiben die Längen der Hauptachsen erhalten. Es gilt wie erwartet $a \geq b$, da $\lambda_1 \leq \lambda_2$. 
 
 
 \subsection{Abstand: Punkt zu Ellipse}
 \label{sc:distPointEllipse}
 Das hier beschriebene Verfahren zur Bestimmung der kürzesten euklidischen Distanz eines Punktes zu einer Ellipse stammt aus der Arbeit von David Eberly \cite{Eberly2013}.
-Wir betrachten nur Ellipsen im Ursprung, die achsenausgerichtet sind und darüber hinaus nur Punkte im ersten Quadranten. Ansonsten wir die Ellipse in den Ursprung verschoben und um ihren entgegengesetzten Drehwinkel rotiert. Da die Ellipse dann bezüglich der $X$- und $Y$- Achse symmetrisch ist, kann der Punkt einfach durch Spiegelung in den richtigen Quadranten transformiert werden. Der Abstand ändert sich dadurch nicht. 
+Wir betrachten nur Ellipsen im Ursprung, die achsenausgerichtet sind und darüber hinaus nur Punkte im ersten Quadranten. Ansonsten wir die Ellipse in den Ursprung verschoben und um ihren entgegengesetzten Drehwinkel rotiert. Da die Ellipse dann bezüglich der $x$- und $y$- Achse symmetrisch ist, kann der Punkt einfach durch Spiegelung in den richtigen Quadranten transformiert werden. Der Abstand ändert sich dadurch nicht. 
 
 Wir bezeichnen von nun an $Q = (y_0, y_1)$ als eine Punkt, dessen Distanz zur Ellipse wir berechnen wollen und $E = (x_0, x_1)$ als denjenigen eindeutigen Punkt, welcher auf der Ellipse liegt und die kürzeste euklidische Distanz zum Punkt $Q$ hat. 
 
@@ -653,7 +653,7 @@ $F'$ wird null, wenn $\left(\mathcal{E}(\theta) - Q\right)$ und $ \mathcal{E}'(\
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=.9]{images/ellipseQuery.eps}
-	\caption{Ellipsenausschnitt im ersten Quadranten mit Abfragepunkt $Q$ und eingezeichneter kürzester Distanz zur Ellipse}
+	\caption{Ellipsenausschnitt im ersten Quadranten mit Abfragepunkt $Q$ und eingezeichneter kürzester Distanz zum Ellipsenpunkt $E$. Die Ellipse wird beschrieben durch $\mathcal{E}$}
 	\label{fig:ellipseDist}
 \end{figure}
 
@@ -683,9 +683,9 @@ x_0 = \frac{a^2y_0}{t+a^2},\quad x_1 = \frac{b^2y_1}{t+b^2}
 Man macht nun eine Fallunterscheidung:
 
 \begin{enumerate}
-	\item Der einfachste Fall ist, wenn sich der Punkt $Q$ auf der $Y$-Achse (außer $(0,0)$) befindet, wenn also gilt $y_0 = 0, y_1 > 0$.
-	Da die Hauptachse nach der $X$-Achse ausgerichtet ist und $a >= b$ gilt, ist der Punkt auf der Ellipse mit der kürzesten Distanz zu $Q$ offenbar $E = (0, b)$ und für die Distanz gilt $d = \abs{y_1 - b}$.
-	\item Als nächstes betrachten wir ein $Q$ auf der $X$-Achse (einschließlich $(0,0)$), wenn also gilt  $y_0 \geq 0, y_1 = 0$. Es gilt also mit \ref{eq:ellipseDistY}
+	\item Der einfachste Fall ist, wenn sich der Punkt $Q$ auf der $y$-Achse (außer $(0,0)$) befindet, wenn also gilt $y_0 = 0, y_1 > 0$.
+	Da die Hauptachse nach der $y$-Achse ausgerichtet ist und $a >= b$ gilt, ist der Punkt auf der Ellipse mit der kürzesten Distanz zu $Q$ offenbar $E = (0, b)$ und für die Distanz gilt $d = \abs{y_1 - b}$.
+	\item Als nächstes betrachten wir ein $Q$ auf der $x$-Achse (einschließlich $(0,0)$), wenn also gilt  $y_0 \geq 0, y_1 = 0$. Es gilt also mit \ref{eq:ellipseDistY}
 	\[
 		y_0 = x_0\left(1 + \frac{t}{a^2}\right), \quad 0 = x_1\left(1 + \frac{t}{b^2}\right)
 	\]

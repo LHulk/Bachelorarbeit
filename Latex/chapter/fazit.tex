@@ -12,7 +12,7 @@ Um die Linien-Detektion etwas genauer zu machen, könnte man die Gradientenricht
 probalistic hough?
 
 \section{Verbesserung der Vorwärtsentfaltung}
-Das Hauptproblem der Vorwärtsentfaltung sind die Löcher auf dem entfalteten Bild. Um diese schließen zu können, könnte man eine Delaunay-Triangulation durchführen. 
+Das Hauptproblem der Vorwärtsentfaltung sind die Defekte auf dem entfalteten Bild. Um diese schließen zu können, könnte man eine Delaunay-Triangulation durchführen. 
 Da das Verfahren jedoch ohne Triangulation schon relativ rechenintensiv ist, und die Rückwärtsentfaltung sehr gute Ergebnisse liefert wurde dieses Möglichkeit nicht weiter untersucht.
 Solch eine Triangulation ist beispielhaft in Abbildung \ref{fig:delaunayTriag} abbgebildet. Zum Zwecke der Veranschaulichung wurde hierbei nur ein Teil der Daten benutzt.
 
@@ -31,7 +31,6 @@ Solch eine Triangulation ist beispielhaft in Abbildung \ref{fig:delaunayTriag} a
 	\caption{Delaunay-Triangulation}
 	\label{fig:delaunayTriag}
 \end{figure}
-
 
 
 \section{Verbesserung der Rückwärtsentfaltung}
