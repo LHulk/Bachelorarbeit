@@ -210,7 +210,7 @@ ConeUnfolding::ConeUnfolding()
 	cv::imshow("repro forwardWarp", vis);*/
 
 	cv::Mat mapx, mapy;
-	bool isReverse = true;
+	bool isReverse = false;
 	cv::Mat greyWarped;
 
 	if(isReverse)

@@ -1,6 +1,6 @@
 #include "Ellipse.h"
 
-static bool isDebug = false;
+static bool isDebug = true;
 
 
 Ellipse::Ellipse()
@@ -243,17 +243,17 @@ Ellipse Ellipse::robustEllipseFit(const std::vector<cv::Point>& points, cv::Size
 
         Ellipse currentEllipse = solveEllipseEquation(ellipsePoints);
 
-	   //bool passedCheck = checkBoundaries(currentEllipse, szImg, maxAtoBRatio);
-	   //if(!passedCheck) continue;
+	   bool passedCheck = checkBoundaries(currentEllipse, szImg, maxAtoBRatio);
+	   if(!passedCheck) continue;
 
-		/*if(isDebug)
+		if(isDebug)
         {
             cv::ellipse(debug, currentEllipse.getEllipseAsRotatedRect(), cv::Scalar(0,255,255),1);
             for(const auto& pt : ellipsePoints)
                 cv::circle(debug, pt, 3, cv::Scalar(255, 255, 0), -1);
             cv::circle(debug, currentEllipse.getCenter(), 2, cv::Scalar(0, 255, 255), -1);
 
-		}*/
+		}
 
 
         //count inliers

@@ -29,6 +29,10 @@ int main()
 	//cv::ellipse(img, e.getEllipseAsRotatedRect(), cv::Scalar(0,255,0), 2);
 	//cv::ellipse(img, eShadow.getEllipseAsRotatedRect(), cv::Scalar(0,255,0), 2);
 
+	cv::Mat originalE = cv::Mat::zeros(700, 700, CV_8U);
+	cv::ellipse(originalE, e.getEllipseAsRotatedRect(), cv::Scalar(255), -1);
+	int numOriginal = cv::countNonZero(originalE);
+
 	int sizeEllipse = 500;
 
 	std::string str1 = "[";
@@ -61,16 +65,15 @@ int main()
 		//generate errors
 		for(int i = 0; i < sizeError; i++)
 		{
-			/*cv::Point errorPoint = cv::Point(rng.uniform(0,699), rng.uniform(0,699));
-			cv::circle(img, errorPoint, 2, cv::Scalar(0,255,255), -1);*/
+			//cv::Point errorPoint = cv::Point(rng.uniform(0,699), rng.uniform(0,699));
 
 			double angle = rng.uniform(0.0, 2*CV_PI);
-
 			//distort data a bit
 			//cv::Point2d offset = cv::Point2d(rng.uniform(0,0), rng.uniform(0,0));
 			cv::Point2d offset = cv::Point2d(0,0);
-
 			cv::Point2d errorPoint = eShadow.evalAtPhi(angle) + offset;
+
+
 			cv::circle(img, errorPoint, 2, cv::Scalar(0,255,255), -1);
 
 			points.push_back(errorPoint);
@@ -99,15 +102,34 @@ int main()
 		float dist = 1.0f;
 
 		Ellipse fittedEllipse = Ellipse::robustEllipseFit(points, img.size(), dist, 10.0f, (minN > 0) ? minN + 20 : 1);
-		str1 += std::to_string(distTo(e, fittedEllipse)) + ",";
+		//str1 += std::to_string(distTo(e, fittedEllipse)) + ",";
+
+		cv::Mat intersect = cv::Mat::zeros(700, 700, CV_8U);
+		cv::ellipse(intersect, fittedEllipse.getEllipseAsRotatedRect(), cv::Scalar(255), -1);
+		int numFitted = cv::countNonZero(intersect);
+		cv::bitwise_and(intersect, originalE, intersect);
+		
+
+		str1 += std::to_string(static_cast<float>(2 * cv::countNonZero(intersect)) / (numFitted + numOriginal)) + ",";
+		
+
+
 
 		Ellipse leastSquareEllipse = cv::fitEllipse(points);
-		str2 += std::to_string(distTo(e, leastSquareEllipse)) + ",";
+		
+
+		intersect = cv::Mat::zeros(700, 700, CV_8U);
+		cv::ellipse(intersect, leastSquareEllipse.getEllipseAsRotatedRect(), cv::Scalar(255), -1);
+		numFitted = cv::countNonZero(intersect);
+		cv::bitwise_and(intersect, originalE, intersect);
+		
+
+		str2 += std::to_string(static_cast<float>(2 * cv::countNonZero(intersect)) / (numFitted + numOriginal)) + ",";
 
 		cv::ellipse(img, fittedEllipse.getEllipseAsRotatedRect(), cv::Scalar(0,255,0), 2);
 		cv::ellipse(img, leastSquareEllipse.getEllipseAsRotatedRect(), cv::Scalar(255, 255, 0), 2);
 		cv::imshow("fitted", img);
-		cv::waitKey(0);
+		//cv::waitKey(0);
 
 		//cv::imwrite("ransac50_1.png", img);
 

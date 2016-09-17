@@ -271,18 +271,18 @@ void CalibrationWizard::on_buttonGetMappings_clicked()
 	cv::Mat proj = Transformation::getProjectiveMatrix(cone);
 	this->projectionMatrix = proj;
 
-    /*std::vector<cv::Point2f> reproj = Transformation::getReprojectionError(cone, proj);
-	std::string reprojx = "["; std::string reprojy = "[";
+	std::vector<cv::Point2f> reproj = Transformation::getReprojectionError(cone, proj);
+	std::string reprojx = ""; std::string reprojy = "";
 	for(const auto& pt : reproj)
 	{
-		reprojx += std::to_string(pt.x) + ", ";
-		reprojy += std::to_string(pt.y) + ", ";
+		reprojx += std::to_string(pt.x) + " ";
+		reprojy += std::to_string(pt.y) + " ";
 
 	}
-	reprojx += "];"; reprojy += "];";
+	reprojx += ""; reprojy += "";
     std::cout << reprojx << "\n" << reprojy << std::endl;
 
-	double avg = std::accumulate(reproj.begin(), reproj.end(), 0.0, [](double a, const cv::Point2f pt) { return a + cv::norm(pt);});
+	/*double avg = std::accumulate(reproj.begin(), reproj.end(), 0.0, [](double a, const cv::Point2f pt) { return a + cv::norm(pt);});
 	avg /= reproj.size();
 
     std::cout << avg << std::endl;*/
@@ -325,43 +325,6 @@ void CalibrationWizard::on_buttonUnfold_clicked()
 		this->isForward = false;
 		Transformation::getReverseWarpMaps(cone, remapXWarp, remapYWarp, projectionMatrix);
 		cv::remap(greyOriginal, showWarped, remapXWarp, remapYWarp, cv::INTER_CUBIC, cv::BORDER_CONSTANT, cv::Scalar(0,0,0));
-
-		/*double S = cone.S();
-		double s = cone.s();
-		double maxAngle = Misc::radToDeg(cone.maxAngle());
-		double scaleSlant = (1 / S) * Config::resSlantHeight;
-		S *= scaleSlant;
-		s *= scaleSlant;
-		int width = static_cast<int>(std::ceil(S));
-		int height = static_cast<int>(std::ceil(S + S*std::cos(Misc::degToRad(180 - maxAngle))));
-		cv::Point origin = cv::Point(width, Misc::round(std::ceil(height - S)));
-
-		std::vector<std::vector<cv::Point2f>> laterals = cone.calculateLateralSamples();
-		cv::cvtColor(showWarped, showWarped, CV_GRAY2BGR);
-		std::vector<std::vector<cv::Point3f>> worldCoords = cone.sampleCoordsWorld();
-		for(size_t i = 0; i < worldCoords.size(); i++)
-		{
-			for(size_t j = 0; j < worldCoords[i].size(); j++)
-			{
-				cv::Point2f currLateral = scaleSlant * laterals[i][j];
-				currLateral = currLateral + cv::Point2f(origin.x, origin.y);
-				cv::Point2f currProject = scaleSlant * cone.coneCoordinatesToLateral(worldCoords[i][j]);
-				currProject = currProject + cv::Point2f(origin.x, origin.y);
-
-
-				cv::circle(showWarped, currLateral, 4, cv::Scalar(0, 255, 0), -1);
-				//cv::circle(showWarped, currProject, 4, cv::Scalar(0, 0, 255), -1);
-			}
-		}*/
-
-
-		/*cv::Mat grey2 = cv::imread("../../../img/rasp/02-09_16-56-52.jpg", CV_LOAD_IMAGE_GRAYSCALE);
-		cv::Mat grey3;
-		cv::remap(grey2, grey3, remapXCam, remapYCam, cv::INTER_CUBIC);
-		cv::Mat grey4;
-		cv::remap(grey3, grey4, remapXWarp, remapYWarp, cv::INTER_CUBIC);
-		cv::imshow("chessboard", grey4);*/
-
 
 
 	}

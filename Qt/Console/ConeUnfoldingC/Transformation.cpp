@@ -235,7 +235,7 @@ void Transformation::inverseRemap(const cv::Mat& src, cv::Mat& dst, const cv::Ma
 
 
 
-//ONLY WORKS FOR n*m < 127
+//ONLY WORKS FOR 1 + n*m < 127
 //TODO BETTER SEED
 void Transformation::fillSegments(cv::Mat& img, const std::vector<Ellipse>& ellipses, const std::vector<Line>& lines, const std::vector<std::vector<cv::Point2f>>& pointsPerEllipse)
 {
