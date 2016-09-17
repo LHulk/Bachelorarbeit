@@ -179,7 +179,7 @@ Die robuste Ellipsendetektion ist der wichtigste Schritt bei der Entzerrung. Bei
 	\begin{subfigure}{.5\textwidth}
 		\centering
 		\includegraphics[width=.9\textwidth]{images/ransac50_1.png}
-		\caption{detekt. Ellipsen: RANSAC (grün), LSQ (cyan)}
+		\caption{geschätzte Ellipsen: RANSAC (grün), LSQ (cyan)}
 		\label{fig:uniformRansac2}
 	\end{subfigure}
 	\label{fig:uniformRansac}
@@ -192,19 +192,22 @@ Wir betrachten zunächst, wie sich eine Gleichverteilung von Ausreißern auf die
 	D = \frac{2\abs{A\cap B}}{\abs{A} + \abs{B}} \in [0, 1]
 \]
 
-für zwei Mengen $A$ und $B$ mit einem Wert von eins für eine perfekte Übereinstimmung $(A = B)$ und einem Wert von null, falls $A\cap B = \emptyset$. Wir betrachten hierbei die Ellipsen als Mengen, wobei die Punkte in einer Ellipse die Element der Menge sind. Die Anzahl der Iterationen für RANSAC kann in jedem Schritt berechnet werden mit Hilfe der Formel aus Kapitel \ref{s:ransac}.
+für zwei Mengen $A$ und $B$ mit einem Wert von eins für eine perfekte Übereinstimmung $(A = B)$ und einem Wert von null, falls $A\cap B = \emptyset$. Wir betrachten hierbei die Ellipsen als Mengen, wobei die Punkte in einer Ellipse die Element der Menge sind. Die Anzahl der Iterationen für RANSAC kann in jedem Schritt mit Hilfe der Formel aus Kapitel \ref{s:ransac} berechnet werden.
 
-In Abbildung \ref{fig:uniformEval} sieht man, dass der Dice-Koeffizient bei RANSAC konstant nahezu bei eins liegt. Das heißt, dass mittels RANSAC auch bei einem Fehleranteil von 60\% immer noch mit sehr großer Genauigkeit die Ellipse korrekt geschätzt wird. Bei der Methode der kleinsten Quadrate weicht die geschätzte Ellipse schon bei einem kleinen relativen Fehleranteil von 10\% stark von der korrekten Ellipse ab. 
+In Abbildung \ref{fig:uniformEval} sieht man, dass der Dice-Koeffizient bei RANSAC konstant nahezu bei eins liegt. Das heißt, dass mittels RANSAC auch bei einem Fehleranteil von 60\% immer noch mit sehr großer Genauigkeit die Ellipse korrekt geschätzt wird. Bei der Methode der kleinsten Quadrate weicht die geschätzte Ellipse jedoch schon bei einem kleinen relativen Fehleranteil von 10\% stark von der korrekten Ellipse ab. 
 
 
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[width=\textwidth]{images/ransacEval0.eps}
-	\caption{Vergleich von RANSAC und der Methode der kleisten Quadrate (LSQ) bei gleichverteilten Ausreißern}
+	\caption{Dice-Koeffizienten bei einer Schätzung mittels RANSAC und der Methode der kleinsten Quadrate (LSQ) bei gleichverteilten Ausreißern}
 	\label{fig:uniformEval}
 \end{figure}
 
 In unserem Verfahren ist eine Gleichverteilung der Ausreißer unwahrscheinlich. Viel wahrscheinlicher ist es, dass eine der nächst äußeren Ellipsen frühzeitig sichtbar wird (siehe Kapitel \ref{s:ellipseDetection}). 
+Dieser Fall ist in Abbildung \ref{fig:nonmUniformRansac} illustriert. Wir wollen nun untersuchen, wie stark solche Ellipsen das korrekte Ergebnis beeinflussen. Wir gehen dabei analog zum dem Verfahren zur Untersuchung von gleichverteilten Ausreißern vor. Ein Fehleranteil von 50\% bedeutet hier, dass auf der inneren Ellipse genauso viele Punkten sind, wie auf der äußeren. 
+
+In Abbildung \ref{fig:nonUniformEval} sieht man, dass bei der Schätzung mittels RANSAC die Dice-Koeffizienten bis circa 50\% nahezu bei eins liegt. Bei 50\% ist jedoch ein Sprung auf einen Wert von circa $0.6$. Dies liegt daran, dass ab 50\% auf der äußeren Ellipse mehr Punkte liegen, als auf der inneren. Es ist also wahrscheinlicher bei einer zufälligen Auswahl, Punkte der äußeren Ellipse zu erhalten. Die Koeffizienten der Schätzung mittels der Methode der kleinsten Quadrate verhalten sich ähnlich wie im Fall der gleichverteilten Ausreißer. Würde man den Ausreißeranteil weiter erhöhen, würde der Dice-Koeffizient hier gegen den gleichen Wert wie bei RANSAC konvergieren. Der Wert ist durch die Entfernung der äußeren Ellipse zur inneren Ellipse definiert. Erhöht man diesen, verringert sich erreichte Dice-Koeffizient. 
 
 \begin{figure}[!htb]
 	\begin{subfigure}{.5\textwidth}
@@ -216,27 +219,19 @@ In unserem Verfahren ist eine Gleichverteilung der Ausreißer unwahrscheinlich. 
 	\begin{subfigure}{.5\textwidth}
 		\centering
 		\includegraphics[width=.9\textwidth]{images/ransacShadow33_1.png}
-		\caption{detekt. Ellipsen: RANSAC (grün), LSQ (cyan)}
+		\caption{geschätzte Ellipsen: RANSAC (grün), LSQ (cyan)}
 		\label{fig:nonmUniformRansac2}
 	\end{subfigure}
-	\caption{Vergleich RANSAC und LSQ bei Schattenellipsen mit $p = 0.99$ und $\epsilon = 0.33$}
+	\caption{Vergleich RANSAC und LSQ bei bei Ausreißern auf einer äußeren Ellipse mit $p = 0.99$ und $\epsilon = 0.33$}
 	\label{fig:nonmUniformRansac}
 \end{figure}
 
 
 \begin{figure}[!htb]
-	\begin{subfigure}{.8\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{images/ransacEval0.eps}
-		\caption{gestörte Messdaten}
-	\end{subfigure}
-	\begin{subfigure}{.8\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{images/ransacEval1.eps}
-		\caption{detekt. Ellipsen: RANSAC (grün), LSQ (cyan)}
-	\end{subfigure}
-	\caption{Vergleich RANSAC und LSQ bei Schattenellipsen mit $p = 0.99$ und $\epsilon = 0.4$}
-	\label{fig:blubbs}
+	\centering
+	\includegraphics[width=\textwidth]{images/ransacEval1.eps}
+	\caption{Dice-Koeffizienten bei einer Schätzung mittels RANSAC und der Methode der kleinsten Quadrate (LSQ) bei Ausreißern auf einer äußeren Ellipse}
+	\label{fig:nonUniformEval}
 \end{figure}
 
 
