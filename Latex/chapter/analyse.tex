@@ -1,19 +1,18 @@
 %!TEX root = bachelor.tex
 \chapter{Analyse}
 \label{ch:analysis}
-\todo{analyse einleitung schreiben}
-In diesem Kapitel...
 
-Zunächst werden die beiden Verfahren zur Entzerrung gegenübergestellt\todo{ändern}. Anschließend untersuchen wir verschiedene Einflüsse auf der Qualität der Entzerrung, woraufhin wir die Laufzeit ermitteln. 
-Zum Schluss Ransac...
+Im folgenden Kapitel vergleichen wir beide, in Kapitel \ref{ch:method}, vorgestellten Verfahren zur Entzerrung. Anschließend gehen wir auf verschiedene Einflussfaktoren auf die Qualität und Präzision der Entzerrung ein, woraufhin wir die Laufzeiten analysieren. Im letzten Teil des Kapitels evaluieren wir beide Ansätze zur Ellipsendetektion.
 
-Die Laufzeitanalysen wurden auf einem Raspberry Pi 2 Model B durchgeführt mit folgenden Eigenschaften:
+
+Die Laufzeitanalysen wurden dabei auf einem \textbf{Raspberry Pi 2 Model B} mit folgenden Eigenschaften
 \begin{itemize}
-	\item 900MHz ARM Cortex-A7 CPU
+	\item 900MHz quad-core ARM Cortex-A7 CPU
 	\item 1GB RAM
 	\item GCC-4.9.2
 	\item Opencv 2.4.13
-\end{itemize}
+\end{itemize} %%
+durchgeführt.
 
 
 \section{Vergleich Vorwärtsentfaltung und Rückwärtsentfaltung}
@@ -149,11 +148,11 @@ Wie in Abbildung \ref{fig:influenceRes2} zu sehen, wächst die Laufzeit bei beid
 \end{figure}
 
 \section{Evaluierung der Ellipsendetektion mittels Deformable Templates}
-Das Problem bei der Ellipsendetektion mittels {Deformable Templates ist, dass die Energiefunktion, auch nach starker Glättung des Kanten- und Kantenrichtungsbilds, schnell in kleine lokale Minima läuft, obwohl ein wesentlicher stärkeres Minimum in näherer Umgebung wäre. 
+Das Problem bei der Ellipsendetektion mittels {Deformable Templates ist, dass die Energiefunktion, auch nach starker Glättung des Kanten- und Kantenrichtungsbilds, schnell in kleine lokale Minima läuft, obwohl ein wesentlich stärkeres Minimum in näherer Umgebung wäre. 
 
 In Abbildung \ref{fig:deformable} sieht man beispielhaft einen Auschnitt der Energiefunktion, wobei in diesem Fall zwecks Veranschaulichung nur die Haupt- und Nebenachse der Ellipse variable sind. Das Zentrum bleibt das Zentrum des Bildes und der Winkel $\theta$ ist konstant null. Trotz dieser Einschränkungen lässt sich gut erkennen, dass circa bei $a = b = 350$ ein starkes Minimum liegt. Es gibt jedoch neben diesem Minimum in näherer Umgebung kleine irrelevante Minima, wie beispielsweise in $(350, 260)$. Solche "`Becken"' (in rot markiert) erschweren die Detektion erheblich.
 
-Darüber hinaus muss für ein robustes und effizientes Optimierungsverfahren der Gradient und im besten Fall sogar die Hesse-Matrix der zu minimierenden Funktion zur Verfügung gestellt werden.  Jede Ableitung des Kanten- und Kantenorientierungsbilds bringt Unstetigkeitsstellen mit sich. Mit einer zu starke Glättung, geht jedoch viel Informationsverlust einher. Auch das korrekte Einstellen der Einflussparameter $\alpha,\beta$ und $\gamma$ (siehe Gleichung \ref{eq:deformTerms}) hat sich als große Herausforderung erwiesen. \todo{ist schon eher Fazit}.
+Darüber hinaus muss für ein robustes und effizientes Optimierungsverfahren der Gradient und im besten Fall sogar die Hesse-Matrix der zu minimierenden Funktion zur Verfügung gestellt werden.  Jede Ableitung des Kanten- und Kantenorientierungsbilds bringt Unstetigkeitsstellen mit sich. Mit einer zu starke Glättung, geht jedoch viel Informationsverlust einher. 
 
 
 \begin{figure}[!htb]
@@ -192,7 +191,8 @@ Wir betrachten zunächst, wie sich eine Gleichverteilung von Ausreißern auf die
 	D = \frac{2\abs{A\cap B}}{\abs{A} + \abs{B}} \in [0, 1]
 \]
 
-für zwei Mengen $A$ und $B$ mit einem Wert von eins für eine perfekte Übereinstimmung $(A = B)$ und einem Wert von null, falls $A\cap B = \emptyset$. Wir betrachten hierbei die Ellipsen als Mengen, wobei die Punkte in einer Ellipse die Element der Menge sind. Die Anzahl der Iterationen für RANSAC kann in jedem Schritt mit Hilfe der Formel aus Kapitel \ref{s:ransac} berechnet werden.
+für zwei Mengen $A$ und $B$ mit einem Wert von eins für eine perfekte Übereinstimmung $(A = B)$ und einem Wert von null, falls $A\cap B = \emptyset$. Wir betrachten hierbei die Flächen zweier Ellipsen beziehungsweise die Schnittfläche. Da die Berechnung der Schnittfläche zweier Ellipsen analytisch sehr komplex ist \cite{Eberly2008}, berechnen wir stattdessen jeweils die Menge der gemeinsamen Pixel zweier auf ein Bild gezeichneter Ellipsen. 
+Die Anzahl der Iterationen für RANSAC kann in jedem Schritt mit Hilfe der Formel aus Kapitel \ref{s:ransac} berechnet werden.
 
 In Abbildung \ref{fig:uniformEval} sieht man, dass der Dice-Koeffizient bei RANSAC konstant nahezu bei eins liegt. Das heißt, dass mittels RANSAC auch bei einem Fehleranteil von 60\% immer noch mit sehr großer Genauigkeit die Ellipse korrekt geschätzt wird. Bei der Methode der kleinsten Quadrate weicht die geschätzte Ellipse jedoch schon bei einem kleinen relativen Fehleranteil von 10\% stark von der korrekten Ellipse ab. 
 
