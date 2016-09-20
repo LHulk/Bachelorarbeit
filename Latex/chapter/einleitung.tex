@@ -1,6 +1,10 @@
 %!TEX root = ../bachelor.tex
 \chapter{Einleitung}
 \todo{einleitung schreiben}
+
+Drosophilae melanogaster, im Volksmund auch Fruchtfliege genannt, und ihre Larven sind schon seit Jahrzehnten ein wichtiges Untersuchunsobjekt der Biologie. Sie zeichnen sich aus durch einen schnellen Generationswechsel, eine hohe Nachkommenszahl, eine einfache Chromosomenstruktur und können darüber hinaus leicht gehalten und gezüchtet werden.
+
+
 \begin{itemize}
 	\item Ausgangssitatuion
 	\item Problemstellung
@@ -19,7 +23,12 @@
 	\item zwei verschiedene Verfahren werden vorgestellt?
 \end{itemize}
 
-Um die Larven möglichst stressfrei untersuchen zu können werden die Larven in ihrem Aufzuchtröhrchen beobachtet. 
+In den vergangenen Jahren wurden verschiedene Versuchsaufbauten zur Untersuchung des Bewegungsmusters von Drosphilae entwickelt. 
+Problematisch erwies sich, dass die Larven Stress ausgesetzt waren.
+
+Es wurde ein Aufbau entwickelt, in dem sich die Larven stressfrei entwickeln/leben können.
+
+Um die Larven möglichst stressfrei untersuchen zu können werden die Larven in ihrem Aufzuchtröhrchen beobachtet
 
 Der bisherige Untersuchungsaufbau ist in Abbildung \ref{fig:oldSetup} abgebildet. Die Larven befinden sich hierbei in einem Zylinder, der von insgesamt fünf Kameras beobachtet wird, die jeweils an einen Raspberry Pi angeschlossen sind. Die Kameras nehmen nun simultan ein Bild auf, wobei hier eine Synchronisation notwendig ist. Auf Grund der Krümmung des Zylinders, müssen diese nun entsprechend entzerrt werden. Anschließend werden die fünf entzerrten Bilder zu einem Gesamtbild zusammengefügt. 
 Um ein besseren Verhältnis zwischen der Anzahl der Kameras und Gehege zu erreichen, wäre eine Reduktion Kameraanzahl wünschenswert. 
@@ -27,6 +36,7 @@ Statt eines Zylinders benutzen wir nun einen Kegel, wie in Abbildung \ref{fig:ne
 
 oder wir stellen zwei vor
 Ziel dieser Arbeit ist die Entwicklung eines Verfahrens zur Entzerrung von Kegeloberflächen. 
+
 
 \begin{figure}[!htb]
 	\centering
