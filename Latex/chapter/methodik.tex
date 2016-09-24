@@ -1,11 +1,11 @@
 %!TEX root = bachelor.tex
 \chapter{Methodik}
 \label{ch:method}
-In diesem Kapitel stellen wir zwei Vorgehensweisen zur Entzerrung von Kegeloberflächen vor. 
+In diesem Kapitel stellen wir zwei Verfahren zur Entzerrung von Kegeloberflächen vor. 
 Zunächst gehen wir auf das verwendete Kalibrierungsmuster ein, worauf hin die einzelnen Schritte der Entzerrung erläutert werden. 
 
 Die geometrischen Eigenschaften des Kegelstumpfs $(r, R, \Delta H)$ können gemessen und somit als bekannt angenommen werden. 
-Darüber hinaus nehmen wir an, dass sich das Zentrum des kleineren Kreises im Weltkoordinatensystem an der Positon $(0,0,0)$ befindet (siehe Abbildung \ref{fig:coneFrustum} in Kapitel \ref{s:cone}). Durch diese Einschränkung gehen jegliche absolute Größenverhältnisse verloren. Die Larven können jedoch weiterhin relativ zu einander verglichen werden. 
+Darüber hinaus nehmen wir an, dass sich das Zentrum des Deckkreises an der Position $(0,0,0)$, sowie das Zentrum des Grundkreises an der Position $(0,\Delta H, 0)$ im Weltkoordinatensystem befindet (siehe Abbildung \ref{fig:coneFrustum} in Kapitel \ref{s:cone}). Durch diese Einschränkung gehen jegliche absolute Größenverhältnisse verloren. Die Larven können jedoch weiterhin relativ zu einander verglichen werden. 
 
 
 \section{Kalibrierungsmuster}
@@ -15,7 +15,7 @@ Um eine Beziehung zwischen Bildpunkten und Kegelpunkten herstellen zu können, i
 
 Die Wahl des Kalibrierungsmusters spielt dabei eine entscheidende Rolle bei der Robustheit und Präzision der Entfaltung. Es muss gewährleistet sein, dass die charakteristischen Merkmale des Musters auch bei leichten Abweichungen der Kamera vom Lot und schlechteren Beleuchtungssituationen zuverlässig erkannt werden. Das Muster muss darüber hinaus so entworfen sein, dass beim Zusammenlegen im Kegel, dessen geometrische Eigenschaften nicht verfälscht, sondern realitätsgetreu wiedergeben werden. 
 
-Wir haben uns für ein Muster entscheiden, dass in äquidistanten Abständen $\Delta R$, beginnend mit dem kleinen Radius $r$ des Kegelstumpfs (siehe Abbildung \ref{fig:coneFrustum}) Kreislinien und in gleichen Winkelabständen $\Delta \alpha$ auf der Seitenhöhe Liniensegmente besitzt. Das zusammengelegte Muster ist in Abbildung \ref{fig:calibrationPatternTop} skizziert, beziehungsweise das entfaltete in \ref{fig:calibrationPattern}. Die Anzahl der Kreislinien wird mit $n$ gekennzeichnet, die Anzahl sichtbarer Liniensegmente im Kegel mit $m$. Zu beachten ist, dass bedingt durch das Entfalten, in Abbildung \ref{fig:calibrationPattern}  ein Liniensegment doppelt zu sehen ist. Die schwarzen Kreise bezeichnen wir als Samples. 
+Wir haben uns für ein Muster entscheiden, dass in äquidistanten Abständen $\Delta R$, beginnend mit dem Radius $r$ des Deckkreises (siehe Abbildung \ref{fig:coneFrustum}) Kreislinien und in gleichen Winkelabständen $\Delta \alpha$ auf der Seitenhöhe Liniensegmente besitzt. Das zusammengelegte Muster ist in Abbildung \ref{fig:calibrationPatternTop} skizziert, beziehungsweise das entfaltete in \ref{fig:calibrationPattern}. Die Anzahl der Kreislinien wird mit $n$ gekennzeichnet, die Anzahl sichtbarer Liniensegmente im Kegel mit $m$. Zu beachten ist, dass bedingt durch das Entfalten, in Abbildung \ref{fig:calibrationPattern}  ein Liniensegment doppelt zu sehen ist. Die schwarzen Kreise bezeichnen wir als Samples. 
 
 Dadurch dass die Geometrie des Kegels bekannt ist, kann jedem Sample ein Punkt auf dem Kegel im Weltkoordinatensystem zugeordnet werden. Da ein Kegel beliebig um die $y$-Achse rotiert werden kann, ist diese Zuordnung zunächst nicht eindeutig. Dazu nehmen wir an, dass das Liniensegment mit dem kleinsten Winkel zur $x$-Achse mit dem Kegelwinkel $\theta = 0$ korrespondiert (siehe Gleichung \ref{eq:paramFrustum} in Kapitel \ref{s:cone}).
 
@@ -37,12 +37,12 @@ Dadurch dass die Geometrie des Kegels bekannt ist, kann jedem Sample ein Punkt a
 Zur Konstruktion des Musters benötigt man $\Delta S$ und $s$, die man aus der Geometrie des Kegels errechnen kann und außerdem den Öffnungswinkel, der gegeben ist als $\alpha = 2\pi\frac{R}{S}$ (siehe Gleichung \ref{eq:paramLateral} in Kapitel \ref{s:cone}).
 
 \subsection{Anzahl der Samples}
-Die Anzahl der Samples sollte groß genug sein, um möglichst viele geometrische Informationen des Kegels zu erhalten, aber klein genug, dass eine Detektion der Samples problemlos möglich ist. Insbesondere auf dem innersten Kreis, macht sich eine zu hohe Sampleanzahl negativ bemerkbar, da der Abstand zueinander sehr klein wird, was eine Detektion erschwert. Des Weiteren sollte noch ein möglichst großer Teil der Kreislinien zu sehen bleiben, da diese für die spätere Ellipsendetektion benötigt werden. 
+Die Anzahl der Samples sollte groß genug sein, um möglichst viele geometrische Informationen des Kegels zu erhalten, aber klein genug, dass eine Detektion der Samples problemlos möglich ist. Insbesondere auf dem innersten Kreis, macht sich eine zu hohe Sampleanzahl negativ bemerkbar, da der Abstand der Samples zueinander sehr klein wird, was eine Detektion erschwert. Des Weiteren sollte noch ein möglichst großer Teil der Kreislinien zu sehen bleiben, da diese für die spätere Ellipsendetektion benötigt werden. 
 
 
 \section{Intrinsische Kamerakalibrierung}
 \label{s:intrinsic}
-Bedingt durch die Wahl einer Weitwinkelkamera, sind die Bilder von einer starke tonnenförmige (nach außen gewölbte) Verzerrung geprägt.(siehe Abbildung \ref{fig:calib}). Diese muss herausgerechnet werden, da sonst Abstände im Bild nicht mehr der Realität entsprechen und dadurch die Präzision der Entfaltung stark abnimmt (siehe Kapitel \ref{ch:analysis}). Es wird also im ersten Schritt eine Kamerakalibrierung durchgeführt.
+Bedingt durch die Wahl einer Weitwinkelkamera, sind die Bilder von einer starken tonnenförmigen (nach außen gewölbte) Verzerrung geprägt, wie in Abbildung \ref{fig:calib} zu sehen. Diese muss herausgerechnet werden, da sonst Abstände im Bild nicht mehr der Realität entsprechen und dadurch die Präzision der Entfaltung stark abnimmt (siehe Kapitel \ref{ch:analysis}). Es wird also im ersten Schritt eine Kamerakalibrierung durchgeführt.
 
 
 \begin{figure}[!htb]
@@ -100,7 +100,7 @@ In Abbildung \ref{fig:blobDetect} ist beispielhaft links ein Grauwertbild und re
 \label{s:ellipseDetection}
 
 \subsection{RANSAC}
-Nachdem die Sample-Positionen bestimmt wurden, muss für jeden Sample entschieden werden, auf welcher der Kreislinien er liegt. Da die Kreise, bedingt durch perspektivische Verzerrung, zu Ellipsen werden, wird eine Verfahren 
+Nachdem die Sample-Positionen bestimmt wurden, muss für jeden Sample entschieden werden, auf welcher der Kreislinien es liegt. Da die Kreise, bedingt durch perspektivische Verzerrung, zu Ellipsen werden, wird eine Verfahren 
 benötigt, dass Ellipsen erkennt. 
 
 
@@ -127,7 +127,7 @@ Zunächst werden die Kanten mit Hilfe von Canny \cite{Canny1986} detektiert (sie
 Anschließend versuchen wir möglichst genau das Zentrum der innersten Ellipsen zu schätzen.
 Wir benutzen dafür Hough-Transformationen (siehe Kapitel \ref{s:hough}), um Linien im Kantenbild zu detektieren.
 Es werden anschließend die Schnittpunkte aller Liniensegmente bestimmt. Auf Grund der perspektivischen Verzerrung, schneiden sich die Liniensegmente nicht in einem Punkt.
-Darüber hinaus werden, auf Grund der Liniendicke auf dem Kalibrierungsmuster, durch Canny viele Linien als doppelte Linien gekennzeichnet\footnote{Stellt man sich ein relativ breites Liniensegment vor, so gibt es einmal den Übergang vom Hintergrund auf die Linie, sowie den Übergang von der Linie wieder auf den Hintergrund}. Auch ein inhomogener Hintergrund, erschwert die Ermittlung eines Mittelpunkts. Befinden sich Objekte im Hintergrund, werden durch die Kantendetektion auch deren Kanten ermittelt. Die Hough-Transformation detektiert nun auch außerhalb des Kalibrierungsmusters Linien. Die Schnittpunkte mit solchen Linien können beliebig stark von dem eigentlichen Mittelpunkt abweichen. Würde man an dieser Stelle beispielsweise den Mittelwert aller Schnittpunkte berechnen, könnten solche Ausreißer die Lokalisierung des Mittelpunkts erheblich verschlechtern. 
+Darüber hinaus werden, auf Grund der Liniendicke auf dem Kalibrierungsmuster, durch Canny viele Linien als doppelte Linien gekennzeichnet\footnote{Stellt man sich ein relativ breites Liniensegment vor, so gibt es einmal den Übergang vom Hintergrund auf die Linie, sowie den Übergang von der Linie wieder auf den Hintergrund}. Auch ein inhomogener Hintergrund, erschwert die Ermittlung eines Mittelpunkts. Befinden sich Objekte im Hintergrund, werden durch die Kantendetektion auch deren Kanten ermittelt. Die Hough-Transformation detektiert nun auch außerhalb des Kalibrierungsmusters Linien. Die Schnittpunkte mit solchen Linien können beliebig stark von dem eigentlichen Mittelpunkt abweichen. Würde man an dieser Stelle beispielsweise den Mittelwert aller Schnittpunkte (elementweise) berechnen, könnten solche Ausreißer die Lokalisierung des Mittelpunkts erheblich verschlechtern. 
 
 Um also möglichst robust einen Kandidaten auszuwählen, wird zuerst der Median der $x$-Koordinaten der Schnittpunkte und dann der Median der $y$-Koordinaten bestimmt. Die erhaltenen Koordinaten bilden den Schnittpunkt, wie in Abbildung \ref{fig:houghLines} beispielhaft zu sehen. 
 
