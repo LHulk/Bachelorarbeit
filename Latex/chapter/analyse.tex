@@ -191,7 +191,7 @@ Wir betrachten zunächst, wie sich eine Gleichverteilung von Ausreißern auf die
 	D = \frac{2\abs{A\cap B}}{\abs{A} + \abs{B}} \in [0, 1]
 \]
 
-für zwei Mengen $A$ und $B$ mit einem Wert von eins für eine perfekte Übereinstimmung $(A = B)$ und einem Wert von null, falls $A\cap B = \emptyset$. Wir betrachten hierbei die Flächen zweier Ellipsen beziehungsweise die Schnittfläche. Da die Berechnung der Schnittfläche zweier Ellipsen analytisch sehr komplex ist \cite{Eberly2008}, berechnen wir stattdessen jeweils die Menge der gemeinsamen Pixel zweier auf ein Bild gezeichneter Ellipsen. 
+für zwei Mengen $A$ und $B$ mit einem Wert von eins für eine perfekte Übereinstimmung $(A = B)$ und einem Wert von null, falls $A\cap B = \emptyset$. Wir betrachten hierbei die Flächen zweier Ellipsen beziehungsweise die Schnittfläche. Da die Berechnung der Schnittfläche zweier Ellipsen analytisch sehr aufwändig ist \cite{Eberly2008}, berechnen wir stattdessen jeweils die Menge der gemeinsamen Pixel zweier auf ein Bild gezeichneter Ellipsen. 
 Die Anzahl der Iterationen für RANSAC kann in jedem Schritt mit Hilfe der Formel aus Kapitel \ref{s:ransac} berechnet werden.
 
 In Abbildung \ref{fig:uniformEval} sieht man, dass der Dice-Koeffizient bei RANSAC konstant nahezu bei eins liegt. Das heißt, dass mittels RANSAC auch bei einem Fehleranteil von 60\% immer noch mit sehr großer Genauigkeit die Ellipse korrekt geschätzt wird. Bei der Methode der kleinsten Quadrate weicht die geschätzte Ellipse jedoch schon bei einem kleinen relativen Fehleranteil von 10\% stark von der korrekten Ellipse ab. 

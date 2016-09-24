@@ -13,10 +13,10 @@
 
 \begin{definition}[Kegel]
 	Ein Kegel ist ein geometrischer Körper, der durch eine beliebige Grundfläche, sowie einen Punkt definiert wird.
-	Ein Kegel mit Kreis als Grundfläche wird als Kreiskegel bezeichnet. Liegt die Kegelspitze auf einer Geraden durch die Normale der Grundebene, bezeichnen wir den Kegel als gerade.
+	Ein Kegel mit Kreis (auch Grundkreis genannt) als Grundfläche wird als Kreiskegel bezeichnet. Liegt die Kegelspitze auf einer Geraden durch die Normale der Grundebene, bezeichnen wir den Kegel als gerade.
 \end{definition}
 
-In der weiteren Arbeit betrachten wir nur gerade Kreiskegel. Ein Kegel mit Spitze $T(0,0,0)$, Radius $R$ und Höhe $H$ kann parametrisch beschrieben werden als:
+In der weiteren Arbeit betrachten wir nur gerade Kreiskegel. Ein Kegel mit Spitze $T(0,0,0)$, Radius $R$ und Höhe $H$, dessen Zentrum des Grundkreises in $(0,H,0)$ liegt, kann parametrisch beschrieben werden als:
 \begin{equation} \label{eq:paramCone}
 \begin{aligned}
 x &= \frac{u}{H} R~cos \theta \\
@@ -37,11 +37,10 @@ $S$ bezeichne hierbei die Seitenhöhe und sei definiert durch das rechtwinklige 
 
 
 
-
 \begin{definition}[Kegelstumpf und Ergänzungskegel]
-	Ein Kegelstumpf entsteht als Schnitt eines geraden Kreiskegels mit einer zur Grundfläche parallelen Ebene (siehe Abbildung \ref{fig:coneWithFrustum}). Der Kegel, der definiert ist durch die Schnittfläche und die Spitze des ursprünglichen Kegels bezeichnen wir als Ergänzungskegel. Die Differenz des eigentlichen Kegels und des Ergänzungskegels bezeichnen wir als Kegelstumpf. 
+	Ein Kegelstumpf entsteht als Schnitt eines geraden Kreiskegels mit einer zur Grundfläche parallelen Ebene (siehe Abbildung \ref{fig:coneWithFrustum}). Der Kegel, der definiert ist durch die Schnittfläche und die Spitze des ursprünglichen Kegels bezeichnen wir als Ergänzungskegel. Die Differenz des eigentlichen Kegels und des Ergänzungskegels bezeichnen wir als Kegelstumpf. Die Grundfläche des Kegelstumpfs wird als Grundkreis, die Schnittfläche als Deckkreis bezeichnet. 
 	
-	\noindent $H, R, S$ sind dabei weiterhin die Höhe, Radius und Seitenhöhe des gesamten Kegels. Hinzu kommen $h,r,s$ als Höhe, Radius und Seitenhöhe des Ergänzungskegels. Die Höhe, sowie die Seitenhöhe des Kegelstumpfs werden durch die Differenzen $\Delta S = S - s,~ \Delta H = H-h$ charakterisiert (siehe Abbildung \ref{fig:coneFrustum}).
+	\noindent $H, R, S$ sind dabei weiterhin die Höhe, Radius und Seitenhöhe des gesamten Kegels. Hinzu kommen $h,r,s$ als Höhe, Radius und Seitenhöhe des Ergänzungskegels. Die Höhe, sowie die Seitenhöhe des Kegelstumpfs werden durch die Differenzen $\Delta S = S - s,~ \Delta H = H-h$ charakterisiert (siehe Abbildung \ref{fig:coneFrustum}). 
 \end{definition}
 
 \begin{figure}[!htb]
@@ -58,7 +57,7 @@ $S$ bezeichne hierbei die Seitenhöhe und sei definiert durch das rechtwinklige 
 	\label{fig:coneFrustum}
 \end{figure}
 
-Wir definieren einen Kegelstumpf mit Zentrum $(0,0,0)$ des kleineren Kreises mit Radius $r$ durch folgende Parametrisierung: 
+Wir definieren einen Kegelstumpf mit Zentrum $(0,0,0)$ des Deckkreises und Zentrum $(0,\Delta H, 0)$ des Grundkreises durch folgende Parametrisierung: 
 \begin{equation} \label{eq:paramFrustum}
 \begin{aligned}
 x &= (r + \frac{u}{\Delta H} (R - r))~cos \theta \\
@@ -74,10 +73,10 @@ Die Mantefläche des Kegelstumpfes aus Abbildung \ref{fig:coneLateral} kann dann
 \begin{equation} \label{eq:paramLateral}
 \begin{aligned}
 x &= -(s + \frac{u}{\Delta H}(S-s)) ~sin \phi \\
-y &= (s + \frac{u}{\Delta H} (S-s)) ~cos \phi
+y &= ~~(s + \frac{u}{\Delta H} (S-s)) ~cos \phi
 \end{aligned}
 \end{equation}
-mit  $u\in [0, \Delta H]$ und $\phi \in [0, \alpha] \subseteq [0, 2\pi]$. 
+mit  $u\in [0, \Delta H]$ und $\phi \in [0, \alpha) \subseteq [0, 2\pi)$. 
 
 \begin{figure}[!htb]
 	\centering
@@ -105,13 +104,13 @@ Sei dazu ein Punkt $C(x,y,z)$ auf der Oberfläche des Kegelstumpfs gegeben. Gege
 C(x,y,z) = (r + \frac{u}{\Delta H} (R - r))~cos \theta, u, (r + \frac{u}{\Delta H} (R - r))~sin \theta
 \]  für ein $u\in [0, \Delta H]$ und $\theta \in [0, 2\pi)$. 
 
-Aus der $y$-Koordinate lässt sich direkt die Höhe $u$ ablesen und somit analog zur Gleichung \ref{eq:paramLateral} die zugehörige Seitenhöhe, also der Radius der Polarkoordinaten in der parametrischen Gleichung  der Mantelfläche bestimmen.  Wir definieren uns hierfür eine Hilfsfunktion 
+Aus der $y$-Koordinate lässt sich direkt die Höhe $u$ ablesen und somit analog zur Gleichung \ref{eq:paramLateral} die zugehörige Seitenhöhe bestimmen. Diese entspricht dem Radius in der parametrischen Gleichung  der Mantelfläche.  Wir definieren uns hierfür eine Hilfsfunktion 
 \begin{equation} \label{eq:help1}
 	\Sigma(y) := s + \frac{y}{\Delta H} (S-s)
 \end{equation}
 
 
-Da $R, r, \Delta H$  und nun auch die Höhe bekannt sind, können wir den Winkel $\theta$ im Kegelstumpf ausrechnen. Anschließend muss dieser noch mit  $\frac{R}{S}$ multipliziert werden um ihn auf $[0, \alpha]$ zu skalieren (siehe Gleichung \ref{eq:paramLateral}).  Wir wollen in der Gleichung \ref{eq:paramFrustum} nach $\cos\phi$, beziehungsweise nach $\sin\phi$ umstellen und anschließend nach $\phi$ auflösen. Wir teilen also zunächst beide Gleichungen durch $r + \frac{y}{\Delta h} (R - r)$. Zu beachten ist nun, dass wir nicht die Umkehrfunktionen $\text{acos}$ oder $\text{asin}$ benutzen können, da $\sin$ und $\cos$ in einer Periode $[0, 2\pi)$ nicht injektiv sind. Die Wertebereiche der Umkehrfunktionen sind also eingeschränkt und wir erhalten somit im Allgemeinen nicht den korrekten Winkel in $[0, 2\pi)$. Das gleiche Problem zeigt sich bei $\tan\phi = \frac{\sin\phi}{\cos\phi}$ und der Umkehrfunktion $\atano$. Um dieses Problem zu beheben muss man eine Fallunterscheidung durchführen und wir definieren die Funktion $\atant$
+Da $R, r, \Delta H$  und nun auch die Höhe bekannt sind, können wir den Winkel $\theta$ im Kegelstumpf ausrechnen. Anschließend muss dieser noch mit  $\frac{R}{S}$ multipliziert werden um ihn auf $[0, \alpha]$ zu skalieren (siehe Gleichung \ref{eq:paramLateral}).  Wir wollen in der Gleichung \ref{eq:paramFrustum} nach $\cos\phi$, beziehungsweise nach $\sin\phi$ umstellen und anschließend nach $\phi$ auflösen. Wir teilen also zunächst beide Gleichungen durch $r + \frac{y}{\Delta h} (R - r)$. Zu beachten ist nun, dass wir nicht die Umkehrfunktionen $\text{acos}$ oder $\text{asin}$ benutzen können, da $\sin$ und $\cos$ in einer Periode $[0, 2\pi)$ nicht injektiv sind. Die Wertebereiche der Umkehrfunktionen sind also eingeschränkt und wir erhalten somit im Allgemeinen nicht den erwünschten Winkel aus $[0, 2\pi)$. Das gleiche Problem zeigt sich bei $\tan\phi = \frac{\sin\phi}{\cos\phi}$ und der Umkehrfunktion $\atano$. Um dieses Problem zu beheben macht man eine Fallunterscheidung und definiert wie folgt die sogenannte $\atant$-Funktion
 \[
 \atant(y,x) = 	\begin{cases}
 					\atano \frac{y}{x} 					& \mbox{für } x > 0 \\ 
@@ -123,12 +122,13 @@ Da $R, r, \Delta H$  und nun auch die Höhe bekannt sind, können wir den Winkel
 				\end{cases}
 \]
 
-die den Winkel $\phi$ im richtigen Quadranten,also in $[0, 2\pi)$ bestimmt.
+die den Winkel $\phi$ im richtigen Quadranten, also in $[0, 2\pi)$ bestimmt.
 
-Wir definieren wieder eine Hilfsfunktion
+Aus diesen Erkenntnissen definieren wieder eine Hilfsfunktion
 \begin{equation} \label{eq:help2}
-\Phi(x,y,z) := \frac{R}{S} \atant\left(\frac{z}{r + \frac{y}{\Delta h} (R - r)}, \frac{x}{r + \frac{y}{\Delta H} (R - r)}\right).
+\Phi(x,y,z) := \frac{R}{S} \atant\left(\frac{z}{r + \frac{y}{\Delta h} (R - r)}, \frac{x}{r + \frac{y}{\Delta H} (R - r)}\right), 
 \end{equation}
+die den korrekten Winkel in Polarkoordinaten liefert und auf das Intervall $[0, \alpha)$ skaliert. 
 
 Mit den beiden Hilfsfunktionen \ref{eq:help1} und \ref{eq:help2}, sowie der Gleichung \ref{eq:paramLateral} ergibt sich insgesamt
 \begin{equation}\label{eq:coneToLateral}
@@ -139,8 +139,8 @@ x \\ y \\ z
 \end{pmatrix}  &\mapsto
 \begin{pmatrix}
 -\Sigma(y)\sin \Phi(x,y,z)\\
- \Sigma(y)\cos\Phi(x,y,z).
-\end{pmatrix}
+ ~~\Sigma(y)\cos\Phi(x,y,z)
+\end{pmatrix}.
 \end{aligned}
 \end{equation}
 
@@ -152,7 +152,7 @@ Sei ein Punkt $L(x,y)$ auf der Mantelfläche des Kegelstumpfs gegeben. Aus der p
 L(x,y) = (-(s + \frac{u}{\Delta H}(S-s)) ~sin \phi, (s + \frac{u}{\Delta H} (S-s)) ~cos \phi)
 \]
 
-für ein passendes $u\in [0, \Delta H]$ und $\phi \in [0, \alpha] \subseteq  [0, 2\pi]$.
+für ein passendes $u\in [0, \Delta H]$ und $\phi \in [0, \alpha) \subseteq  [0, 2\pi)$.
 
 Da $L(x,y)$ in Polarkoordinaten gegeben ist, lässt sich der Radius durch $\sqrt{x^2+y^2}$ bestimmen. Wir können den Winkel $\phi$ mit inverser Skalierung also analog zu oben durch folgende Hilfsfunktion bestimmen:
 
@@ -183,7 +183,11 @@ x \\ y
 
 \section{Lineares Ausgleichsproblem}
 \label{s:LSQ}
-Gegeben seien $m$ Messdaten $(x_1,y_1),\dotsc,(x_m,y_m)$, sowie eine lineare Funktion $\varphi(x) = \sum_{i = 1}^{n}c_i\varphi_i(x)$ in $x$ mit $c_1,\dotsc,c_n\in\mathbb{R}$, Funktionen $\varphi_1,\dotsc,\varphi_n$, $n\leq m$ und $n,m\in\mathbb{N}$. 
+Gegeben seien $m$ Messdaten $(x_1,y_1),\dotsc,(x_m,y_m)$, sowie eine lineare Funktion 
+\[
+\varphi(x) = \sum_{i = 1}^{n}c_i\varphi_i(x)
+\] %%
+in $x$ mit Skalaren $c_1,\dotsc,c_n\in\mathbb{R}$, Funktionen $\varphi_1,\dotsc,\varphi_n$, $n\leq m$ und $n,m\in\mathbb{N}$. 
 
 Gesucht ist eine Lösung welche die mittlere Abweichung
 
@@ -234,7 +238,7 @@ A^+ &= V\Sigma^+U^T
 mit orthogonalen Matrizen $U\in\mathbb{R}^{m\times m}$ und $V\in\mathbb{R}^{n\times n}$ und einer Diagonalmatrix $\Sigma\in\mathbb{R}^{m\times n}$ mit den absteigend sortierten Singulärwerten auf der Diagonale (aufgefüllt mit Nullen), sowie $\Sigma^+\in\mathbb{R}^{n\times m}$ mit den jeweiligen reziproken Singulärwerten.
 
 
-Die Lösung des Ausgleichsproblems kann also mittels SVD angeben werden als:
+Die Lösung des Ausgleichsproblems kann dann mittels SVD angeben werden als:
 \[
 c = V\Sigma^+U^Ty
 \]
@@ -258,7 +262,7 @@ Um die Parameter einer Kamera korrekt beschreiben zu können, ist ein Kameramode
 	\label{fig:pinhole}
 \end{figure}
 
-Das Bild das an der Rückseite der Kamera entsteht ist dabei um 180° gedreht. Damit man diese Rotation nicht betrachten muss, kann man die Bildebene virtuell vor die Lochblende setzen. Da sich der Abstand zur Blende somit nicht ändert, ändern sich auch die optischen Eigenschaften nicht.
+Das Bild das an der Rückseite der Kamera entsteht ist dabei um 180° gedreht. Damit man diese Rotation nicht betrachten muss, kann man die Bildebene virtuell vor die Lochblende setzen. Da sich der Abstand zur Blende nicht ändert, ändern sich auch die optischen Eigenschaften des Bildes nicht.
 
 Kamerakalibrierung wird benötigt, um eine Beziehung zwischen Punkten im dreidimensionalen Weltkoordinatensystem und den Punkten auf der zweidimensionalen Bildebene herstellen zu können. Konkret suchen wir eine projektive Abbildung
 
@@ -277,6 +281,9 @@ Kamerakalibrierung wird benötigt, um eine Beziehung zwischen Punkten im dreidim
 
 
 die einen Punkt $P=(x,y,z)$ in homogenen Koordinaten $\tilde P = (x,y,z,1)$ auf einen Punkt $\tilde C = (wu,wv, w)$ beziehungsweise nach der perspektivischen Division $C = (u,v)$ auf die Bildebene abbildet, wobei die $a_{ij}$ von den intrinsischen und extrinsischen Parametern der Kamera abhängen \cite{Heikkila1997}.
+
+Als intrinsische Parameter einer Kamera, bezeichnen wir die optischen Eigenschaften, sowie die interne Kamerageometrie. Hierzu zählen beispielsweise Linsenverzerrungen, sowie die Brennweite. 
+Extrinsische Parameter beschreiben die dreidimensionale Position und Orientierung der Bildebene relativ zu einem Weltkoordinatensystem  \cite{Tsai1987}.
 
 %Man kann leicht zeigen, dass für $A$ gilt
 %\[
@@ -314,12 +321,12 @@ die einen Punkt $P=(x,y,z)$ in homogenen Koordinaten $\tilde P = (x,y,z,1)$ auf 
 Man kann die Matrix $A$ mit gegebene Punktkorrespondenzen bestimmen. Wir benötigen dafür Punkte $(x_k,y_k, z_k), k = 1,\dotsc,m$ im Weltkoordinatensystem und die korrespondierenden Punkte $(u_k, v_k)$ auf der Bildebene.
 Wir stellen zunächst das Gleichungssystems \ref{eq:projectionMat} nach $u$ und $v$ um:
  
- \begin{equation*}
+\[
  \begin{aligned}
  u_k &= \frac{a_{11} x_k +a_{12}y_k + a_{13}z_k + a_{14}}{a_{31} x_k +a_{32}y_k + a_{33}z_k + a_{34}} \\
  v_k &= \frac{a_{21} x_k +a_{22}y_k + a_{23}z_k + a_{24}}{a_{31} x_k +a_{32}y_k + a_{33}z_k + a_{34}}.
  \end{aligned}
- \end{equation*}
+\]
  
 Wir wollen nun die $a_{ij}$ als Unbekannte betrachten und formulieren das Gleichungssystem noch einmal um zu:
  
@@ -340,12 +347,13 @@ u_1 \\ v_1 \\ \vdots \\ u_m \\ v_m
 \end{pmatrix},
 \end{equation}
 
-wobei $a_{34}$ auf eins skaliert wird. Dies ist erlaubt, da wir in homogenen Koordinaten rechnen und dies durch die perspektivischen Division kompensiert wird.  Es handelt sich hierbei für $m \geq 6$ um ein überbestimmtes lineares Gleichungssystem, was mittels der Methode der kleinsten Quadrate (siehe Kapitel \ref{s:LSQ}) und durch eine Singulärwertzerlegung gelöst werden kann. 
-Diese Verfahren wird auch als \textit{Direct Linear Transformation} (DLT) bezeichnet.
+wobei $a_{34}$ auf eins skaliert werden darf, da wir in homogenen Koordinaten rechnen. Es handelt sich hierbei für $m \geq 6$ um ein überbestimmtes lineares Gleichungssystem, was mittels der Methode der kleinsten Quadrate (siehe Kapitel \ref{s:LSQ}) und durch eine Singulärwertzerlegung gelöst werden kann. 
+Diese Verfahren wird auch als Direct Linear Transformation (DLT) bezeichnet.
  
 Das beschriebene Verfahren vernachlässigt dabei Linsenverzerrungen. Solche Verzerrungen entstehen entweder als Produktionsfehler günstiger Linsen, oder werden durch spezielle Linsen, wie bei Weitwinkelkameras, begünstigt.  Verzerrungen können in der Regel nicht linear modelliert werden. Der Ansatz über DLT funktioniert hier dementsprechend nicht. 
 
-Es wird grundsätzlich zwischen zwei Typen von Verzerrungen unterschieden: radiale Verzerrung und tangentiale Verzerrung. Radialen Verzerrung entsteht durch eine Skalierung des Abstand eines Bildpunktes zum Fokus. Wird der Abstand vergrößert spricht man von einer tonnenförmigen Verzerrung (siehe Abbildung \ref{fig:barrel}), wird er verkleinert von einer kissenförmigen Verzerrung (siehe Abbildung \ref{fig:cushion}).
+Es wird grundsätzlich zwischen zwei Typen von Verzerrungen unterschieden: radiale Verzerrung und tangentiale Verzerrung. 
+Radiale Verzerrung entsteht durch eine Skalierung des Abstand eines Bildpunktes zum Fokus. Wird der Abstand vergrößert spricht man von einer tonnenförmigen Verzerrung (siehe Abbildung \ref{fig:barrel}), wird er verkleinert von einer kissenförmigen Verzerrung (siehe Abbildung \ref{fig:cushion}).
 Radiale Verzerrung kann wie folgt modelliert werden:
 
 \[
@@ -366,7 +374,7 @@ Sie kann modelliert werden durch:
 \end{aligned}
 \]
 
-wobei $(x,y)$ wieder ein verzerrter Bildpunkt, $(\hat{x}^{(t)}, \hat{y}^{(t)})$ der entzerrte Punkt und$p_1$ und $p_2$ die Koeffizienten der tangentialen Verzerrung sind \cite{Heikkila1997}.
+wobei $(x,y)$ wieder ein verzerrter Bildpunkt, $(\hat{x}^{(t)}, \hat{y}^{(t)})$ der entzerrte Punkt und $p_1$ und $p_2$ die Koeffizienten der tangentialen Verzerrung sind \cite{Heikkila1997}.
 
 \begin{figure}[!htb]
 	\centering
@@ -400,7 +408,7 @@ wobei $(x,y)$ wieder ein verzerrter Bildpunkt, $(\hat{x}^{(t)}, \hat{y}^{(t)})$ 
 	Ein Blob ist eine glatte zusammenhängende Region in einem Bild, die sich farblich von ihrer Umgebung abhebt \cite{Lindeberg1993}.
 \end{definition}
 
-Ein Blob-Detektor ist also ein Verfahren zum Detektieren solcher Blobs. Die gefunden Blobs können anschließend nach verschiedenen Kriterien, wie beispielsweise Größe, Farbe, Konvexität oder Rundheit gefiltert werden. 
+Ein Blob-Detektor ist also ein Verfahren zum Detektieren solcher Blobs. Die gefundenen Blobs können anschließend nach verschiedenen Kriterien, wie beispielsweise Größe, Farbe, Konvexität oder Rundheit gefiltert werden. 
 
 %\section{Canny}
 %\label{s:canny}
@@ -422,7 +430,7 @@ wobei $\phi \in [0,2\pi)$ der Winkel der Geraden mit der $x$-Achse und $d \geq 0
 
 Eine Gerade wird somit als ein Punkt $(d,\phi)$ in den Parameterraum (auch Hough-Raum) abgebildet. 
 
-Um eine Gerade eindeutig zu definieren benötigt man, wie auch bei der klassischen Defintionen $y = mx + b$, zwei Punkte. Nimmt man nur einen, so lässt sich jedoch die Auswahl von $\phi$ und $d$ einschränken. Hat man beispielsweise einen Punkt $(x_k,y_k)$ gegeben so lässt sich die Gleichung \ref{eq:HoughLines} nach $d$ umstellen und man erhält eine sinusförmige Funktion in Abhängigkeit von $\phi$. 
+Um eine Gerade eindeutig zu definieren benötigt man, wie auch bei der klassischen Defintionen $y = mx + b$, zwei Punkte. Beschränkt man sich auf einen Punkt, so lässt sich jedoch die Auswahl von $\phi$ und $d$ einschränken. Hat man beispielsweise einen Punkt $(x_k,y_k)$ gegeben so lässt sich die Gleichung \ref{eq:HoughLines} nach $d$ umstellen und man erhält eine sinusförmige Funktion in Abhängigkeit von $\phi$. 
 
 Um nun beliebige Geraden detektieren zu können, werden $\phi$ und $d$ zunächst passend diskretisiert:
 \[
@@ -459,18 +467,18 @@ Die Werte im Akkumulator werden oft auch als Votes bezeichnet. Am Ende des Verfa
 
 \section{RANSAC}
 \label{s:ransac}
-\textit{Random Sample Consensus} (RANSAC) \cite{Fischler1981} ist ein nicht-deterministisches robustes Verfahren zur Parameterschätzung eines Modells bei einer, möglicherweise durch starke Ausreißer, gestörten Messreihe. 
-Im Gegensatz zu Verfahren, wie der Methode der kleinsten Quadrate, die versuchen eine optimale Lösung für alle Messdaten zu bestimmen, nutzt RANSAC nur eine Teilmenge der Messreihe. 
+Random Sample Consensus (RANSAC) \cite{Fischler1981} ist ein nicht-deterministisches robustes Verfahren zur Parameterschätzung eines Modells bei einer, möglicherweise durch starke Ausreißer, gestörten Messreihe. 
+Im Gegensatz zu Verfahren, wie der Methode der kleinsten Quadrate, die versuchen eine optimale Lösung für alle Messdaten zu bestimmen, werden bei RANSAC nur eine Teilmenge der Messreihe genutzt. 
 
 Wir wählen aus der Menge der Messdaten wiederholt zufällig die minimale Anzahl Messdaten aus, die nötig sind um das Modell eindeutig zu beschreiben und prüfen dann, wie gut das geschätzte Modell die restlichen Messdaten beschreibt. 
 Die Güte des Modells wird im Allgemeinen durch ein Distanzmaß, wie zum Beispiel der euklidische Abstand, berechnet. 
 Hat ein Messdatum eine vorher definierte Maximaldistanz zum geschätzten Modell nicht überschritten, wird es ins sogenannte Consensus Set des Modells aufgenommen. 
 Das Modell mit dem größten Consensus Set wird schließlich ausgewählt. 
 
-Die Anzahl der Iterationen, die mindestens notwendig sind, um mit einer Wahrscheinlichkeit von $p \in [0,1)$, bei einem relativen Ausreißeranteil von $\epsilon \in[0,1)$ und einer Anzahl von $k$ Daten, um das Modell eindeutig zu beschreiben, mindestens einmal eine ausreißerfreie Teilmenge der Messreihe zu erhalten, lässt sich berechnen mit \cite{Fischler1981}:
+Die Anzahl der Iterationen, die mindestens notwendig sind, um mit einer Wahrscheinlichkeit von $p \in [0,1)$, bei einem relativen Ausreißeranteil von $\epsilon \in[0,1)$ und einer Anzahl von $k$ Daten, um das Modell eindeutig zu beschreiben, mindestens einmal eine ausreißerfreie Teilmenge der Messreihe zu erhalten, lässt sich berechnen mit \cite{Fischler1981}
 
 \begin{equation}
-n_{min} = \frac{\log{\left(1-p\right)}}{\log{\left(1-\left(1-\epsilon\right)^k\right)}}
+n_{min} = \frac{\log{\left(1-p\right)}}{\log{\left(1-\left(1-\epsilon\right)^k\right)}}.
 \end{equation}
 
 
@@ -506,12 +514,12 @@ beschrieben werden.
 	\label{fig:ellipse}
 \end{figure}
 
-Befindet sich die Ellipse nicht im Ursprung so muss eine Verschiebung beziehungsweise bei einer Rotation ein Drehwinkel (siehe Abbildung \ref{fig:ellipse}) ergänzt werden. 
+Befindet sich die Ellipse nicht im Ursprung so muss eine Verschiebung beziehungsweise bei einer Rotation ein Drehwinkel (siehe Abbildung \ref{fig:ellipse}) ergänzt werden. Es gilt
 
 \begin{equation} \label{eq:ellipseNoRotTrans}
 \frac{\left(x-x_0\right)^2}{a^2} + \frac{\left(y-y_0\right)^2}{b^2} = 1
 \end{equation} 
-
+beziehungsweise
 \begin{equation} \label{eq:ellipseRotTrans}
 \frac{((x - x_0)\cos\theta + (y - y_0)\sin\theta)^2}{a^2} + \frac{((x - x_0)\sin\theta - (y - y_0)\cos\theta)^2}{b^2} = 1
 \end{equation} 
@@ -532,21 +540,23 @@ mit $a,b,c,d,e,f \in \mathbb{R}$. Eine Ellipse lässt sich also durch sechs Punk
 
 
 Die beiden Formen \ref{eq:ellipseRotTrans} und \ref{eq:ellipseQuadratic} sind äquivalent, falls die Ellipse nicht degeneriert ist (ohne Beweis) \cite{Lawrence1972}. Die Umformung von \ref{eq:ellipseRotTrans} nach \ref{eq:ellipseQuadratic} ist mit Hilfe einer Hauptachsentransformation möglich. 
-Da wir diese später brauchen, wird sie hier einmal exemplarisch vorgeführt. 
+Da wir diese später brauchen, wird sie hier exemplarisch vorgeführt. 
 
 Zunächst einmal fällt auf, dass der gemischte Term $cxy$ genau dann null ist, wenn die Ellipse nicht rotiert wurde. Im ersten Schritt versuchen wir also die Rotation der Ellipse rückgängig zu machen, um den Rotationswinkel bestimmen zu können.
 
 Die Gleichung \ref{eq:ellipseQuadratic} kann umgeformt werden zu:
-\begin{equation*}
+\[
 \begin{aligned}
-\underbrace{\begin{pmatrix}x & y\end{pmatrix}}_{=:u^T}\underbrace{\begin{pmatrix}a & \frac{c}{2} \\ \frac{c}{2} & b\end{pmatrix}}_{=: M}\underbrace{\begin{pmatrix}x \\ y\end{pmatrix}}_{=u} +\begin{pmatrix}d & e\end{pmatrix}\underbrace{\begin{pmatrix}x \\ y\end{pmatrix}}_{=u}+ f = 0 \\
-\Leftrightarrow u^TMu +\begin{pmatrix}d & e\end{pmatrix}u + f = 0 \\
+&ax^2 + \frac{c}{2}xy + \frac{c}{2}yx + by^2 + dx + ey + f = 0 \\
+\Leftrightarrow\quad &\begin{pmatrix}ax +  \frac{c}{2}y & \frac{c}{2}x + by\end{pmatrix}\begin{pmatrix}x \\ y\end{pmatrix} +  dx + ey + f = 0\\
+\Leftrightarrow\quad &\underbrace{\begin{pmatrix}x & y\end{pmatrix}}_{=:u^T}\underbrace{\begin{pmatrix}a & \frac{c}{2} \\ \frac{c}{2} & b\end{pmatrix}}_{=: M}\underbrace{\begin{pmatrix}x \\ y\end{pmatrix}}_{=u} +\begin{pmatrix}d & e\end{pmatrix}\underbrace{\begin{pmatrix}x \\ y\end{pmatrix}}_{=u}+ f = 0 \\
+\Leftrightarrow\quad &u^TMu +\begin{pmatrix}d & e\end{pmatrix}u + f = 0 \\
 \end{aligned}
-\end{equation*} 
+\]
 Der gemischte Term wird alleine durch $M = \begin{pmatrix}a & \frac{c}{2} \\ \frac{c}{2} & b\end{pmatrix}$ bestimmt. Die Matrix $M$ ist invertierbar, denn
 \[
 \det M = ab - \dfrac{c^2}{4}
-\] ist nur dann gleich null, wenn $c^2 - 4ab = 0$, was ein Widerspruch zur Annahme in Gleichung \ref{eq:ellipseQuadratic} ist. $M$ hat somit eine von null verschiedene Determinante und somit vollen Rang, hat also zwei von null verschiedene Eigenwerte \cite[S. 199]{Bosch2006}. Insbesondere gibt es also zwei Eigenvektoren von $M$, die zueinander orthogonal sind \cite[S. 198]{Bosch2006}.
+\] ist nur dann gleich null, wenn $c^2 - 4ab = 0$, was ein Widerspruch zur Annahme in Gleichung \ref{eq:ellipseQuadratic} ist. $M$ hat somit eine von null verschiedene Determinante und somit vollen Rang, hat also zwei von null verschiedene Eigenwerte \cite[S. 199]{Bosch2006}. Insbesondere gibt es also zwei Eigenvektoren von $M$, die zueinander orthogonal sind, da Eigenvektoren zu verschiedenen Eigenwerten orthogonal zueinander sind.\cite[S. 198]{Bosch2006}.
 
 Da die Matrix $M$ außerdem symmetrisch ist, ist sie orthogonal diagonalisierbar \cite[S. 278]{Bosch2006}.
 
@@ -573,7 +583,7 @@ R = \begin{pmatrix}\cos\theta & -\sin\theta \\ \sin\theta & \cos\theta\end{pmatr
 \end{aligned}
 \end{equation}
 
-Es gilt offenbar $S = R$ für ein geeignetes $\theta$, da die Eigenvektoren normiert und orthogonal zueinander sind. $\theta$ kann also einfach ausgerechnet werden, denn es gilt:
+Es gilt offenbar $S = R$ für ein geeignetes $\theta$, da die Eigenvektoren normiert und orthogonal zueinander sind $\theta$ kann also einfach ausgerechnet werden, denn es gilt:
 
 \begin{equation*}
 \theta = \atant(\sin\theta, \cos\theta) = \atant(S_{2,1}, S_{1,1})
@@ -596,11 +606,10 @@ da $\lambda_1, \lambda_2 \neq 0$.
 
 Vergleichen wir diese Gleichung mit Gleichung \ref{eq:ellipseNoRotTrans}, so können wir das Zentrum der transformierten Ellipse $(x'_0, y'_0)$ aus Gleichung \ref{eq:ellipseCenter} einfach ablesen. Um das Zentrum der eigentlichen Ellipse zu bestimmen, müssen wir mit der inversen Rotation $S^T$ multiplizieren:
 \[
-(x_0, y_0)^T = S^T(x'_0, y'_0)^T
+\begin{pmatrix} x_0 \\ y_0 \end{pmatrix} = S^T \begin{pmatrix} x'_0 \\ y'_0 \end{pmatrix}
 \]
 
 Die Gleichung \ref{eq:ellipseCenter} lässt sich anschließend weiter vereinfachen: 
-
 
 \begin{equation} \label{eq:PCAKoeff}
 \begin{aligned}
@@ -609,7 +618,7 @@ Die Gleichung \ref{eq:ellipseCenter} lässt sich anschließend weiter vereinfach
 \end{aligned}
 \end{equation}
 
-wobei $\sigma \neq 0$, wenn die Ellipse nicht zum Punkt entartet ist (folgt aus dem Determinantenkriterium \cite{Lawrence1972}). Vergleichen wir nun die beiden Gleichungen \ref{eq:PCAKoeff}, sowie \ref{eq:ellipseNoRotTrans}, so können folgende Beziehung herleiten: 
+wobei $\sigma \neq 0$, wenn die Ellipse nicht zum Punkt entartet ist (folgt aus dem Determinantenkriterium \cite{Lawrence1972}). Vergleichen wir nun die beiden Gleichungen \ref{eq:PCAKoeff}, sowie \ref{eq:ellipseNoRotTrans}, so können wir folgende Beziehung herleiten: 
 
 \begin{equation}
 \begin{aligned}
@@ -618,15 +627,17 @@ wobei $\sigma \neq 0$, wenn die Ellipse nicht zum Punkt entartet ist (folgt aus 
 \end{aligned}
 \end{equation}
 
-Wir dürfen hierbei die Wurzel ziehen, da $\frac{\sigma}{\lambda_i} > 0$ für nicht entartete reele\footnote{Man kann Ellipsen auch mit imaginären Achsen definieren \cite{Lawrence1972}.}  Ellipsen (folgt aus dem Determinantenkriterium \cite{Lawrence1972}). Da die Transformation in das Koordinatensystem der Ellipse nur Rotationen enthielt,  bleiben die Längen der Hauptachsen erhalten. Es gilt wie erwartet $a \geq b$, da $\lambda_1 \leq \lambda_2$. 
+Wir dürfen hierbei die Wurzel ziehen, da $\frac{\sigma}{\lambda_i} > 0$ für nicht entartete reele\footnote{Man kann Ellipsen auch mit imaginären Achsen definieren \cite{Lawrence1972}.}  Ellipsen (folgt aus dem Determinantenkriterium \cite{Lawrence1972}) gilt. Da die Transformation in das Koordinatensystem der Ellipse nur Rotationen enthält,  bleiben die Längen der Hauptachsen erhalten. Es gilt wie erwartet $a \geq b$, da $\lambda_1 \leq \lambda_2$. 
 
 
 \subsection{Abstand: Punkt zu Ellipse}
 \label{sc:distPointEllipse}
 Das hier beschriebene Verfahren zur Bestimmung der kürzesten euklidischen Distanz eines Punktes zu einer Ellipse stammt aus der Arbeit von David Eberly \cite{Eberly2013}.
-Wir betrachten nur Ellipsen im Ursprung, die achsenausgerichtet sind und darüber hinaus nur Punkte im ersten Quadranten. Ansonsten wir die Ellipse in den Ursprung verschoben und um ihren entgegengesetzten Drehwinkel rotiert. Da die Ellipse dann bezüglich der $x$- und $y$- Achse symmetrisch ist, kann der Punkt einfach durch Spiegelung in den richtigen Quadranten transformiert werden. Der Abstand ändert sich dadurch nicht. 
+Wir betrachten nur Ellipsen im Ursprung, die achsenausgerichtet sind und darüber hinaus nur Punkte im ersten Quadranten. Ansonsten wir die Ellipse in den Ursprung verschoben und um ihren entgegengesetzten Drehwinkel rotiert. 
+Der untersuchte Punkt wird anschließende analog zur Ellipse transformiert. 
+Da die Ellipse dann bezüglich der $x$- und $y$- Achse symmetrisch ist, kann der Punkt einfach durch Spiegelung in den richtigen Quadranten verschoben werden. Der Abstand zur Ellipse ändert sich dadurch nicht. 
 
-Wir bezeichnen von nun an $Q = (y_0, y_1)$ als eine Punkt, dessen Distanz zur Ellipse wir berechnen wollen und $E = (x_0, x_1)$ als denjenigen eindeutigen Punkt, welcher auf der Ellipse liegt und die kürzeste euklidische Distanz zum Punkt $Q$ hat. 
+Wir bezeichnen von nun an $Q = (y_0, y_1)$ als einen Punkt, dessen Distanz zur Ellipse wir berechnen wollen und $E = (x_0, x_1)$ als denjenigen eindeutigen Punkt, welcher auf der Ellipse liegt und die kürzeste euklidische Distanz zum Punkt $Q$ hat. 
 
 Aufgrund dieser Forderungen können wir ohne Beschränkung der Allgemeinheit folgende Aussagen treffen:
 \begin{itemize}
@@ -642,9 +653,9 @@ Für die quadrierte Distanz von einem beliebigen Punkt $Q$ zu einem Punkt $\math
 	F(\theta) = \abs{\mathcal{E}(\theta) - Q}^2.
 \end{equation}
 
-Wir wollen $F$ minimieren und betrachten die Ableitung:
+Wir wollen $F$ minimieren und betrachten daher die Ableitung
 \begin{equation}\label{eq:perp}
-F'(\theta) = 2\left(\mathcal{E}(\theta) - Q\right) \cdot \mathcal{E}'(\theta)
+F'(\theta) = 2\left(\mathcal{E}(\theta) - Q\right) \cdot \mathcal{E}'(\theta).
 \end{equation}
 
 $F'$ wird null, wenn $\left(\mathcal{E}(\theta) - Q\right)$ und $ \mathcal{E}'(\theta)$ zu einander orthogonal sind. Daraus folgt, dass der Vektor von $Q$ zu $E$ senkrecht zur Ellipse stehen muss (siehe Abbildung \ref{fig:ellipseDist}). 
@@ -692,15 +703,19 @@ Man macht nun eine Fallunterscheidung:
 	
 	Wenn $x_1 = 0$ gilt, muss $x_0 = a$ gelten, damit $E(x_0,x_1)$ auf der Ellipse ist. Es  gilt analog zum ersten Fall $E=(a,0)$ mit $d = \abs{y_0 - a}$ 
 	
-	Gilt $x_1 \neq 0$, so können wir in der zweiten Gleichung durch $x_1$ teilen und es folgt $t = -b^2$ und somit $y_0 = x_0\left(1 - \frac{b^2}{a^2}\right)$. Auf Grund der Krümmung der Ellipse gilt außerdem $x_0 < a$ und somit ergibt sich zusammen mit \ref{eq:ellipseDistX} die Ungleichung:
-	\begin{equation*}
+	Gilt $x_1 \neq 0$, so können wir in der zweiten Gleichung durch $x_1$ teilen und es folgt $t = -b^2$ und somit $y_0 = x_0\left(1 - \frac{b^2}{a^2}\right)$. Der Punkt $E(x_0,x_1)$ liegt außerdem oberhalb von $(a,0)$ und es gilt deshalb, auf Grund der Krümmung der Ellipse, $x_0 < a$.
+	
+	und somit ergibt sich zusammen mit \ref{eq:ellipseDistX} die Ungleichung:
+	\[
 	\begin{aligned}
 		&x_0 = \frac{a^2y_0}{a^2 - b^2} < a \\
 		\Leftrightarrow\quad &y_0 < \frac{a^2 - b^2}{a} < a
 	\end{aligned}
-	\end{equation*}
+	\]
+	
+	Das bedeutet, dass sich der Punkt $Q(y_0,y_1)$ in der Ellipse befindet. 
 		
-	Für Punkte $Q(y_0,0)$ mit $y_0 \geq \frac{a^2 - b^2}{a}$, ist der kürzeste Punkt also wieder $E(a,0)$
+	Für Punkte $Q(y_0,0)$ mit $y_0 \geq \frac{a^2 - b^2}{a}$ muss dementsprechend $x_1 = 0$ gelten und der kürzeste Punkt ist wieder $E(a,0)$.
 	
 	Für Punkte $Q(y_0,0)$ mit $y_0 < \frac{a^2 - b^2}{a}$, muss für $E(x_0,x_1)$ nach Umstellen der Ellipsengleichung \ref{eq:distEqParam}\quad$x_1 = b\cdot\sqrt{1-\left(\frac{x_0}{a}\right)}$ gelten. 
 	Die Distanz beträgt dann:
@@ -715,7 +730,7 @@ Man macht nun eine Fallunterscheidung:
 	\Leftrightarrow\quad& -1\cdot a^2 < t.
 	\end{aligned}
 \]
-	Analog ergibt sich mit $y_1\colon -b^2 < t$. Da $a\geq b$ gilt, reicht es, sich nur die zweite Ungleichung anzuschauen, da sie die erste impliziert. Setzt man nun Gleichung \ref{eq:ellipseDistX} in Gleichung \ref{eq:ellipseDistEq} ein, erhält man:
+	Analog ergibt sich mit $y_1\colon -b^2 < t$. Da $a\geq b$ gilt, reicht es nur die zweite Ungleichung zu betrachten, da sie die erste impliziert. Setzt man nun Gleichung \ref{eq:ellipseDistX} in Gleichung \ref{eq:ellipseDistEq} ein, erhält man:
 	
 \[
 	\begin{aligned}
@@ -734,7 +749,7 @@ Man macht nun eine Fallunterscheidung:
 
 \section{Analytical Deformable Templates}
 \label{s:anaDef}
-\textit{Analytical Deformable Templates} ist ein Verfahren zur Detektion von analytischen Kurven. 
+Analytical Deformable Templates ist ein Verfahren zur Detektion von analytischen Kurven. 
 Ein Template ist dabei definiert durch eine Menge von Parametern, die a priori Wissen über die erwartete Form ermöglichen. 
 Als Beispiel sei eine  Ellipse genannt, die durch ihr Zentrum, ihren beiden Achsen und den Drehwinkel $(x_0,y_0,a,b,\phi)$ definiert ist.
 Es wird dann eine Energiefunktion konstruiert, dessen Terme eine Anziehung des Templates an Hauptmerkmale (wie Kantenstärke, Kantenorientierung, Farbintensität, etc. ) des Bildes hervorrufen. 

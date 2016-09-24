@@ -8,7 +8,7 @@ Bla bla hier werden einige Verbesserungen vorgeschlagen...\todo{fazit einleitung
 \section{Parallelisierung}
 Da der Kalibrierungsprozess nur ein Mal vor der eigentlichen Entzerrung durchgeführt wird, bietet sich eine Parallelisierung hier deshalb nur bedingt an.
 Dennoch könnte man hier besonders bei den komplexen Aufgaben, wie der Liniendetektion \cite{Havel2014} und anschließenden Schnittpunktberechnung, sowie der Ellipsendetektion auf parallele Methoden zurückgreifen. 
-Bei der Ellipsendetektion mittels RANSAC werden für eine vorher definierte Anzahl an Iterationen, wiederholt Punkte ausgewählt mit denen anschließend eine Ellipse geschätzt wird. Es bietet sich hier an, parallel mehrere Gruppen von Punkten zu verarbeiten. 
+Bei der Ellipsendetektion mittels RANSAC werden für eine vorher definierte Anzahl an Iterationen, wiederholt Punkte ausgewählt mit denen anschließend eine Ellipse geschätzt wird. Es bietet sich hier an, mehrere Gruppen von Punkten parallel zu verarbeiten. 
 
 Von größerer Bedeutung ist eine Laufzeitverbesserung der Entzerrung. Nach der Bestimmung der Abbildungsmatrizen werden, nach dem in Kapitel \ref{ch:implementation} beschriebenen Schema, eine Reihe von Bildern entzerrt. Um die aufgenommenen Bilder nicht zwischenspeichern zu müssen, wäre eine echtzeitfähige Entfaltung wünschenswert. Die Bilder könnten somit direkt entzerrt gespeichert werden.  Um die Laufzeit der Entfaltung zu verbessern könnte man hier beispielsweise parallel mehrere Bildblöcke gleichzeitig verarbeiten.
 
