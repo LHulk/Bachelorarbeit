@@ -309,7 +309,7 @@ Ohne Beschränkung der Allgemeinheit, seien die Ellipsen $i = 0,\dotsc,n - 1$ au
 Außerdem seien die Liniensegmente $j = 0,\dotsc,m - 1$ aufsteigend nach Winkel mit der $x$-Achse, wie in Kapitel \ref{s:pointMapping} beschrieben, sortiert.
 Eine Sample kann also eindeutig durch ein Tupel $(i,j) \in [0,n-1]\times [0,m-1]$ identifiziert werden und $(x_{ij},y_{ij},z_{ij})$ bezeichne seine Koordinaten im Weltkoordinatensystem.
 
-Analog zur parametrischen Darstellung von Kegelstümpfen (Gleichung \ref{eq:paramFrustum}) in Kapitel \ref{s:cone} ergibt sich:
+Analog zur parametrischen Darstellung von Kegelstümpfen (Gleichung \ref{eq:paramFrustum}) in Kapitel \ref{s:cone} ergibt sich
 
 \[
 \begin{aligned}
@@ -325,21 +325,22 @@ r_i &= r + \frac{i}{n - 1}\cdot(R - r) \quad&\forall i\in[0,n-1]\\
 h_i &= \frac{i}{n - 1}\cdot\Delta H &\forall i\in[0,n-1]\\
 \theta_j &= \frac{j}{m-1} \cdot  2\pi  &\forall j\in[0,m-1]
 \end{aligned}
-\]
+\] %%
+enstprechend dem Aufbau des Kalibrierungsmusters.
 
 
 
 \section{Entfaltung}
 \label{s:unfolding}
 Die eigentliche Entfaltung des Kegels kann mit zwei unterschiedlichen Ansätzen realisiert werden.
-Die erste Möglichkeit ist die \textit{Vorwärtsentfaltung}. Hierbei wird für jedes Pixel auf dem Kegelbild eine 3D-Koordinate durch geeignete Interpolation bestimmt und dann auf die Mantelfläche abgebildet. Beim zweiten Ansatz, der \textit{Rückwärtsentfaltung}, wird ein Punkt von der Mantelfläche zurück auf den Kegel abgebildet und von dort mit einer Projektionsmatrix auf die Bildebene projiziert und dann interpoliert.
+Die erste Möglichkeit ist die Vorwärtsentfaltung. Hierbei wird für jedes Pixel auf dem Kegelbild eine 3D-Koordinate durch geeignete Interpolation bestimmt und dann auf die Mantelfläche abgebildet. Beim zweiten Ansatz, der Rückwärtsentfaltung, wird ein Punkt von der Mantelfläche zurück auf den Kegel abgebildet und von dort mit einer Projektionsmatrix auf die Bildebene projiziert und dann interpoliert.
 
 \subsection{Vorwärtsentfaltung}
-Bei der \textit{Vorwärtsentfaltung} muss wie oben erwähnt zu jedem Pixel die zugehörige 3D Koordinate im Weltkoordinatensystem berechnet werden. Da bisher jedoch nur die Positionen der Samples bekannt sind muss hier entsprechend interpoliert werden.
+Bei der Vorwärtsentfaltung muss wie oben erwähnt zu jedem Pixel die zugehörige 3D-Koordinate im Weltkoordinatensystem berechnet werden. Da bisher jedoch nur die Positionen der Samples bekannt sind muss hier entsprechend interpoliert werden.
 
 Zunächst betrachten wir diejenigen Pixel, die sich weder auf einer Kreislinie, noch auf einem Liniensegment befinden. Es gibt zu einem Pixel $P$ also immer vier Sample-Nachbarn $(b_l, b_r, t_r, t_l)$. Diese Situation ist in Abbildung \ref{fig:radialInterpolation} illustriert.
 
-Nachdem die vier Nachbarn bestimmt wurden, können wir im ersten Schritt die Abstände $d_1$ und $d_2$ von Pixel $P$ zu inneren Ellipse $E_b$, respektive äußeren Ellipse $E_t$ berechnen. Mithilfe dieser Abständen kann nun eine \textit{Interpolationsellipse}~$E_1$ definiert werden als
+Nachdem die vier Nachbarn bestimmt wurden, können wir im ersten Schritt die Abstände $d_1$ und $d_2$ von Pixel $P$ zu inneren Ellipse $E_b$, respektive äußeren Ellipse $E_t$ berechnen. Mithilfe dieser Abstände kann nun eine "`Interpolationsellipse"' $E_1$ definiert werden als
 \begin{equation*}
 	E_{int} = \left(\frac{d_1}{d_1 + d_2}\right) \cdot E_t + \left(\frac{d_2}{d_1 + d_2}\right) E_b,
 \end{equation*}
@@ -349,16 +350,21 @@ wobei eine Multiplikation mit einem Skalar alle Charakteristika einer Ellipse sk
 Da sich $t_l$, $L$ und $b_l$ nun auf einem gemeinsamen Liniensegment befinden, kann bezüglich der Weltkoordinaten linear interpoliert werden. Analoges gilt für $t_r$,$R$ und $b_r$.
 Die interpolierte Weltkoordinaten von $L$, sowie $R$ bezeichnen wir als $L_W$ und $R_W$
 
-Die drei Punkte $(L, P, R)$ befinden sich auf der Interpolationsellipse und somit können die  Winkel $(\phi_L, \phi_P, \phi_R)$ bezüglich des gemeinsamen Ellipsenkoordinatensystems bestimmt werden.
-
-Analog zu oben werden die 3D-Koordinaten von $P$ als lineare Interpolation zwischen den bestimmen 3D-Koordinaten von $L$ und $R$ bestimmt. Als Interpolationsfaktor benutzen wir
-$\frac{\phi_L - \phi_P}{\phi_L - \phi_R}$. Wir erhalten für die Weltkoordinaten $P_W$ des Pixels $P$:
-
+Die drei Punkte $(L, P, R)$ befinden sich auf der Interpolationsellipse und somit können die  Winkel $(\phi_L, \phi_P, \phi_R)$ bezüglich des gemeinsamen Ellipsenkoordinatensystems bestimmt werden. Dazu transformieren wir die Ellipse, sowie den Punkt in das Koordinatensystem, indem sich die Ellipse im Ursprung und ihre Hauptachsen achsenausgerichtet sind. Die Abbildung ist rigide, erhält also Längen und Winkel. Die Ellipse kann nun parametrisch beschrien werden als
 \[
-P_W = \left(\frac{\phi_L - \phi_P}{\phi_L - \phi_R}\right) R_W + \left(1 - \frac{\phi_L - \phi_P}{\phi_L - \phi_R}\right) L_W
+\begin{pmatrix}x \\ y\end{pmatrix} = \begin{pmatrix}a\cos\phi \\
+b\sin\phi\end{pmatrix}
+\] %%
+mit $\phi \in [0, 2\pi)$ und der Haupt- und Nebenachse $a$, beziehungsweise $b$. Zu einem gebenen Ellipsenpunkt $(x,y)$ können wir nun wieder den Winkel $\phi$ bezüglich der Ellipse bestimmen mit
+\[
+\phi = \atant \frac{y/b}{x/a} \bmod 2\pi.
+\] %%
+
+Analog zu oben werden nun die 3D-Koordinaten von $P$ als lineare Interpolation zwischen den bestimmen 3D-Koordinaten von $L$ und $R$ bestimmt. Als Interpolationsfaktor benutzen wir die Winkeldifferenzen
+$\frac{\phi_L - \phi_P}{\phi_L - \phi_R}$. Wir erhalten für die Weltkoordinaten $P_W$ des Pixels $P$ insgesamt
+\[
+P_W = \left(\frac{\phi_L - \phi_P}{\phi_L - \phi_R}\right) R_W + \left(1 - \frac{\phi_L - \phi_P}{\phi_L - \phi_R}\right) L_W.
 \]
-
-
 
 \begin{figure}[!htb]
 	\centering
@@ -369,7 +375,7 @@ P_W = \left(\frac{\phi_L - \phi_P}{\phi_L - \phi_R}\right) R_W + \left(1 - \frac
 
 
 
-Analog werden die auf Liniensegmenten befindlichen Punkte einfach linear interpoliert. Die Punkte, die sich auf Kreislinien befinden werden über Winkel interpoliert.
+Die Pixel, die sich auf Liniensegmenten befinden werden einfach linear interpoliert. Die Punkte, die sich auf Kreislinien befinden werden über Winkel interpoliert.
 
 Jedes Pixel hat nun 3D-Koordinaten im Kegel erhalten. Mit Hilfe der konstruierten Abbildung \ref{eq:coneToLateral} aus Kapitel \ref{s:cone}, können wir nun die interpolierten Punkte auf die Mantelfläche abbilden und erhalten schließlich das entzerrte Bild (siehe Abbildung \ref{fig:forwardUnfold})
 
@@ -398,8 +404,7 @@ Bei der Rückwärtsentfaltung gehen wir von dem entzerrten Bild aus, dessen geom
 Wir müssen zunächst für einen Punkt auf dem entzerrten Bild  dreidimensionale Koordinaten auf der Kegeloberfläche berechnen. Wir nutzen dafür die konstruierte Umkehrabbildung \ref{eq:LateralToCone} aus Kapitel \ref{s:cone}. Im nächsten Schritt müssen wir die erhaltenen Kegelkoordinaten auf das Ursprungsbild abbilden, um die Pixelkandidaten bestimmen zu können.
 
 Wir konstruieren dafür eine Projektionsmatrix. Wie in Kapitel \ref{s:calib} nutzen wir die  Punktkorrespondenzen der Samples aus, um mittels \textit{Direct Linear Transformation} eine Projektionsmatrix zu bestimmen.
-Wir erhalten somit die gewünschte Abbildung, die wir auf jede 3D-Koordinate anwenden, wodurch wir Bildkoordinaten erhalten. Im Allgemeinen, sind diese Koordinaten nicht ganzzahlig und wir müssen entsprechen interpolieren.
-
+Wir erhalten somit die gewünschte Abbildung, die wir auf jede 3D-Koordinate anwenden, wodurch wir Bildkoordinaten erhalten. Im Allgemeinen, sind diese Koordinaten nicht ganzzahlig und wir müssen entsprechend interpolieren (linear oder bikubisch siehe Kapitel \ref{ch:analysis}).
 
 \begin{figure}[!htb]
 	\centering

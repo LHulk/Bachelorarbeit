@@ -59,12 +59,9 @@ Ellipse::Ellipse(cv::Mat params)
     //A = U^T*D*U, where U = eigenVectors, D = diag(eigenvalues)
     _theta = std::atan(eigenVectors.at<float>(0,1) / eigenVectors.at<float>(0,0));
 
-    //TODO: is this correct?
     //transform to [0,2*pi) for easier math
     _theta = std::fmod((std::fmod(_theta, CV_PI) + CV_PI), CV_PI);
 
-    if(_theta < 0)
-        std::cout << "theta < 0" << std::endl;
 
     //(d,e) * U^T = (d',e')
     float dRot = d*eigenVectors.at<float>(0,0) + e*eigenVectors.at<float>(0,1);

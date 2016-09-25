@@ -2,9 +2,9 @@
 \chapter{Implementierung}
 \label{ch:implementation}
 
-Zwecks Vereinfachung des Kalibrierungsprozesses wurde ein Assistent in Form einer graphischen Benutzerschnittstelle implementiert. 
+Zwecks Vereinfachung des Kalibrierungsprozesses wurde ein Assistent in Form einer graphischen Benutzerschnittstelle implementiert.
 
-Im ersten Schritt des Assistenten wird dabei optional, wie in Abbildung \ref{fig:wizard1} zu sehen, eine intrinsische Kamerakalibrierung durchgeführt. 
+Im ersten Schritt des Assistenten wird dabei optional, wie in Abbildung \ref{fig:wizard1} zu sehen, eine intrinsische Kamerakalibrierung durchgeführt.
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.9\textwidth]{images/GUI/calibWizard1_1.PNG}
@@ -21,7 +21,7 @@ Anschließend wird die eigentliche Kegelkalibrierung durchgeführt. Dabei wird z
 	\label{fig:wizard2}
 \end{figure}
 
-Im letzten Schritt kann zwischen beiden Entfaltungsverfahren gewählt werden. Anschließend können die Einstellungen in eine XML-Datei exportiert werden, in der, neben der Kamera-Matrix und Verzerrungskoeffizienten, auch die zwei Abbildungsmatrizen des ausgewählten Verfahrens gespeichert werden. 
+Im letzten Schritt kann zwischen beiden Entfaltungsverfahren gewählt werden. Anschließend können die Einstellungen in eine XML-Datei exportiert werden, in der, neben der Kamera-Matrix und den Verzerrungskoeffizienten, auch die zwei Abbildungsmatrizen des ausgewählten Verfahrens gespeichert werden.
 
 
 Die Abbildungsmatrizen sind dabei wie folgt aufgebaut. Als $dst$ bezeichnen wir das entfaltete Bild. $src$ ist das Ursprungsbild.
@@ -31,10 +31,10 @@ Bei der Vowärtsentfaltung gilt:
 dst(map_x(x,y), map_y(x,y)) = src(x,y),
 \]
 
-wobei $map_x$ und $map_y$ die Abbildungsmatrizen sind und die gleiche Größe wie das Ursprungsbild haben. Für ein Pixel $(x,y)$ auf dem Ursprungsbild $src$ geben die Matrizen $map_x$, sowie $map_y$ an, auf welche Position ein das Pixel auf dem entzerrten Bild abgebildet wird. $map_x(x,y)$ bestimmt dabei die $x$-Koordinate, $map_y(x,y)$ die $y$-Koordinate. Da wir bei der Entfaltung die Größe des Ergebnisbildes benötigen, und wir diese bei der Erstellung der Abbildungsmatrizen berechnet haben, sind Breite und Höhe, in $map_x(0,0)$, respektive $map_y(0,0)$ kodiert. Für das Pixel an der Position $(0,0)$ auf dem Ursprungsbild ist anschließend keine Auswertung der Matrizen mehr möglich. Dieses Pixel ist jedoch ohnehin nicht Teil des Kalibrierungsmusters.
+wobei $map_x$ und $map_y$ die Abbildungsmatrizen sind und die gleiche Größe wie das Ursprungsbild haben. Für ein Pixel $(x,y)$ auf dem Ursprungsbild $src$ geben die Matrizen $map_x$, sowie $map_y$ an, auf welche Position das Pixel auf dem entzerrten Bild abgebildet wird. $map_x(x,y)$ bestimmt dabei die $x$-Koordinate, $map_y(x,y)$ die $y$-Koordinate. Da wir bei der Entfaltung die Größe des Ergebnisbildes benötigen, und wir diese bei der Erstellung der Abbildungsmatrizen berechnet haben, sind Breite und Höhe, in $map_x(0,0)$, respektive $map_y(0,0)$ kodiert. Für das Pixel an der Position $(0,0)$ auf dem Ursprungsbild ist anschließend keine Auswertung der Matrizen mehr möglich. Dieses Pixel ist jedoch ohnehin nicht Teil des Kegels.
 
 Bei der Rückwärtsentfaltung gilt:
 \[
 dst(x,y) = src((map_x(x,y),map_y(x,y)),
 \]
-wobei $map_x$ und $map_y$ wieder die Abbildungsmatrizen sind, die analog zur Vorwärtsenfaltung aufgebaut sind. Der grundlegende Unterschied ist hier, dass die wir von einem Pixel auf dem entzerrten Bild auf eine Position auf dem Ursprungsbild schließen. Die Abbildungsmatrizen haben hier die  gleiche Größe wie das entfaltete Bild. Eine Kodierung wie bei der Vowärtsentfaltung ist hier also nicht notwendig.
+wobei $map_x$ und $map_y$ wieder die Abbildungsmatrizen sind, die analog zur Vorwärtsenfaltung aufgebaut sind. Der grundlegende Unterschied ist hier, dass die wir von einem Pixel auf dem entzerrten Bild auf eine Position auf dem Ursprungsbild schließen. Die Abbildungsmatrizen haben hier die gleiche Größe wie das entfaltete Bild. Eine Kodierung wie bei der Vowärtsentfaltung ist hier also nicht notwendig.

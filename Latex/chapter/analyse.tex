@@ -5,14 +5,13 @@
 Im folgenden Kapitel vergleichen wir beide, in Kapitel \ref{ch:method}, vorgestellten Verfahren zur Entzerrung. Anschließend gehen wir auf verschiedene Einflussfaktoren auf die Qualität und Präzision der Entzerrung ein, woraufhin wir die Laufzeiten analysieren. Im letzten Teil des Kapitels evaluieren wir beide Ansätze zur Ellipsendetektion.
 
 
-Die Laufzeitanalysen wurden dabei auf einem \textbf{Raspberry Pi 2 Model B} mit folgenden Eigenschaften
+Die Laufzeitanalysen wurden dabei auf einem \textbf{Raspberry Pi 2 Model B} mit folgenden Eigenschaften durchgeführt:
 \begin{itemize}
 	\item 900MHz quad-core ARM Cortex-A7 CPU
 	\item 1GB RAM
 	\item GCC-4.9.2
 	\item Opencv 2.4.13
-\end{itemize} %%
-durchgeführt.
+\end{itemize}
 
 
 \section{Vergleich Vorwärtsentfaltung und Rückwärtsentfaltung}
@@ -32,14 +31,14 @@ Untersucht man die interpolierten Weltkoordinaten bei der Vorwärtsentfaltung, s
 	\label{fig:forwardHoles}
 \end{figure}
 
-Darüber hinaus zeigt sich ein weiteres Problem nach der Entfaltung. Die Entfaltung geschieht über die Abbildung \ref{eq:coneToLateral}, die in Kapitel \ref{s:cone} konstruiert wurde. 
-Damit im entfalteten Bild nicht 1mm einem Pixel entspricht, müssen die erhaltenen Werte skaliert werden. Wir wollen dabei entsprechend einer gewünschten Auflösung der entzerrten Seitenhöhe skalieren. 
-Auch schon bei kleineren Skalierungen entstehen auffällige Risse im entfalteten Bild, die in Abbildung \ref{fig:forwardHoles} exemplarisch zu sehen sind. Grund dafür ist, dass jedes Pixel aus dem Ursprungsbild auf eine 2D-Koordinate der Mantelfläche abgebildet wird. Auch nach einer Skalierung handelt es sich bei diesen Werten im Allgemeinen nicht um ganzzahlige Werte. Es entstehen Rundungsfehler. Auch wenn Rundungsfehler nicht entständen, fehlte es auf Grund der starken Stauchung, in den inneren, kleineren Regionen (siehe Abbildung \ref{fig:forwardHoles} in rot) des Ursprungsbild an genügend Bildinformation. Solche Risse, beziehungsweise nicht erreichte Pixel auf dem entfalteten Bild, bezeichnen wir als Defekte. 
+Darüber hinaus zeigt sich ein weiteres Problem nach der Entfaltung. Die Entfaltung geschieht über die Abbildung \ref{eq:coneToLateral}, die in Kapitel \ref{s:cone} konstruiert wurde.
+Damit im entfalteten Bild nicht 1mm einem Pixel entspricht, müssen die erhaltenen Werte skaliert werden. Wir wollen dabei entsprechend einer gewünschten Auflösung der entzerrten Seitenhöhe skalieren.
+Auch schon bei kleineren Skalierungen entstehen auffällige Risse im entfalteten Bild, die in Abbildung \ref{fig:forwardHoles} exemplarisch zu sehen sind. Grund dafür ist, dass jedes Pixel aus dem Ursprungsbild auf eine 2D-Koordinate der Mantelfläche abgebildet wird. Auch nach einer Skalierung handelt es sich bei diesen Werten im Allgemeinen nicht um ganzzahlige Werte. Es entstehen Rundungsfehler. Auch wenn Rundungsfehler nicht entständen, fehlte es auf Grund der starken Stauchung, in den inneren, kleineren Regionen (siehe Abbildung \ref{fig:forwardHoles} in rot) des Ursprungsbild an genügend Bildinformation. Solche Risse, beziehungsweise nicht erreichte Pixel auf dem entfalteten Bild, bezeichnen wir als Defekte.
 
-Da wir von dem Ursprungsbild aus auf das entfaltete Bild abbilden, ist außerdem eine Interpolation auf dem Ursprungsbild nicht möglich, da wir vorher nicht wissen, wo Defekte entstehen. Man müsste also entweder auf dem resultierendem Bild interpolieren (siehe Kapitel \ref{ch:summary}), oder zu gegebenen Defekten über die Umkehrabbildung auf Pixelkandidaten im Ursprungsbild schließend und dann entsprechend interpolieren. 
+Da wir von dem Ursprungsbild aus auf das entfaltete Bild abbilden, ist außerdem eine Interpolation auf dem Ursprungsbild nicht möglich, da wir vorher nicht wissen, wo Defekte entstehen. Man müsste also entweder auf dem resultierendem Bild interpolieren (siehe Kapitel \ref{ch:summary}), oder zu gegebenen Defekten über die Umkehrabbildung auf Pixelkandidaten im Ursprungsbild schließend und dann entsprechend interpolieren.
 Es bietet sich dann jedoch an, direkt die Umkehrabbildung zu nutzen, was die Motivation hinter der Rückwärtsentfaltung ist.
 
-Wir möchten untersuchen wie sich die Anzahl der Defekte bei einer Änderung der Ausgabeauflösung verhält. Diese Beziehung lässt sich in Abbildung \ref{fig:influenceRes} ablesen. 
+Wir möchten untersuchen wie sich die Anzahl der Defekte bei einer Änderung der Ausgabeauflösung der Seitenhöhe verhält. Diese Beziehung lässt sich in Abbildung \ref{fig:influenceRes} ablesen.
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[width=\textwidth]{images/numberOfHoles.eps}
@@ -47,7 +46,7 @@ Wir möchten untersuchen wie sich die Anzahl der Defekte bei einer Änderung der
 	\label{fig:influenceRes}
 \end{figure}
 
-Wie erwartet verhält sich die Anzahl der Defekte quadratisch zur gewählten Ausgabeaufösung. Der Informationsgehalt (Pixelanzahl) des Ursprungsbild bleibt trotz erhöhter Ausgabeauflösung konstant. Wie in Abbildung \ref{fig:sizeOutput} zu sehen, verhält sich die Ausgabeauflösung quadratisch zur Gesamtzahl der Pixel für ein konstantes $\alpha$. Für die Breite $b$ des Ausgabebildes gilt $b = res_S$. 
+Wie erwartet verhält sich die Anzahl der Defekte quadratisch zur gewählten Ausgabeaufösung. Der Informationsgehalt (Pixelanzahl) des Ursprungsbild bleibt trotz erhöhter Ausgabeauflösung konstant. Wie in Abbildung \ref{fig:sizeOutput} zu sehen, verhält sich die Ausgabeauflösung $res_S$ quadratisch zur Gesamtzahl der Pixel für ein konstantes $\alpha$. Für die Breite $b$ des Ausgabebildes gilt $b = res_S$.
 Die Höhe $h$ setzt sich wie folgt zusammen: $h = res_S + res_S\cdot\cos(2\pi-\alpha) = res_S\cdot(1 + cos(2\pi-\alpha)) = res_S\cdot(1+\cos\alpha)$. Dazu betrachten wir das rechtwinklige Dreieck in der rechten oberen Ecke der Abbildung (in magenta). Die Hypotenuse des Dreiecks beträgt $res_S$ und mit $\beta = 2\pi - \alpha$ ergibt sich für die Ankathete eine Länge von $res_S\cdot\cos(2\pi-\alpha)$. Die Gesamtzahl der Pixel beträgt demnach $b\cdot h = res_S^2(1+\cos(\alpha))$.
 
 \begin{figure}[!htb]
@@ -61,8 +60,8 @@ Die Höhe $h$ setzt sich wie folgt zusammen: $h = res_S + res_S\cdot\cos(2\pi-\a
 Obwohl die Laufzeit der Kalibrierung nicht im Vordergrund steht, vergleichen wir die Laufzeit beider Verfahren bei verschiedenen Auflösungen der Seitenhöhe. Da der Großteil des Kalibrierungsprozesses bei beiden Verfahren identisch ist, vergleichen wir nun den Teil, der sich unterscheidet. Das heißt wir messen bei der Vorwärtsentfaltung die Laufzeit für die Interpolation der Weltkoordinaten und die anschließende Abbildung auf die Mantelfläche, und bei der Rückwärtsentfaltung die Laufzeit für die Abbildung auf die Kegelkoordinaten, die Bestimmung der Projektionsmatrix und die anschließende Abbildung auf die Bildkoordinaten, inklusive Interpolation.
 
 
-Wie in Abbildung \ref{fig:runningTimeComparision} zu sehen, ist der Aufwand bei bei der Vorwärtsentfaltung weitestgehend konstant. Dies da dadurch zu begründen, dass sich die Eingabeauflösung nicht ändert. Der Interpolationsaufwand bleibt gleich und es wird anschließend die gleiche Anzahl Pixel auf die Mantelfläche abgebildet. Nur der Ort der Projektion wird entsprechend der Ausgabeauflösung skaliert. 
-Bei der Rückwärtsentfaltung hingegen, wächst der Interpolationsaufwand quadratisch. Wir gehen dort von dem Ausgabebild aus, das quadratisch mit der Auflösung wächst und bilden dort jeden Punkt auf das Ursprungsbild ab. Je mehr Pixel auf dem Ausgabebild, desto häufiger muss interpoliert werden. Bei einer Auflösung der Seitenhöhe von $850$ Pixeln ist die Laufzeit bei beiden Verfahren gleich. 
+Wie in Abbildung \ref{fig:runningTimeComparision} zu sehen, ist der Aufwand bei bei der Vorwärtsentfaltung weitestgehend konstant. Dies da dadurch zu begründen, dass sich die Eingabeauflösung nicht ändert. Der Interpolationsaufwand bleibt gleich und es wird anschließend die gleiche Anzahl Pixel auf die Mantelfläche abgebildet. Nur der Ort der Projektion wird entsprechend der Ausgabeauflösung skaliert.
+Bei der Rückwärtsentfaltung hingegen, wächst der Interpolationsaufwand quadratisch. Wir gehen dort von dem Ausgabebild aus, das quadratisch mit der Auflösung wächst und bilden dort jeden Punkt auf das Ursprungsbild ab. Je mehr Pixel auf dem Ausgabebild, desto häufiger muss interpoliert werden. Bei einer Auflösung der Seitenhöhe von $850$ Pixeln ist die Laufzeit bei beiden Verfahren gleich.
 
 \begin{figure}[!htb]
 	\centering
@@ -74,23 +73,22 @@ Bei der Rückwärtsentfaltung hingegen, wächst der Interpolationsaufwand quadra
 
 \bigskip
 
-Als Reprojektionsfehler einer Abbildung wird die Distanz zwischen einem gemessenem Punkt und einem korrespondierendem (durch die Abbildung) projizierten Punkt bezeichnet. 
+Als Reprojektionsfehler einer Abbildung wird die Distanz zwischen einem gemessenem Punkt und einem korrespondierendem (durch die Abbildung) projizierten Punkt bezeichnet.
 
 
-Im Falle der Rückwärtsentfaltung sind die gemessenen Punkte die Bildpositionen der Samples im Ursprungsbild. Da die Geometrie des Kegels bekannt ist, wissen wir wo sich die  Samples auf dem entfalteten Bild befinden müssen (siehe Parametrisierung der Mantelfläche \ref{eq:paramLateral} in Kapitel \ref{ch:theory}). Wir können nun diese Positionen mit Hilfe der Abbildung zur Entfaltung und der Projektionsmatrix zurück auf das Ursprungsbild abbilden. Diese Punkte sind die projizierten Punkte. Da die Abbildung von der Mantelfläche zur Kegeloberfläche exakt ist, ist der Reprojektionsfehler der Rückwärtsentfaltung alleine durch die Projektionsmatrix bestimmt. 
+Im Falle der Rückwärtsentfaltung sind die gemessenen Punkte die Bildpositionen der Samples im Ursprungsbild. Da die Geometrie des Kegels bekannt ist, wissen wir wo sich die  Samples auf dem entfalteten Bild befinden müssen (siehe Parametrisierung der Mantelfläche \ref{eq:paramLateral} in Kapitel \ref{ch:theory}). Wir können nun diese Positionen mit Hilfe der Abbildung zur Entfaltung und der Projektionsmatrix zurück auf das Ursprungsbild abbilden. Diese Punkte sind die projizierten Punkte. Da die Abbildung von der Mantelfläche zur Kegeloberfläche exakt ist, ist der Reprojektionsfehler der Rückwärtsentfaltung alleine durch die Projektionsmatrix bestimmt.
 
-Bei der Vorwärtsentfaltung sind die gemessenen Punkte gegeben durch die bekannten Sample-Positionen auf der Mantelfläche. Die projizierten Punkte erhält man, nach der Abbildung der detektierten Sample-Positionen des Ursprungsbild auf die Mantelfläche. Der Reprojektionsfehler ist also alleine durch die Genaugkeit der Sample-Detektion definiert und somit bei diesem Verfahren immer nahe null. 
-Obwohl das Endergebnis, bedingt durch die Defekte, bei der Vorwärtsentfaltung optisch schlechter ist, ist der Reprojektionsfehler also bei der Vorwärtsentfaltung immer kleiner. 
-Als Vergleich zwischen den beiden Verfahren eignet sich der Reprojektionsfehler also nicht.
+Bei der Vorwärtsentfaltung sind die gemessenen Punkte gegeben durch die bekannten Sample-Positionen auf der Mantelfläche. Die projizierten Punkte erhält man, nach der Abbildung der detektierten Sample-Positionen des Ursprungsbild auf die Mantelfläche. Der Reprojektionsfehler ist also alleine durch die Genaugkeit der Sample-Detektion definiert und somit bei diesem Verfahren immer nahe null.
+Obwohl das Endergebnis, bedingt durch die Defekte, bei der Vorwärtsentfaltung optisch schlechter ist, ist der Reprojektionsfehler also bei der Vorwärtsentfaltung im Allgemeinen kleiner.
+Als Vergleich zwischen den beiden Verfahren eignet sich der Reprojektionsfehler demnach nicht.
 
-%Auf Grund der wesentlich schlechteren Laufzeit, sowie auf Grund der Defekte, die sich sogar quadratisch zur Ausgabeauflösung verhalten, beziehen sich alle folgenden Auswertungen nur noch auf die Rückwärtsentfaltung. 
 Auf Grund der fehlenden Defekte bei der Rückwärtsentfaltung und der besseren Laufzeit bei Auflösungen unter 850 Pixeln, beziehen sich alle folgenden Auswertungen nur noch auf die Rückwärtsentfaltung.
 
 
 \section{Einfluss der intrinsischen Kalibrierung}
-Ein wichtiger Einflussfaktor auf die Qualität der Entzerrung ist die intrinsische Kamerakalibrierung, die vor der eigentlichen Kegelkalibrierung stattfindet. Ihre Hauptaufgabe besteht darin, die Linsenverzerrungen der Kamera herauszurechnen. 
+Ein wichtiger Einflussfaktor auf die Qualität der Entzerrung ist die intrinsische Kamerakalibrierung, die vor der eigentlichen Kegelkalibrierung stattfindet. Ihre Hauptaufgabe besteht darin, die Linsenverzerrungen der Kamera herauszurechnen.
 
-Wir messen den Einfluss der Kamerakalibrierung mit Hilfe des Reprojektionsfehlers. Dazu betrachten wir fünf verschiedene Bilder, die ein Mal mit und ein Mal ohne intrinsische Kalibrierung entzerrt werden. Bei beiden Gruppen wird anschließend jeweils der Reprojektionsfehler pro Sample bestimmt und verglichen. Die Ergebnisse sind in Abbildung \ref{fig:influenceCalib} zu sehen. In der linken Abbildung sind hierbei die Fehler im kalibrierten Fall zu erkennen, im Linken im Unkalibrierten. In der Abbildung ist dabei ein Kreuz an der Stelle $(u,v)$, falls die Abweichung des projizierten Punktes in $x$-Richtung $u$, sowie in $y$-Richtung $v$ beträgt. 
+Wir messen den Einfluss der Kamerakalibrierung mit Hilfe des Reprojektionsfehlers. Dazu betrachten wir fünf verschiedene Bilder, die ein Mal mit und ein Mal ohne intrinsische Kalibrierung entzerrt werden. Bei beiden Gruppen wird anschließend jeweils der Reprojektionsfehler pro Sample bestimmt und verglichen. Die Ergebnisse sind in Abbildung \ref{fig:influenceCalib} zu sehen. In der linken Abbildung sind hierbei die Fehler im kalibrierten Fall zu sehen, im Linken im unkalibrierten Fall. In der Abbildung ist dabei ein Kreuz an der Stelle $(u,v)$, falls die Abweichung des projizierten Punktes in $x$-Richtung $u$, sowie in $y$-Richtung $v$ beträgt.
 
 \begin{figure}[!htb]
 	\centering
@@ -100,10 +98,10 @@ Wir messen den Einfluss der Kamerakalibrierung mit Hilfe des Reprojektionsfehler
 \end{figure}
 
 
-Es ist klar zu erkennen, dass der Reprojektionsfehler bei den Bildern ohne intrinsische Kamerakalibrierung wesentlich größer ist. Der starke Einfluss kommt unter Anderem daher, dass wir eine Weitwinkelkamera mit starker tonnenförmiger Verzerrung eingesetzt haben. Ohne eine Modellierung der Linsenverzerrungen weichen die Abstände zwischen den Sample-Positionen stark von der Realität ab. Die Projektionsmatrix wird mit fehlerhaften Daten bestimmt. Die eigentlichen Sample-Positionen auf dem entzerrten Bild, werden also nicht korrekt auf die Sample-Positionen im Ursprungsbild abgebildet. 
+Es ist klar zu erkennen, dass der Reprojektionsfehler bei den Bildern ohne intrinsische Kamerakalibrierung wesentlich größer ist. Der starke Einfluss kommt unter Anderem daher, dass wir eine Weitwinkelkamera mit starker tonnenförmiger Verzerrung eingesetzt haben. Ohne eine Modellierung der Linsenverzerrungen weichen die Abstände zwischen den Sample-Positionen stark von der Realität ab. Die Projektionsmatrix wird mit fehlerhaften Daten bestimmt. Die eigentlichen Sample-Positionen auf dem entzerrten Bild, werden also nicht korrekt auf die Sample-Positionen im Ursprungsbild abgebildet.
 
 \section{Einfluss der Rotation der Kamera}
-Um den Einfluss der Rotation der Kamera untersuchen zu können, wurde der Kegel mit Kalibrierungsmuster gerendert, da die Kameraposition dann exakt bekannt ist und äußere Faktoren wie Lichtverhältnisse und inhomogene Hintergründe kontrolliert werden können. In Abbildung \ref{fig:blender} ist bei zwei unterschiedlichen Winkeln der gerenderte Kegel zu sehen. 
+Um den Einfluss der Rotation der Kamera untersuchen zu können, wurde der Kegel mit Kalibrierungsmuster gerendert, da die Kameraposition dann exakt bekannt ist und äußere Faktoren wie Lichtverhältnisse und inhomogene Hintergründe kontrolliert werden können. In Abbildung \ref{fig:blender} ist bei zwei unterschiedlichen Winkeln der gerenderte Kegel zu sehen.
 
 \begin{figure}[!htb]
 	\centering
@@ -117,12 +115,12 @@ Um den Einfluss der Rotation der Kamera untersuchen zu können, wurde der Kegel 
 		\includegraphics[width=.9\textwidth]{images/blender12.png}
 		\caption{bei 12°}
 	\end{subfigure}
+	\caption{gerendeter Kegel mit Kalibrierungsmuster aus verschiedenen Blickrichtungen}
 	\label{fig:blender}
-	\caption{gerendeter Kegel mit Kalibrierungsmuster in Blender aus verschiedenen Blickrichtungen}
 \end{figure}
 
 
-Es werden anschließend Bilder erzeugt, in denen in 1° Schritten die Kamera von 0° bis 12° um die $x$-Achse rotiert wird. Für jedes dieser Bilder wird anschließend eine Rückwärtsentfaltung durchgeführt und der durchschnittliche Reprojektionsfehler ermittelt. Abbildung \ref{fig:influenceRot} zeigt, dass der Reprojektionsfehler relativ rotationsinvariant ist bei einem durchschnittlichen . Ab einem Winkel von  13°, werden die Samples teilweise vom Blob-Detektor nicht mehr erkannt (bei 13° und 14° werden zwei nicht erkannt, bei 15° und 16° jeweiles vier) und mussten per Hand markiert werden. Ab einem Winkel von 16° sind die Abstände zischen den Kreislinien so klein, dass die Ellipsendetektion fehlschlägt. 
+Es werden anschließend Bilder erzeugt, in denen in 1° Schritten die Kamera von 0° bis 16° um die $x$-Achse rotiert wird. Für jedes dieser Bilder wird anschließend eine Rückwärtsentfaltung durchgeführt und der durchschnittliche Reprojektionsfehler ermittelt. Abbildung \ref{fig:influenceRot} zeigt, dass der Reprojektionsfehler relativ rotationsinvariant ist bei einem durchschnittlichen Reprojektionsfehler von $1.925$. Ab einem Winkel von  13°, werden die Samples teilweise vom Blob-Detektor nicht mehr erkannt (bei 13° und 14° werden zwei nicht erkannt, bei 15° und 16° jeweiles vier) und mussten per Hand markiert werden. Ab einem Winkel von 16° sind die Abstände zischen den Kreislinien so klein, dass die Ellipsendetektion fehlschlägt.
 
 
 \begin{figure}[!htb]
@@ -134,11 +132,11 @@ Es werden anschließend Bilder erzeugt, in denen in 1° Schritten die Kamera von
 
 
 \section{Laufzeit der Entfaltung}
-Durch den Kalibrierungsprozess erhalten wir zwei Abbildungsmatrizen (siehe Kapitel \ref{ch:implementation}), mit denen wir anschließend eine Reihe von Bildern entzerren möchten. Wir untersuchen dabei die Laufzeit pro gewählter Auflösung, in 50er Schritten, und ermitteln jeweils die Laufzeit gemittelt über 200 Bilder. Untersucht wird die Laufzeit mit bikubischer, sowie mit (bi-) linearer Interpolation. 
+Durch den Kalibrierungsprozess erhalten wir zwei Abbildungsmatrizen (siehe Kapitel \ref{ch:implementation}), mit denen wir anschließend eine Reihe von Bildern entzerren möchten. Wir untersuchen dabei die Laufzeit pro gewählter Auflösung in 50er Schritten, und ermitteln jeweils die Laufzeit gemittelt über 200 Bilder. Untersucht wird die Laufzeit mit bikubischer, sowie mit (bi-) linearer Interpolation.
 
-Im Gegensatz zu linearer Interpolation, werden bei bikubischer Interpolation , 16 Nachbarn statt vier betrachtet und mittels (stückweise stetiger) Polynome interpoliert. Der Aufwand bei der bikubischen Interpolation ist wesentlich größer, es entstehen aber weniger Artefakte \cite{Keys1981}.
+Im Gegensatz zu linearer Interpolation, werden bei bikubischer Interpolation 16 Nachbarn statt vier betrachtet und mittels (stückweise stetiger) Polynome interpoliert. Der Aufwand bei der bikubischen Interpolation ist wesentlich größer, es entstehen aber weniger Artefakte \cite{Keys1981}.
 
-Wie in Abbildung \ref{fig:influenceRes2} zu sehen, wächst die Laufzeit bei beiden Verfahren quadratisch mit der Auflösung der Seitenhöhe. Die Laufzeit des Verfahrens mittels bikubischer Interpolation wächst dabei um einen Faktor von $1.35$ schneller, als das Verfahren mittels linearer Interpolation.
+Wie in Abbildung \ref{fig:influenceRes2} zu sehen, wächst die Laufzeit bei beiden Verfahren quadratisch mit der Auflösung der Seitenhöhe. Die Laufzeit des Verfahrens mittels bikubischer Interpolation wächst dabei um einen Faktor von circa $1.35$ schneller, als das Verfahren mittels linearer Interpolation.
 
 \begin{figure}[!htb]
 	\centering
@@ -148,11 +146,11 @@ Wie in Abbildung \ref{fig:influenceRes2} zu sehen, wächst die Laufzeit bei beid
 \end{figure}
 
 \section{Evaluierung der Ellipsendetektion mittels Deformable Templates}
-Das Problem bei der Ellipsendetektion mittels {Deformable Templates ist, dass die Energiefunktion, auch nach starker Glättung des Kanten- und Kantenrichtungsbilds, schnell in kleine lokale Minima läuft, obwohl ein wesentlich stärkeres Minimum in näherer Umgebung wäre. 
+Das Problem bei der Ellipsendetektion mittels {Deformable Templates ist, dass die Energiefunktion, auch nach starker Glättung des Kanten- und Kantenrichtungsbilds, schnell in kleine lokale Minima läuft, obwohl ein wesentlich stärkeres Minimum in näherer Umgebung wäre.
 
 In Abbildung \ref{fig:deformable} sieht man beispielhaft einen Auschnitt der Energiefunktion, wobei in diesem Fall zwecks Veranschaulichung nur die Haupt- und Nebenachse der Ellipse variable sind. Das Zentrum bleibt das Zentrum des Bildes und der Winkel $\theta$ ist konstant null. Trotz dieser Einschränkungen lässt sich gut erkennen, dass circa bei $a = b = 350$ ein starkes Minimum liegt. Es gibt jedoch neben diesem Minimum in näherer Umgebung kleine irrelevante Minima, wie beispielsweise in $(350, 260)$. Solche "`Becken"' (in rot markiert) erschweren die Detektion erheblich.
 
-Darüber hinaus muss für ein robustes und effizientes Optimierungsverfahren der Gradient und im besten Fall sogar die Hesse-Matrix der zu minimierenden Funktion zur Verfügung gestellt werden.  Jede Ableitung des Kanten- und Kantenorientierungsbilds bringt Unstetigkeitsstellen mit sich. Mit einer zu starke Glättung, geht jedoch viel Informationsverlust einher. 
+Darüber hinaus muss für ein robustes und effizientes Optimierungsverfahren der Gradient und im besten Fall sogar die Hesse-Matrix der zu minimierenden Funktion zur Verfügung gestellt werden.  Jede Ableitung des Kanten- und Kantenorientierungsbilds bringt Unstetigkeitsstellen mit sich. Mit einer zu starke Glättung geht jedoch viel Informationsverlust einher.
 
 
 \begin{figure}[!htb]
@@ -164,7 +162,7 @@ Darüber hinaus muss für ein robustes und effizientes Optimierungsverfahren der
 
 
 \section{Evaluierung der Ellipsendetektion mittels RANSAC}
-Die robuste Ellipsendetektion ist der wichtigste Schritt bei der Entzerrung. Bei beiden Verfahren werden die bestimmten Ellipsen genutzt um Korrespondenzen zwischen den Sample-Positionen und Punkten auf dem Kegel im Weltkoordinatensystem herzustellen. Bei der Vorwärtsentfaltung werden die Ellipsen darüber hinaus benötigt, um für die Pixel geeignete 3D-Koordinaten interpolieren zu können. Es ist also von großer Bedeutung wie gut die Ellipsendetektion mittels RANSAC funktioniert.  
+Die robuste Ellipsendetektion ist der wichtigste Schritt bei der Entzerrung. Bei beiden Verfahren werden die bestimmten Ellipsen genutzt um Korrespondenzen zwischen den Sample-Positionen und Punkten auf dem Kegel im Weltkoordinatensystem herzustellen. Bei der Vorwärtsentfaltung werden die Ellipsen darüber hinaus benötigt um für die Pixel geeignete 3D-Koordinaten interpolieren zu können. Es ist also von großer Bedeutung wie gut die Ellipsendetektion mittels RANSAC funktioniert.
 
 
 \begin{figure}[!htb]
@@ -191,10 +189,10 @@ Wir betrachten zunächst, wie sich eine Gleichverteilung von Ausreißern auf die
 	D = \frac{2\abs{A\cap B}}{\abs{A} + \abs{B}} \in [0, 1]
 \]
 
-für zwei Mengen $A$ und $B$ mit einem Wert von eins für eine perfekte Übereinstimmung $(A = B)$ und einem Wert von null, falls $A\cap B = \emptyset$. Wir betrachten hierbei die Flächen zweier Ellipsen beziehungsweise die Schnittfläche. Da die Berechnung der Schnittfläche zweier Ellipsen analytisch sehr aufwändig ist \cite{Eberly2008}, berechnen wir stattdessen jeweils die Menge der gemeinsamen Pixel zweier auf ein Bild gezeichneter Ellipsen. 
+für zwei Mengen $A$ und $B$ mit einem Wert von eins für eine perfekte Übereinstimmung $(A = B)$ und einem Wert von null, falls $A\cap B = \emptyset$. Wir betrachten hierbei die Flächen zweier Ellipsen beziehungsweise die Schnittfläche. Da die Berechnung der Schnittfläche zweier Ellipsen analytisch sehr aufwändig ist \cite{Eberly2008}, berechnen wir stattdessen jeweils die Menge der gemeinsamen Pixel zweier auf ein Bild gezeichneter Ellipsen.
 Die Anzahl der Iterationen für RANSAC kann in jedem Schritt mit Hilfe der Formel aus Kapitel \ref{s:ransac} berechnet werden.
 
-In Abbildung \ref{fig:uniformEval} sieht man, dass der Dice-Koeffizient bei RANSAC konstant nahezu bei eins liegt. Das heißt, dass mittels RANSAC auch bei einem Fehleranteil von 60\% immer noch mit sehr großer Genauigkeit die Ellipse korrekt geschätzt wird. Bei der Methode der kleinsten Quadrate weicht die geschätzte Ellipse jedoch schon bei einem kleinen relativen Fehleranteil von 10\% stark von der korrekten Ellipse ab. 
+In Abbildung \ref{fig:uniformEval} sieht man, dass der Dice-Koeffizient bei RANSAC konstant nahezu bei eins liegt. Das heißt, dass mittels RANSAC auch bei einem Fehleranteil von 60\% immer noch mit sehr großer Genauigkeit die Ellipse korrekt geschätzt wird. Bei der Methode der kleinsten Quadrate weicht die geschätzte Ellipse jedoch schon bei einem kleinen relativen Fehleranteil von 10\% mit einem Dice-Koeffizienten von circa $0.5$ stark von der korrekten Ellipse ab.
 
 
 \begin{figure}[!htb]
@@ -204,10 +202,10 @@ In Abbildung \ref{fig:uniformEval} sieht man, dass der Dice-Koeffizient bei RANS
 	\label{fig:uniformEval}
 \end{figure}
 
-In unserem Verfahren ist eine Gleichverteilung der Ausreißer unwahrscheinlich. Viel wahrscheinlicher ist es, dass eine der nächst äußeren Ellipsen frühzeitig sichtbar wird (siehe Kapitel \ref{s:ellipseDetection}). 
-Dieser Fall ist in Abbildung \ref{fig:nonmUniformRansac} illustriert. Wir wollen nun untersuchen, wie stark solche Ellipsen das korrekte Ergebnis beeinflussen. Wir gehen dabei analog zum dem Verfahren zur Untersuchung von gleichverteilten Ausreißern vor. Ein Fehleranteil von 50\% bedeutet hier, dass auf der inneren Ellipse genauso viele Punkten sind, wie auf der äußeren. 
+In unserem Verfahren ist eine Gleichverteilung der Ausreißer unwahrscheinlich. Viel wahrscheinlicher ist es, dass eine der nächst äußeren Ellipsen frühzeitig sichtbar wird (siehe Kapitel \ref{s:ellipseDetection}).
+Dieser Fall ist in Abbildung \ref{fig:nonmUniformRansac} illustriert. Wir wollen nun untersuchen, wie stark solche Ellipsen das korrekte Ergebnis beeinflussen. Wir gehen dabei analog zum dem Verfahren zur Untersuchung von gleichverteilten Ausreißern vor. Ein Fehleranteil von 50\% bedeutet hier, dass auf der inneren Ellipse genauso viele Punkten sind, wie auf der äußeren.
 
-In Abbildung \ref{fig:nonUniformEval} sieht man, dass bei der Schätzung mittels RANSAC die Dice-Koeffizienten bis circa 50\% nahezu bei eins liegt. Bei 50\% ist jedoch ein Sprung auf einen Wert von circa $0.6$. Dies liegt daran, dass ab 50\% auf der äußeren Ellipse mehr Punkte liegen, als auf der inneren. Es ist also wahrscheinlicher bei einer zufälligen Auswahl, Punkte der äußeren Ellipse zu erhalten. Die Koeffizienten der Schätzung mittels der Methode der kleinsten Quadrate verhalten sich ähnlich wie im Fall der gleichverteilten Ausreißer. Würde man den Ausreißeranteil weiter erhöhen, würde der Dice-Koeffizient hier gegen den gleichen Wert wie bei RANSAC konvergieren. Der Wert ist durch die Entfernung der äußeren Ellipse zur inneren Ellipse definiert. Erhöht man diesen, verringert sich erreichte Dice-Koeffizient. 
+In Abbildung \ref{fig:nonUniformEval} sieht man, dass bei der Schätzung mittels RANSAC die Dice-Koeffizienten bis circa 50\% nahezu bei eins liegt. Bei 50\% ist jedoch ein Sprung auf einen Wert von circa $0.6$. Dies liegt daran, dass ab 50\% auf der äußeren Ellipse mehr Punkte liegen, als auf der inneren. Bei einer zufälligen Auswahl ist es also wahrscheinlicher einen Punkt der äußeren Ellipse zu erhalten. Die Koeffizienten der Schätzung mittels der Methode der kleinsten Quadrate verhalten sich ähnlich wie im Fall der gleichverteilten Ausreißer. Würde man den Ausreißeranteil weiter erhöhen, würde der Dice-Koeffizient hier gegen den gleichen Wert wie bei RANSAC konvergieren. Der Wert ist durch die Entfernung der äußeren Ellipse zur inneren Ellipse definiert. Erhöht man diesen, verringert sich erreichte Dice-Koeffizient.
 
 \begin{figure}[!htb]
 	\begin{subfigure}{.5\textwidth}
@@ -233,26 +231,3 @@ In Abbildung \ref{fig:nonUniformEval} sieht man, dass bei der Schätzung mittels
 	\caption{Dice-Koeffizienten bei einer Schätzung mittels RANSAC und der Methode der kleinsten Quadrate (LSQ) bei Ausreißern auf einer äußeren Ellipse}
 	\label{fig:nonUniformEval}
 \end{figure}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
