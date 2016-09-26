@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70107" creator="Ipe 7.2.5">
-<info created="D:20160827215528" modified="D:20160914102100" tex="pdftex"/>
+<info created="D:20160827215528" modified="D:20160926104536" tex="pdftex"/>
 <preamble>\usepackage[utf8]{inputenc}</preamble>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
@@ -360,8 +360,8 @@ h
 576 288 l
 560 288 l
 </path>
-<text matrix="1 0 0 1 1.53846 -41.5385" transformations="translations" pos="608 704" stroke="black" type="label" width="76.942" height="9.962" depth="2.79" valign="baseline" size="Large">Kegelstumpf</text>
-<text matrix="1 0 0 1 -15.2308 -37.5385" transformations="translations" pos="624 448" stroke="black" type="label" width="101.722" height="9.962" depth="2.79" valign="baseline" size="Large">Ergänzungskegel</text>
+<text matrix="1 0 0 1 1.53846 -41.5385" transformations="translations" pos="608 704" stroke="black" type="label" width="86.482" height="11.954" depth="3.35" valign="baseline" size="LARGE">Kegelstumpf</text>
+<text matrix="1 0 0 1 -15.2308 -37.5385" transformations="translations" pos="624 448" stroke="black" type="label" width="114.244" height="11.954" depth="3.35" valign="baseline" size="LARGE">Ergänzungskegel</text>
 <use matrix="-51.0013 0 0 -6.60818 15645.14 5620.12" name="mark/disk(sx)" pos="300.903 738.816" size="normal" stroke="black"/>
 <group matrix="1.28377 0 0 1.16017 -87.237 -119.452">
 <path matrix="1.28028 0 0 1.31971 -86.1661 -238.437" stroke="black">
