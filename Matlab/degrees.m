@@ -11,14 +11,21 @@ for i = 1:num
     avgs(i) = mean(norms(:,i));
 end
 
-x = 0:1:num-1
-h1 = bar(x,avgs, 0.5);
 x = -10:1:22;
 y = mean(avgs)*ones(1,22+10+1);
-hold on;
 h2 = plot(x,y,'m--', 'LineWidth', 2);
+
+hold on;
+
+x = 0:1:num-1;
+h1 = bar(x,avgs, 0.5);
+
+
+
 axis([-1 num 0 3])
 legend([h2],{strcat('insg. Durschnitt:', num2str(mean(avgs)))});
+xlabel('Rotation der Kamera in Grad');
+ylabel('durchscnittl. Reprojektionsfehler');
 
 id = 0:1:16;
 set(gca, 'XTick',id);

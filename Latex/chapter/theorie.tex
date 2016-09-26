@@ -1,7 +1,10 @@
 %!TEX root = bachelor.tex
 \chapter{Theoretische Grundlagen}
 \label{ch:theory}
-In diesem Kapitel werden einige grundlegende Begriffe und Definitionen eingeführt, die in der folgenden Arbeit benötigt werden. \todo{hier noch was schreiben}
+In diesem Kapitel werden einige grundlegende Begriffe und Definitionen eingeführt, die in der folgenden Arbeit benötigt werden.
+Zunächst wird auf die Definition eines Kegels, eines Kegelstumpfs und dessen Mantelfläche eingegangen. 
+Anschließend wird eine Abbildung konstruiert, die die Oberfläche eines Kegels auf dessen Mantelfläche abbildet. 
+Im Anschluss wird kurz die Theorie hinter linearen Ausgleichsproblemen erklärt, woraufhin auf Kamerakalibrierung eingegangen wird. 
 
 \section{Kegel}
 \label{s:cone}
@@ -537,7 +540,7 @@ mit $a,b,c,d,e,f \in \mathbb{R}$. Eine Ellipse lässt sich also durch sechs Punk
 Die beiden Formen \ref{eq:ellipseRotTrans} und \ref{eq:ellipseQuadratic} sind äquivalent, falls die Ellipse nicht zu einem Punkt oder einer Linie degeneriert ist \cite{Lawrence1972}. Dies ist dann der Fall, wenn gilt $a = b = 0$ (Punkt), oder $a = 0 \lor b = 0$ (Linie). Die Umformung von \ref{eq:ellipseRotTrans} nach \ref{eq:ellipseQuadratic} ist mit Hilfe einer Hauptachsentransformation möglich.
 Da diese später benötigt wird, wird diese hier exemplarisch vorgeführt.
 
-Zunächst einmal fällt auf, dass der gemischte Term $cxy$ genau dann null ist, wenn die Ellipse nicht rotiert wurde. Im ersten Schritt versuchen wir also die Rotation der Ellipse rückgängig zu machen, um den Rotationswinkel bestimmen zu können.
+Zunächst einmal fällt auf, dass der gemischte Term $cxy$ genau dann null ist, wenn die Ellipse nicht rotiert wurde. Im ersten Schritt wird also die Rotation der Ellipse rückgängig gemacht, um den Rotationswinkel bestimmen zu können.
 
 Die Gleichung \ref{eq:ellipseQuadratic} kann umgeformt werden zu:
 \[
