@@ -1,4 +1,4 @@
-function [] = degrees()
+function [avgs] = reprojByDeg()
 values = load('reprojByDeg.txt', '-ascii');
 
 s = size(values);
