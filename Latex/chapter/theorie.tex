@@ -2,9 +2,13 @@
 \chapter{Theoretische Grundlagen}
 \label{ch:theory}
 In diesem Kapitel werden einige grundlegende Begriffe und Definitionen eingeführt, die in der folgenden Arbeit benötigt werden.
-Zunächst wird auf die Definition eines Kegels, eines Kegelstumpfs und dessen Mantelfläche eingegangen. 
-Anschließend wird eine Abbildung konstruiert, die die Oberfläche eines Kegels auf dessen Mantelfläche abbildet. 
-Im Anschluss wird kurz die Theorie hinter linearen Ausgleichsproblemen erklärt, woraufhin auf Kamerakalibrierung eingegangen wird. 
+Zunächst wird auf die Definition eines Kegels, eines Kegelstumpfs und dessen Mantelfläche eingegangen.
+%Anschließend wird eine Abbildung konstruiert, die die Oberfläche eines Kegels auf dessen Mantelfläche abbildet.
+Anschließend wird kurz die Theorie hinter linearen Ausgleichsproblemen erklärt, woraufhin der Prozess der Kamerakalibrierung
+beschrieben wird.
+Im Anschluss wird ein kurzer Überblick über Hough-Transformation zur Liniendetektion, sowie RANSAC zur Parameterschätzung gegeben.
+Es werden Ellipsen definiert und beschrieben wie die kürzeste Distanz eines Punktes zu einer Ellipsen approxmiert werden kann.
+Abschließend wird die Ellipsendetektion mittels Deformable Templates erklärt.
 
 \section{Kegel}
 \label{s:cone}
@@ -22,7 +26,7 @@ y &= u \\
 z &= \frac{u}{H} R~sin \theta
 \end{aligned}
 \end{equation} %
-mit $u\in [0, H]$ und $\theta \in [0, 2\pi)$. Hierbei steht $u$ für die aktuelle Höhe im Kegel. Um die vollständige Oberfläche zu beschreiben muss $u$ das Intervall $[0, H]$ abdecken. Zu jedem $u$ ergibt sich ein Kreis mit Radius $\frac{u}{H} R$. Um einen vollständigen Kreis zu erhalten muss $\theta$ demnach $[0, 2\pi)$ abdecken. Der Radius des Kreises nimmt zu bis er sein Maximum bei $u = H$ mit einem Wert von $R$ erreicht. 
+mit $u\in [0, H]$ und $\theta \in [0, 2\pi)$. Hierbei steht $u$ für die aktuelle Höhe im Kegel. Um die vollständige Oberfläche zu beschreiben muss $u$ das Intervall $[0, H]$ abdecken. Zu jedem $u$ ergibt sich ein Kreis mit Radius $\frac{u}{H} R$. Um einen vollständigen Kreis zu erhalten muss $\theta$ demnach $[0, 2\pi)$ abdecken. Der Radius des Kreises nimmt zu bis er sein Maximum bei $u = H$ mit einem Wert von $R$ erreicht.
 
 $S$ bezeichne die Seitenhöhe des Kegels und sei definiert durch das rechtwinklige Dreieck mit den Seitenlängen $H,R$ und $S$ (siehe Abbildung \ref{fig:cone}). Es gilt $S = \sqrt{H^2 + R^2}$.
 \bigskip
@@ -61,7 +65,7 @@ y &= u \\
 z &= (r + \frac{u}{\Delta H} (R - r))~sin \theta
 \end{aligned}
 \end{equation}
-mit $u\in [0, \Delta H]$ und $\theta \in [0, 2\pi)$. Die parametrische Form eines Kegelstumpfs ist somit eine Verallgemeinerung der Parametrisierung von klassischen Kegeln (siehe Gleichung \ref{eq:paramCone}), wobei beim klassischen Kegel $r = 0$ gilt. Es wird eine Skalierung des Intervalls $[0, R]$ auf das Intervall $[r, R]$ durchgeführt, sodass ein Wert von $u = 0$ den Radius $r$ für den Deckkreis liefert. 
+mit $u\in [0, \Delta H]$ und $\theta \in [0, 2\pi)$. Die parametrische Form eines Kegelstumpfs ist somit eine Verallgemeinerung der Parametrisierung von klassischen Kegeln (siehe Gleichung \ref{eq:paramCone}), wobei beim klassischen Kegel $r = 0$ gilt. Es wird eine Skalierung des Intervalls $[0, R]$ auf das Intervall $[r, R]$ durchgeführt, sodass ein Wert von $u = 0$ den Radius $r$ für den Deckkreis liefert.
 
 Die Mantelfläche des Kegelstumpfs aus Abbildung \ref{fig:coneLateral} kann in Polarkoordinaten parametrisch beschrieben werden als
 \begin{equation} \label{eq:paramLateral}
@@ -102,7 +106,7 @@ Aus der $y$-Koordinate lässt sich direkt die Höhe $u$ ablesen und somit analog
 \end{equation}
 
 
-Da $R, r, \Delta H$  und nun auch die Höhe bekannt sind, kann der Winkel $\theta$ im Kegelstumpf ausgerechnet werden. Anschließend muss dieser noch mit  $\frac{R}{S}$ multipliziert werden um ihn auf $[0, \alpha]$ zu skalieren (siehe Gleichung \ref{eq:paramLateral}).  In Gleichung \ref{eq:paramFrustum} wird nach $\cos\phi$, beziehungsweise nach $\sin\phi$ umgestellt und anschließend nach $\phi$ aufgelöst. 
+Da $R, r, \Delta H$  und nun auch die Höhe bekannt sind, kann der Winkel $\theta$ im Kegelstumpf ausgerechnet werden. Anschließend muss dieser noch mit  $\frac{R}{S}$ multipliziert werden um ihn auf $[0, \alpha]$ zu skalieren (siehe Gleichung \ref{eq:paramLateral}).  In Gleichung \ref{eq:paramFrustum} wird nach $\cos\phi$, beziehungsweise nach $\sin\phi$ umgestellt und anschließend nach $\phi$ aufgelöst.
 Zunächst werden beide Gleichungen durch $r + \frac{y}{\Delta h} (R - r)$ geteilt. Zu beachten ist nun, dass hier nicht die Umkehrfunktionen $\text{acos}$ oder $\text{asin}$ benutzen werden kann, da $\sin$ und $\cos$ in einer Periode $[0, 2\pi)$ nicht injektiv sind. Die Wertebereiche der Umkehrfunktionen sind also eingeschränkt. Im Allgemeinen liefern die Umkehrfunktion nicht den erwünschten Winkel aus $[0, 2\pi)$.
 Das gleiche Problem zeigt sich bei $\tan\phi = \frac{\sin\phi}{\cos\phi}$ und der Umkehrfunktion $\atano$. Um dieses Problem zu beheben, wird eine Fallunterscheidung gemacht und es ergibt sich wie folgt die sogenannte $\atant$-Funktion
 \[
@@ -117,7 +121,7 @@ Das gleiche Problem zeigt sich bei $\tan\phi = \frac{\sin\phi}{\cos\phi}$ und de
 \]
 
 In der Funktion wird untersucht in welchem Quadranten sich der Punkt $(x,y)$ befindet und entsprechend behandelt. Sie liefert den Winkel $\phi$ im Intervall $(-\pi, \pi]$ zurück gibt.
-Um den Winkel in $[0,2\pi)$ zu bestimmen muss anschließend $\bmod 2\pi$ gerechnet werden. 
+Um den Winkel in $[0,2\pi)$ zu bestimmen muss anschließend $\bmod 2\pi$ gerechnet werden.
 
 Aus diesen Erkenntnissen definieren wieder eine Hilfsfunktion
 \begin{equation} \label{eq:help2}
@@ -231,8 +235,8 @@ A^+ &= V\Sigma^+U^T
 \end{aligned}
 \]
 
-mit orthogonalen Matrizen $U\in\mathbb{R}^{m\times m}$ und $V\in\mathbb{R}^{n\times n}$ und einer Diagonalmatrix $\Sigma\in\mathbb{R}^{m\times n}$. 
-Die Matrix $\Sigma$ hat die absteigend sortierten Singulärwerten von $A$ auf der Diagonalen, die Matrix $\Sigma^+\in\mathbb{R}^{n\times m}$ die jeweiligen reziproken Singulärwerte. Bei beiden Matrizen wird die Diagonale mit Nullen aufgefüllt. 
+mit orthogonalen Matrizen $U\in\mathbb{R}^{m\times m}$ und $V\in\mathbb{R}^{n\times n}$ und einer Diagonalmatrix $\Sigma\in\mathbb{R}^{m\times n}$.
+Die Matrix $\Sigma$ hat die absteigend sortierten Singulärwerten von $A$ auf der Diagonalen, die Matrix $\Sigma^+\in\mathbb{R}^{n\times m}$ die jeweiligen reziproken Singulärwerte. Bei beiden Matrizen wird die Diagonale mit Nullen aufgefüllt.
 
 
 Die Lösung des Ausgleichsproblems kann dann mittels SVD angeben werden als:
@@ -315,7 +319,7 @@ Extrinsische Parameter beschreiben die dreidimensionale Position und Orientierun
 
 %Zunächst wird also das Weltkoordinatensystem wie in Abbildung \ref{fig:extrinsic} mit einer Rotation und einer Translation in das Kamerakoordinatensystem überführt. Anschließend wird
 
-Die Matrix $A$ kann mit gegebenen Punktkorrespondenzen bestimmt werden. Dafür werden Punkte $(x_k,y_k, z_k), k = 1,\dotsc,m$ im Weltkoordinatensystem und die korrespondierenden Punkte $(u_k, v_k)$ auf der Bildebene benötigt. 
+Die Matrix $A$ kann mit gegebenen Punktkorrespondenzen bestimmt werden. Dafür werden Punkte $(x_k,y_k, z_k), k = 1,\dotsc,m$ im Weltkoordinatensystem und die korrespondierenden Punkte $(u_k, v_k)$ auf der Bildebene benötigt.
 Zunächst wird das Gleichungssystems \ref{eq:projectionMat} nach $u$ und $v$ umgestellt:
 
 \[
@@ -472,7 +476,7 @@ Die Güte des Modells wird im Allgemeinen durch ein Distanzmaß, wie zum Beispie
 Hat ein Messdatum eine vorher definierte Maximaldistanz zum geschätzten Modell nicht überschritten, wird es ins sogenannte Consensus Set des Modells aufgenommen.
 Das Modell mit dem größten Consensus Set wird schließlich ausgewählt.
 
-Die Anzahl der Punkte, die notwendig sind, um das Modell eindeutig zu beschreiben sei durch $k\in\mathbb{N}$ gegeben. Der relativen Ausreißeranteil wird mit $\epsilon \in[0,1)$ bezeichnet. 
+Die Anzahl der Punkte, die notwendig sind, um das Modell eindeutig zu beschreiben sei durch $k\in\mathbb{N}$ gegeben. Der relativen Ausreißeranteil wird mit $\epsilon \in[0,1)$ bezeichnet.
 Die Anzahl der Iterationen, die mindestens notwendig sind, um mit einer Wahrscheinlichkeit von $p \in [0,1)$, bei einem relativen Ausreißeranteil von $\epsilon$ und $k$ Punkten mindestens einmal eine ausreißerfreie Teilmenge der Messreihe zu erhalten, lässt sich dann berechnen mit \cite{Fischler1981}:
 
 \begin{equation}
@@ -602,7 +606,7 @@ Formt man nun Gleichung \ref{eq:PCARot} weiter um, ergibt sich:
 
 da $\lambda_1, \lambda_2 \neq 0$.
 
-Vergleicht man diese Gleichung mit Gleichung \ref{eq:ellipseNoRotTrans}, so kann das Zentrum der transformierten Ellipse $(x'_0, y'_0)$ aus Gleichung \ref{eq:ellipseCenter} einfach abgelesen werden. 
+Vergleicht man diese Gleichung mit Gleichung \ref{eq:ellipseNoRotTrans}, so kann das Zentrum der transformierten Ellipse $(x'_0, y'_0)$ aus Gleichung \ref{eq:ellipseCenter} einfach abgelesen werden.
 Um das Zentrum der eigentlichen Ellipse zu bestimmen, muss mit der inversen Rotation $S^T$ multipliziert werden:
 \[
 \begin{pmatrix} x_0 \\ y_0 \end{pmatrix} = S^T \begin{pmatrix} x'_0 \\ y'_0 \end{pmatrix}.
@@ -697,7 +701,7 @@ Man macht nun eine Fallunterscheidung:
 	\item Der einfachste Fall ist, wenn sich der Punkt $Q$ auf der $y$-Achse (außer $(0,0)$) befindet, wenn also gilt $y_0 = 0, y_1 > 0$.
 	Da die Hauptachse nach der $y$-Achse ausgerichtet ist und $a >= b$ gilt, ist der Punkt auf der Ellipse mit der kürzesten Distanz zu $Q$ offenbar $E = (0, b)$ und für die Distanz gilt $d = \abs{y_1 - b}$.
 	\item Als nächstes befinde sich ein $Q$ auf der $x$-Achse (einschließlich $(0,0)$), wenn also gilt  $y_0 \geq 0, y_1 = 0$. Es gilt also mit \ref{eq:ellipseDistY}
-	\begin{equation} \label{eq:xAxisQ}	
+	\begin{equation} \label{eq:xAxisQ}
 		y_0 = x_0\left(1 + \frac{t}{a^2}\right), \quad 0 = x_1\left(1 + \frac{t}{b^2}\right)
 	\end{equation}
 

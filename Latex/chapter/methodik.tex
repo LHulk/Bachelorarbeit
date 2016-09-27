@@ -10,11 +10,11 @@ Darüber hinaus wird angenommen, dass sich das Zentrum des Deckkreises an der Po
 
 \section{Kalibrierungsmuster}
 \label{s:calibrationPattern}
-\subsection{Aufbau des Kalibrierungsmusters}
 Um eine Beziehung zwischen Bildpunkten und Kegelpunkten herstellen zu können, ist ein Kalibrierungsmuster notwendig.
 
 Die Wahl des Kalibrierungsmusters spielt dabei eine entscheidende Rolle bei der Robustheit und Präzision der Entfaltung. Es muss gewährleistet sein, dass die charakteristischen Merkmale des Musters auch bei leichten Abweichungen der Kamera vom Lot und schlechteren Beleuchtungssituationen zuverlässig erkannt werden. Das Muster muss darüber hinaus so entworfen sein, dass beim Zusammenlegen im Kegel, dessen geometrische Eigenschaften nicht verfälscht, sondern realitätsgetreu wiedergeben werden.
 
+\subsection{Aufbau des Kalibrierungsmusters}
 Die Wahl fiel auf ein Muster, dass in äquidistanten Abständen $\Delta R$, beginnend mit dem Radius $r$ des Deckkreises (siehe Abbildung \ref{fig:coneFrustum}) Kreislinien und in gleichen Winkelabständen $\Delta \alpha$ auf der Seitenhöhe Liniensegmente besitzt. Das zusammengelegte Muster ist in Abbildung \ref{fig:calibrationPatternTop} skizziert, beziehungsweise das entfaltete in \ref{fig:calibrationPattern}. Die Anzahl der Kreislinien wird mit $n$ gekennzeichnet, die Anzahl sichtbarer Liniensegmente im Kegel mit $m$. Zu beachten ist, dass bedingt durch das Entfalten, in Abbildung \ref{fig:calibrationPattern}  ein Liniensegment doppelt zu sehen ist. Die schwarzen Kreise werden als Samples bezeichnet.
 
 Dadurch dass die Geometrie des Kegels bekannt ist, kann jedem Sample ein Punkt auf dem Kegel im Weltkoordinatensystem zugeordnet werden. Da ein Kegel beliebig um die $y$-Achse rotiert werden kann, ist diese Zuordnung zunächst nicht eindeutig. Dazu sei angenommen, dass das Liniensegment mit dem kleinsten Winkel zur $x$-Achse mit dem Kegelwinkel $\theta = 0$ korrespondiert (siehe Gleichung \ref{eq:paramFrustum} in Kapitel \ref{s:cone}).
@@ -99,9 +99,11 @@ In Abbildung \ref{fig:blobDetect} ist beispielhaft links ein Grauwertbild und re
 \section{Ellipsen-Detektion}
 \label{s:ellipseDetection}
 
-\subsection{RANSAC}
 Nachdem die Sample-Positionen bestimmt wurden, muss für jeden Sample entschieden werden, auf welcher der Kreislinien es liegt. Da die Kreise, bedingt durch perspektivische Verzerrung, zu Ellipsen werden, wird ein Verfahren benötigt, dass Ellipsen erkennt.
+Dies kann mit Hilfe von zwei verschiedenen Verfahren realisiert werden. Zunächst wird ein Ansatz zur Parameterschätzung der Ellipsen mittels RANSAC erläutert, woraufhin auf einen Ansatz eingegangen wird, bei dem die Ellipsen iterativ mit Hilfe von Deformable Templates
+detektiert werden.
 
+\subsection{RANSAC}
 
 
 \begin{figure}[!htb]
@@ -125,7 +127,7 @@ Nachdem die Sample-Positionen bestimmt wurden, muss für jeden Sample entschiede
 Zunächst werden die Kanten mit Hilfe des Canny-Kantendektors \cite{Canny1986} erfasst (siehe Abbildung \ref{fig:canny}).
 Anschließend wird eine möglichst genau Schätzung des Zentrum der innersten Ellipse vorgenommen.
 Dafür werden Hough-Transformationen (siehe Kapitel \ref{s:hough}) benutzt, um Linien im Kantenbild zu detektieren.
-Es werden anschließend die Schnittpunkte aller Liniensegmente bestimmt. 
+Es werden anschließend die Schnittpunkte aller Liniensegmente bestimmt.
 Die Liniensegmente schneiden sich dabei genau dann in einem Punkt, wenn sich die Kamera genau im Lot befindet und perfekt auf das Zentrum des Deckkreises ausgerichtet ist.
 Darüber hinaus werden, auf Grund der Liniendicke auf dem Kalibrierungsmuster, durch den Canny-Algorithmus viele Linien als doppelte Linien gekennzeichnet\footnote{Stellt man sich ein relativ breites Liniensegment vor, so gibt es einmal den Übergang vom Hintergrund auf die Linie, sowie den Übergang von der Linie wieder auf den Hintergrund}. Auch ein inhomogener Hintergrund, erschwert die Ermittlung eines Mittelpunkts. Befinden sich Objekte im Hintergrund, werden durch die Kantendetektion auch deren Kanten ermittelt. Die Hough-Transformation detektiert nun auch außerhalb des Kalibrierungsmusters Linien. Die Schnittpunkte mit solchen Linien können beliebig stark von dem eigentlichen Mittelpunkt abweichen. Würde man an dieser Stelle beispielsweise den Mittelwert aller Schnittpunkte (elementweise) berechnen, könnten solche Ausreißer die Lokalisierung des Mittelpunkts erheblich verschlechtern.
 
@@ -181,7 +183,7 @@ Diese wird dann mittels Hauptachsentransformation, wie in Kapitel \ref{s:ellipse
 Um die, für RANSAC benötigte, Distanz zu berechnen, wird das Verfahren aus Kapitel \ref{sc:distPointEllipse} genutzt, was die exakte euklidische Distanz eines Punktes zu einer Ellipse in der Form $(x_0,y_0,a,b,\phi)$ approxmiert.
 Ein Verfahren wie das Verfahren der kleinsten Quadraten anstelle von RANSAC funktioniert hier nicht, da die weißen Pixel bezüglich einer zu bestimmenden Ellipse, ausreißerbehaftet sind. Wird zum Beispiel auf Grund schlechter Lichtverhältnisse eine Kreislinie nicht deutlich aufgenommen, kann es in dem Kantenbild dazu kommen, dass Kreislinien nicht zusammenhängend sind und folglich treffen die ausgesendeten Strahlen teilweise die nächst äußere Kreislinie. Dieses Problem ist in Abbildung \ref{fig:rayCastR} zu sehen. Man sieht, dass die Anzahl der Pixel, auf der Ellipse, dessen Parameter geschätzt werden sollen, im Vergleich zur Abbildung \ref{fig:rayCast} stark abgenommen hat. Die Strahlen treffen vermehrt auf die nächste äußere Ellipse. Die Ausreißeranzahl nimmt stark zu.
 
-Da die Laufzeit nicht im Vordergrund steht, kann eine großzügige Schätzung des Fehleranteils von $\epsilon = 0.4$ mit einer gewünschten Wahrscheinlichkeit $p = 0.9999$ gewählt werden, was zu einer Mindestanzahl an Iterationen von circa $200$ führt (siehe Kapitel \ref{s:ransac}). Die letztendlich bestimmten Ellipsen sind beispielhaft in Abbildung \ref{fig:detectedEllipses} zu sehen. 
+Da die Laufzeit nicht im Vordergrund steht, kann eine großzügige Schätzung des Fehleranteils von $\epsilon = 0.4$ mit einer gewünschten Wahrscheinlichkeit $p = 0.9999$ gewählt werden, was zu einer Mindestanzahl an Iterationen von circa $200$ führt (siehe Kapitel \ref{s:ransac}). Die letztendlich bestimmten Ellipsen sind beispielhaft in Abbildung \ref{fig:detectedEllipses} zu sehen.
 
 
 \begin{figure}[!htb]
@@ -361,7 +363,7 @@ mit $\phi \in [0, 2\pi)$ und der Haupt- und Nebenachse $a$, beziehungsweise $b$.
 \] %%
 
 Analog zu oben werden nun die 3D-Koordinaten von $P$ als lineare Interpolation zwischen den bestimmen 3D-Koordinaten von $L$ und $R$ bestimmt. Als Interpolationsfaktor werden die Winkeldifferenzen
-$\frac{\phi_L - \phi_P}{\phi_L - \phi_R}$ benutzt. Für die Weltkoordinaten $P_W$ des Pixels $P$ gilt insgesamt: 
+$\frac{\phi_L - \phi_P}{\phi_L - \phi_R}$ benutzt. Für die Weltkoordinaten $P_W$ des Pixels $P$ gilt insgesamt:
 \[
 P_W = \left(\frac{\phi_L - \phi_P}{\phi_L - \phi_R}\right) R_W + \left(1 - \frac{\phi_L - \phi_P}{\phi_L - \phi_R}\right) L_W.
 \]
@@ -375,7 +377,7 @@ P_W = \left(\frac{\phi_L - \phi_P}{\phi_L - \phi_R}\right) R_W + \left(1 - \frac
 
 Die Pixel, die sich auf Liniensegmenten befinden werden einfach linear interpoliert. Die Punkte, die sich auf Kreislinien befinden werden über Winkel interpoliert.
 
-Jedes Pixel hat nun 3D-Koordinaten im Kegel erhalten. Mit Hilfe der konstruierten Abbildung \ref{eq:coneToLateral} aus Kapitel \ref{s:cone}, können nun die interpolierten Punkte auf die Mantelfläche abgebildet werden. Es ergibt sich schließlich das entzerrte Bild, wie es in Abbildung \ref{fig:forwardUnfold} exemplarisch dargestellt ist. 
+Jedes Pixel hat nun 3D-Koordinaten im Kegel erhalten. Mit Hilfe der konstruierten Abbildung \ref{eq:coneToLateral} aus Kapitel \ref{s:cone}, können nun die interpolierten Punkte auf die Mantelfläche abgebildet werden. Es ergibt sich schließlich das entzerrte Bild, wie es in Abbildung \ref{fig:forwardUnfold} exemplarisch dargestellt ist.
 
 
 
