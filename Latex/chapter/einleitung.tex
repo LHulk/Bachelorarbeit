@@ -7,21 +7,6 @@ In den vergangenen Jahren wurden verschiedene Versuchsaufbauten zur Untersuchung
 Als problematisch erwies sich, dass das Verhalten der Larven beim Herausnehmen aus ihren Aufzuchtröhrchen, bedingt durch den ausgesetzten Stress, negativ beeinflusst wurde.
 Es wurde daher ein Aufbau entwickelt, in dem die Larven direkt in ihrem Aufzuchtröhrchen beobachtet werden konnten, wie in Abbildung \ref{fig:oldSetup} schematisch dargestellt.
 Die Larven befinden sich hierbei in einem Zylinder, der von insgesamt fünf Kameras beobachtet wird, die jeweils an einen Raspberry Pi angeschlossen sind. Die Kameras nehmen nun simultan ein Bild auf, wobei hier eine Synchronisation notwendig ist. Auf Grund der Krümmung des Zylinders, müssen diese nun entsprechend entzerrt werden. Anschließend werden die fünf entzerrten Bilder zu einem Gesamtbild zusammengefügt.
-
-Um ein besseren Verhältnis zwischen der Anzahl der Kameras und des Aufzuchtgeheges zu erreichen, wäre eine Reduktion der Kameraanzahl wünschenswert.
-Statt eines Zylinders wird in einem neuen Aufbau einen Kegel benutzt, wie in Abbildung \ref{fig:newSetup} zu sehen. Das Gehege wird mit einer einzigen Weitwinkelkamera beobachtet. Eine Synchronisation, sowie ein Zusammenfügen von Einzelbilder, ist hier also nicht mehr notwendig.
-Wie auch bei dem bisherigen Aufbau muss hier jedoch eine Entzerrung durchgeführt werden. Die Larven, die sich am oberen Rand des Kegels befinden scheinen sonst größer, als jene, die sich im unteren Bereich aufhalten. Ein relativer Vergleich der Larven wäre somit nicht möglich.
-
-In dieser Arbeit werden zwei Verfahren zum Entzerren solcher Kegeloberflächen vorgestellt, sodass die relative Vergleichbarkeit der Larven gewährleistet ist.
-Dazu wird die Kegeloberfläche mit Hilfe einer geeigneten Abbildung auf die Mantelfläche abgebildet.
-
-Im folgenden Kapitel dieser Arbeit werden zunächst die notwendigen theoretischen Grundlagen erarbeitet.
-Anschließend werden beide Verfahren zur Entzerrung von Kegeloberflächen vorgestellt und ihre Funktionsweisen erläutert, woraufhin auf den implementierten Kalibrierungsassistenten eingegangen wird, der diesen Prozess vereinfachen soll.
-Im Anschluss werden beide Verfahren gegenüber gestellt und verschiedene Einflussfaktoren auf die Präzision und Qualität der Entzerrung untersucht. 
-Im letzten Kapitel dieser Arbeit wird ein Fazit gezogen und ein Ausblick auf mögliche Verbesserungsmaßnahmen für die verwendeten Verfahren gegeben.
-
-
-
 \begin{figure}[!htb]
 	\centering
 	\begin{subfigure}{.5\textwidth}
@@ -39,3 +24,15 @@ Im letzten Kapitel dieser Arbeit wird ein Fazit gezogen und ein Ausblick auf mö
 	\caption{beide Ansätze im Vergleich}
 	\label{fig:renderedSetup}
 \end{figure}
+
+Um ein besseren Verhältnis zwischen der Anzahl der Kameras und des Aufzuchtgeheges zu erreichen, wäre eine Reduktion der Kameraanzahl wünschenswert.
+Statt eines Zylinders wird in einem neuen Aufbau einen Kegel benutzt, wie in Abbildung \ref{fig:newSetup} zu sehen. Das Gehege wird mit einer einzigen Weitwinkelkamera beobachtet. Eine Synchronisation, sowie ein Zusammenfügen von Einzelbilder, ist hier also nicht mehr notwendig.
+Wie auch bei dem bisherigen Aufbau muss hier jedoch eine Entzerrung durchgeführt werden. Die Larven, die sich am oberen Rand des Kegels befinden scheinen sonst größer, als jene, die sich im unteren Bereich aufhalten. Ein relativer Vergleich der Larven wäre somit nicht möglich.
+
+In dieser Arbeit werden zwei Verfahren zum Entzerren solcher Kegeloberflächen vorgestellt, sodass die relative Vergleichbarkeit der Larven gewährleistet ist.
+Dazu wird die Kegeloberfläche mit Hilfe einer geeigneten Abbildung auf die Mantelfläche abgebildet.
+
+Im folgenden Kapitel dieser Arbeit werden zunächst die notwendigen theoretischen Grundlagen erarbeitet.
+Anschließend werden beide Verfahren zur Entzerrung von Kegeloberflächen vorgestellt und ihre Funktionsweisen erläutert, woraufhin auf den implementierten Kalibrierungsassistenten eingegangen wird, der diesen Prozess vereinfachen soll.
+Im Anschluss werden beide Verfahren gegenüber gestellt und verschiedene Einflussfaktoren auf die Präzision und Qualität der Entzerrung untersucht.
+Im letzten Kapitel dieser Arbeit wird ein Fazit gezogen und ein Ausblick auf mögliche Verbesserungsmaßnahmen für die verwendeten Verfahren gegeben.
