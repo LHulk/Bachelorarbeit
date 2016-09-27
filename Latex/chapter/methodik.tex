@@ -177,10 +177,10 @@ a \\ b \\ c \\ d \\ e \\ f
 \end{pmatrix}
 \]
 
-gelöst, was auf der Gleichung \ref{eq:ellipseQuadratic} aus Kapitel \ref{s:ellipse} basiert. Dabei wird die Polynomschreibweise einer Ellipse benutzt, da diese im Gegensatz zu der Form $(x_0,y_0,a,b,\phi)$ linear ist. Das Gleichungsystem ist also ein lineares Gleichungssystem und kann mit herkömmlichen Methoden der Numerik gelöst werden. Ein Nachteil dieses Ansatzes ist jedoch, dass nicht alle Werte für $(a,b,c,d,e,f)$ eine nicht entartete reele Ellipse definieren. Nach dem Lösen muss demnach geprüft werden, ob es sich tatsächlich um eine Ellipse handelt.
-Diese wird dann mittels Hauptachsentransformation, wie in Kapitel \ref{s:ellipse} beschrieben, in die Ellipsenform $(x_0,y_0,a,b,\phi)$ umgewandelt.
+gelöst, was auf der Gleichung \ref{eq:ellipseQuadratic} aus Kapitel \ref{s:ellipse} basiert. Dabei wird die Polynomschreibweise einer Ellipse benutzt, da diese im Gegensatz zu der Form $(x_0,y_0,a,b,\theta)$ linear ist. Das Gleichungsystem ist also ein lineares Gleichungssystem und kann mit herkömmlichen Methoden der Numerik gelöst werden. Ein Nachteil dieses Ansatzes ist jedoch, dass nicht alle Werte für $(a,b,c,d,e,f)$ eine nicht entartete reele Ellipse definieren. Nach dem Lösen muss demnach geprüft werden, ob es sich tatsächlich um eine Ellipse handelt.
+Diese wird dann mittels Hauptachsentransformation, wie in Kapitel \ref{s:ellipse} beschrieben, in die Ellipsenform $(x_0,y_0,a,b,\theta)$ umgewandelt.
 
-Um die, für RANSAC benötigte, Distanz zu berechnen, wird das Verfahren aus Kapitel \ref{sc:distPointEllipse} genutzt, was die exakte euklidische Distanz eines Punktes zu einer Ellipse in der Form $(x_0,y_0,a,b,\phi)$ approxmiert.
+Um die, für RANSAC benötigte, Distanz zu berechnen, wird das Verfahren aus Kapitel \ref{sc:distPointEllipse} genutzt, was die exakte euklidische Distanz eines Punktes zu einer Ellipse in der Form $(x_0,y_0,a,b,\theta)$ approxmiert.
 Ein Verfahren wie das Verfahren der kleinsten Quadraten anstelle von RANSAC funktioniert hier nicht, da die weißen Pixel bezüglich einer zu bestimmenden Ellipse, ausreißerbehaftet sind. Wird zum Beispiel auf Grund schlechter Lichtverhältnisse eine Kreislinie nicht deutlich aufgenommen, kann es in dem Kantenbild dazu kommen, dass Kreislinien nicht zusammenhängend sind und folglich treffen die ausgesendeten Strahlen teilweise die nächst äußere Kreislinie. Dieses Problem ist in Abbildung \ref{fig:rayCastR} zu sehen. Man sieht, dass die Anzahl der Pixel, auf der Ellipse, dessen Parameter geschätzt werden sollen, im Vergleich zur Abbildung \ref{fig:rayCast} stark abgenommen hat. Die Strahlen treffen vermehrt auf die nächste äußere Ellipse. Die Ausreißeranzahl nimmt stark zu.
 
 Da die Laufzeit nicht im Vordergrund steht, kann eine großzügige Schätzung des Fehleranteils von $\epsilon = 0.4$ mit einer gewünschten Wahrscheinlichkeit $p = 0.9999$ gewählt werden, was zu einer Mindestanzahl an Iterationen von circa $200$ führt (siehe Kapitel \ref{s:ransac}). Die letztendlich bestimmten Ellipsen sind beispielhaft in Abbildung \ref{fig:detectedEllipses} zu sehen.
@@ -242,7 +242,7 @@ Konkret sehen die Terme wie folgt aus
 \end{equation}
 
 wobei $n$ die Anzahl der Punkte auf dem Ellipsenrand sind. $p_i$ ist definiert als der $i$-te Punkt auf der Ellipse, also als $H(\phi_i)$ mit $\phi_i = \frac{i}{n}\cdot2\pi ~\forall i = 0,\dotsc,n-1$.
-Der Term $I_M(p_i)$ ist definiert als $I_M(p_i) = \sqrt{I_x(p_i)^2 + I_y(p_i)^2}$, wobei $I_x$, sowie $I_y$ für die diskreten partiellen Ableitungen nach $x$ respektive $y$ stehen. Durch $I_M(p_i)$ wird somit die Kantenstärke in Punkt $p_i$ charakterisiert. Der Term $I_O(p_i)$ ist definiert als $I_O(p_i) = \atano\left(\frac{I_y(p_i)}{I_x(p_i)}\right)$
+Der Term $I_M(p_i)$ ist definiert als $I_M(p_i) = \sqrt{I_x(p_i)^2 + I_y(p_i)^2}$, wobei $I_x$, sowie $I_y$ für die diskreten partiellen Ableitungen nach $x$ respektive $y$ stehen. Durch $I_M(p_i)$ wird somit die Kantenstärke in Punkt $p_i$ charakterisiert. Der Term $I_O(p_i)$ ist definiert als $I_O(p_i) = \atant\left(I_y(p_i),I_x(p_i)\right)$
 und beschreibt somit die Gradientenrichtung der Kanten.
 
 Man wählt dabei als Startwert eine Ellipse, deren Zentrum dem Bildzentrum entspricht und deren Hauptachse und Nebenachse möglichst groß sind ($a = w/2$ und $b = h/2$ für ein Bild mit Breite $w$ und Höhe $h$) und bestimmt dann numerisch ein Minimum der Funktion. Der Term $E_M$ wird minimal, wenn entlang der Ellipse die Kantenstärke groß ist. Der Term $E_A$ wird minimal wenn die Winkel der Normalenvektoren ähnlich zu denen der Kanten sind und $E_S$ wird minimal, wenn die Distanz aufeinanderfolgender Ellipsepunkte klein wird, also der Ellipsenumfang klein wird. Der Term lässt die Ellipse also schrumpfen. $\alpha, \beta$ und $\gamma$ steuern hierbei den Einluss der einzelnen Terme. Das Minimum der Funktion sollte die äußerste Ellipse im Kalibirierungsmuster sein. Anschließend wird diese Ellipse vom Bild entfernt und man sucht wiederholt Minima der Funktion bis alle Ellipsen detektiert wurden.
@@ -342,12 +342,27 @@ Bei der Vorwärtsentfaltung muss wie oben erwähnt zu jedem Pixel die zugehörig
 
 Zunächst werden diejenigen Pixel, die sich weder auf einer Kreislinie, noch auf einem Liniensegment befinden, betrachtet. Es gibt zu einem Pixel $P$ also immer vier Sample-Nachbarn $(b_l, b_r, t_r, t_l)$. Diese Situation ist in Abbildung \ref{fig:radialInterpolation} illustriert.
 
-Nachdem die vier Nachbarn bestimmt wurden, können im ersten Schritt die Abstände $d_1$ und $d_2$ von Pixel $P$ zur inneren Ellipse $E_b$, respektive äußeren Ellipse $E_t$ berechnet werden. Mithilfe dieser Abstände kann nun eine "`Interpolationsellipse"' $E_1$ definiert werden als
-\begin{equation*}
+Nachdem die vier Nachbarn bestimmt wurden, können im ersten Schritt die Abstände $d_1$ und $d_2$ von Pixel $P$ zur inneren Ellipse $E_b$, respektive äußeren Ellipse $E_t$ berechnet werden. Mithilfe dieser Abstände kann nun eine "`Interpolationsellipse"' $E_{int}$ definiert werden als
+\[
 	E_{int} = \left(\frac{d_1}{d_1 + d_2}\right) \cdot E_t + \left(\frac{d_2}{d_1 + d_2}\right) E_b,
-\end{equation*}
-
-wobei eine Multiplikation mit einem Skalar alle Charakteristika einer Ellipse skaliert. Der Drehwinkel $\theta$ wird hierbei bei $2\pi$ umgebrochen. Eine Addition geschieht elementweise. Im nächsten Schritt wird der Schnittpunkt $L$ mit dem Liniensegment $\overline{b_lt_l}$, sowie der Schnittpunkt $R$ mit dem Liniensegment $\overline{b_rt_r}$ bestimmt.
+\]
+wobei eine Multiplikation mit einem Skalar alle Charakteristika einer Ellipse skaliert. Der Drehwinkel $\theta$ wird hierbei bei $2\pi$ umgebrochen. Eine Addition geschieht elementweise. Im nächsten Schritt wird der Schnittpunkt $L$ der Interpolationsellipse mit dem Liniensegment $\overline{b_lt_l}$, sowie der Schnittpunkt $R$ mit dem Liniensegment $\overline{b_rt_r}$ bestimmt. Dafür wird einfach das Segment in Vektorschreibweise
+\[
+\begin{pmatrix}
+x \\ y
+\end{pmatrix} = 
+\begin{pmatrix}
+x_0 \\ y_0
+\end{pmatrix} + \lambda \begin{pmatrix}
+x_1 - x_0 \\ y_1 - y_0
+\end{pmatrix}
+\] %%
+für $\lambda \in [0,1]$ und zwei Punkte $(x_0,y_0)$, sowie $(x_1,y_1)$, nach einer Transformation in das Ellipsenkoordinatensystem, in die implizite Gleichung der Ellipse
+\[
+\frac{x^2}{a^2} + \frac{y^2}{b^2} = 1
+\] %
+eingesetzt.
+Es wird nun die erhaltene quadratische Gleichung nach $\lambda$ aufgelöst. Auf Grund der Wahl der Punkte $(x_0,y_0)$ und $(x_1,y_1)$ ergibt sich immer ein einziger Schnittpunkt.
 
 Da sich $t_l$, $L$ und $b_l$ nun auf einem gemeinsamen Liniensegment befinden, kann bezüglich der Weltkoordinaten linear interpoliert werden. Analoges gilt für $t_r$,$R$ und $b_r$.
 Die interpolierte Weltkoordinaten von $L$, sowie $R$ werden als $L_W$ und $R_W$ bezeichnet.

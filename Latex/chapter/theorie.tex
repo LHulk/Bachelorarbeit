@@ -14,8 +14,9 @@ Abschließend wird die Ellipsendetektion mittels Deformable Templates erklärt.
 \label{s:cone}
 
 \begin{definition}[Kegel]
-	Ein Kegel ist ein geometrischer Körper, der durch eine beliebige Grundfläche, sowie einen Punkt definiert wird.
+	Ein Kegel ist ein geometrischer Körper, der durch eine beliebige Grundfläche, sowie einen Punkt (Spitze) definiert wird.
 	Ein Kegel mit Kreis (auch Grundkreis genannt) als Grundfläche wird als Kreiskegel bezeichnet. Liegt die Kegelspitze auf einer Geraden durch die Normale der Grundebene, wird der Kegel als gerade bezeichnet.
+	Die Höhe $H$ eines Kegels ist definiert als die kürzeste Distanz der Spitze zur Grundfläche und steht orthogonal zu dieser. \cite{James1992}
 \end{definition}
 
 In der weiteren Arbeit werden nur gerade Kreiskegel betrachtet. Die Oberfläche eines Kegel mit Spitze $T(0,0,0)$, Radius $R$ und Höhe $H$, dessen Zentrum des Grundkreises in $(0,H,0)$ liegt, kann parametrisch beschrieben werden als:
@@ -31,7 +32,7 @@ mit $u\in [0, H]$ und $\theta \in [0, 2\pi)$. Hierbei steht $u$ für die aktuell
 $S$ bezeichne die Seitenhöhe des Kegels und sei definiert durch das rechtwinklige Dreieck mit den Seitenlängen $H,R$ und $S$ (siehe Abbildung \ref{fig:cone}). Es gilt $S = \sqrt{H^2 + R^2}$.
 \bigskip
 \begin{definition}[Kegelstumpf und Ergänzungskegel]
-	Ein Kegelstumpf entsteht als Schnitt eines geraden Kreiskegels mit einer zur Grundfläche parallelen Ebene (siehe Abbildung \ref{fig:coneWithFrustum}). Der Kegel, der definiert ist durch die Schnittfläche und die Spitze des ursprünglichen Kegels wird als Ergänzungskegel bezeichnet. Der geometrische Körper von Grundfläche zur Schnittfläche wird als Kegelstumpf bezeichnet. Die Grundfläche des Kegelstumpfs wird Grundkreis, die Schnittfläche Deckkreis genannt.
+	Ein Kegelstumpf entsteht als Schnitt eines geraden Kreiskegels mit einer zur Grundfläche parallelen Ebene (siehe Abbildung \ref{fig:coneWithFrustum}) \cite{James1992}. Der Kegel, der definiert ist durch die Schnittfläche und die Spitze des ursprünglichen Kegels wird als Ergänzungskegel bezeichnet. Der geometrische Körper von Grundfläche zur Schnittfläche wird als Kegelstumpf bezeichnet. Die Grundfläche des Kegelstumpfs wird Grundkreis, die Schnittfläche Deckkreis genannt.
 
 	$H, R, S$ sind dabei weiterhin die Höhe, Radius und Seitenhöhe des gesamten Kegels. Hinzu kommen $h,r,s$ als Höhe, Radius und Seitenhöhe des Ergänzungskegels. Die Höhe, sowie die Seitenhöhe des Kegelstumpfs werden durch die Differenzen $\Delta S = S - s,~ \Delta H = H-h$ charakterisiert (siehe Abbildung \ref{fig:coneFrustum}).
 \end{definition}
@@ -755,6 +756,6 @@ Man macht nun eine Fallunterscheidung:
 \label{s:anaDef}
 Analytical Deformable Templates ist ein Verfahren zur Detektion von analytischen Kurven.
 Ein Template ist dabei definiert durch eine Menge von Parametern, die a-priori Wissen über die erwartete Form ermöglichen.
-Als Beispiel sei eine  Ellipse genannt, die durch ihr Zentrum, ihren beiden Achsen und den Drehwinkel also $(x_0,y_0,a,b,\phi)$ definiert ist.
+Als Beispiel sei eine  Ellipse genannt, die durch ihr Zentrum, ihren beiden Achsen und den Drehwinkel also $(x_0,y_0,a,b,\theta)$ definiert ist.
 Es wird dann eine Energiefunktion konstruiert, dessen Terme eine Anziehung des Templates an Hauptmerkmale (wie Kantenstärke, Kantenorientierung, Farbintensität, etc. ) des Bildes hervorrufen.
 Die Energiefunktion wird dabei durch numerische Verfahren, wie dem Gradientenverfahren, minimiert \cite{Yuille1992}.
