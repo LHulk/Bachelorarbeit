@@ -2,6 +2,7 @@
 
 const bool isDebug = false;
 
+//use opencv's simple blob detector to detect dots in calibration pattern
 std::vector<cv::Point2f> DotDetection::detectDots(const cv::Mat& greyImage)
 {
 	std::vector<cv::Point2f> centers;
@@ -9,6 +10,8 @@ std::vector<cv::Point2f> DotDetection::detectDots(const cv::Mat& greyImage)
     cv::Mat blured;
     cv::GaussianBlur(greyImage, blured, cv::Size(3,3), 2.0, 2.0);
 
+
+	//filter rules
     cv::SimpleBlobDetector::Params params;
 	params.minThreshold = 50;
     params.maxThreshold = 800;
@@ -24,10 +27,8 @@ std::vector<cv::Point2f> DotDetection::detectDots(const cv::Mat& greyImage)
 	params.minConvexity = 0.75f;
 
     cv::SimpleBlobDetector detector(params);
-
     std::vector<cv::KeyPoint> keyPoints;
     detector.detect( greyImage, keyPoints);
-
     cv::KeyPoint::convert(keyPoints, centers);
 
     if(isDebug)

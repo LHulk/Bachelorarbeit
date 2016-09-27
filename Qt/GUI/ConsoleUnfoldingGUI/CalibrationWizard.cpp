@@ -271,7 +271,7 @@ void CalibrationWizard::on_buttonGetMappings_clicked()
 	cv::Mat proj = Transformation::getProjectiveMatrix(cone);
 	this->projectionMatrix = proj;
 
-	std::vector<cv::Point2f> reproj = Transformation::getReprojectionError(cone, proj);
+	/*std::vector<cv::Point2f> reproj = Transformation::getReprojectionError(cone, proj);
 	std::string reprojx = ""; std::string reprojy = "";
 	for(const auto& pt : reproj)
 	{
@@ -280,7 +280,7 @@ void CalibrationWizard::on_buttonGetMappings_clicked()
 
 	}
 	reprojx += ""; reprojy += "";
-    std::cout << reprojx << "\n" << reprojy << std::endl;
+	std::cout << reprojx << "\n" << reprojy << std::endl;*/
 
 	/*double avg = std::accumulate(reproj.begin(), reproj.end(), 0.0, [](double a, const cv::Point2f pt) { return a + cv::norm(pt);});
 	avg /= reproj.size();

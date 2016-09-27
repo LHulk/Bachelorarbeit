@@ -2,7 +2,7 @@
 
 using cv::Point;
 
-static bool isDebug = true;
+static bool isDebug = false;
 
 Line::Line(float rho, float theta)
 {
@@ -23,9 +23,10 @@ Line::Line(cv::Point start, cv::Point end) : _isUnbounded(false), _start(start),
 
 }
 
+//intersection of two lines
 bool Line::intersect(const Line& other, Point& point) const
 {
-	//2d 'cross' product
+	//2d 'cross' product (discarding/ignoring z value because it's zero)
 	auto crossProduct = [](const Point& p1, const Point& p2) { return (p1.x*p2.y) - (p1.y*p2.x); };
 
     int c1 = crossProduct(this->getDir(), other.getDir());
@@ -52,7 +53,7 @@ bool Line::intersect(const Line& l1, const Line& l2, cv::Point& point)
 	return l1.intersect(l2, point);
 }
 
-
+//detect lines on edgeImg using HoughLines
 std::vector<Line> Line::getLines(const cv::Mat& edgeImage)
 {
     cv::Mat debug = edgeImage.clone();
@@ -80,6 +81,7 @@ std::vector<Line> Line::getLines(const cv::Mat& edgeImage)
     return linesVec;
 }
 
+//get robust center of line intersections using median in both x and y direction
 cv::Point Line::getWeightedCenter(const std::vector<Line>& lines)
 {
     cv::vector<cv::Point> intersectPoints;
@@ -109,19 +111,11 @@ cv::Point Line::getWeightedCenter(const std::vector<Line>& lines)
 	});
 	int y = intersectPoints[intersectPoints.size() / 2].y;
 
-    /*cv::Point sumP = cv::Point(0,0);
-    for(const cv::Point& p : intersectPoints)
-    {
-        sumP += p;
-    }
-
-    sumP = 1.0/intersectPoints.size() * sumP;*/
-
-    //return sumP;
 	return cv::Point(x, y);
 }
 
 
+//fit lines on sorted point ellipse line mappings
 std::vector<Line> Line::fitLines(const std::vector<std::vector<cv::Point2f>>& pointsPerEllipse)
 {
 	cv::Mat debug = cv::Mat::zeros(Config::usedResHeight, Config::usedResWidth, CV_8UC3);

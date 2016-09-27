@@ -9,7 +9,7 @@ using cv::Vec3f;
 
 static bool isDebug = false;
 
-
+//edge detection using canny, edge orientation by sobel
 void EdgeDetection::canny(const cv::Mat& greyIn, cv::Mat& cannyEdge, cv::Mat& orientation, int minThresh, int maxThresh, int kernel, double sigma)
 {
 	Mat blured;
@@ -41,6 +41,8 @@ void EdgeDetection::canny(const cv::Mat& greyIn, cv::Mat& cannyEdge, cv::Mat& or
 
 }
 
+
+//edge and edge orientation detection using sobel
 void EdgeDetection::sobel(const cv::Mat& greyIn, cv::Mat& magnitude, cv::Mat& orientation, int kernel, double sigma)
 {
     if(sigma > 0)

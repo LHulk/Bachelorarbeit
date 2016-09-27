@@ -1,6 +1,7 @@
 #include "Calibration.h"
 
 
+//detect corner on image using findChessboardConers and use conerSubPix to improve accuracy
 std::vector<cv::Point2f> Calibration::getCorners(const cv::Mat& greyImg, cv::Mat& imgWithCorners)
 {
     cv::Size patternSize(Config::patternPointsPerRow, Config::patternPointsPerCol);
@@ -21,6 +22,7 @@ std::vector<cv::Point2f> Calibration::getCorners(const cv::Mat& greyImg, cv::Mat
         return std::vector<cv::Point2f>();
 }
 
+//sets 3D points for chessboard with z = 0, where top left chessboard rectangle is at (0,0,0)
 std::vector<cv::Point3f> Calibration::getObjectPoints()
 {
     std::vector<cv::Point3f> objectPoints;
@@ -31,6 +33,7 @@ std::vector<cv::Point3f> Calibration::getObjectPoints()
     return objectPoints;
 }
 
+//performs real camera calibration, discarding extrinsic parameters
 void Calibration::getIntrinsicParamters(const std::vector<std::vector<cv::Point2f>>& imagePoints, const std::vector<std::vector<cv::Point3f>>& objectPoints,
                                   cv::Mat& cameraMatrix, cv::Mat& distCoeffs, cv::Size calibImgSize)
 {

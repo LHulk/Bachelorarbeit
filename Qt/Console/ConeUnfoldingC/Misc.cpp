@@ -1,6 +1,6 @@
 #include "Misc.h"
 
-
+//determine angle from vector pt1 -> pt2 with x axis
 double Misc::angleWithX(const cv::Point2d& pt1, const cv::Point2d& pt2)
 {
 	cv::Point2d dirPt = pt2 - pt1;
@@ -10,9 +10,10 @@ double Misc::angleWithX(const cv::Point2d& pt1, const cv::Point2d& pt2)
 	return angle;
 }
 
-
+//sort sample points on every ellipse so that ith position in all vectors correspond to same line
 void Misc::sort(std::vector<std::vector<cv::Point2f>>& pointsPerEllipse, const std::vector<Ellipse>& ellipses)
 {
+	//determine center from innermost circle/ellipse by using average
 	cv::Point2d innerMostCenter = cv::Point2d(0, 0);
 	for(const auto& pt : pointsPerEllipse[0])
 		innerMostCenter += cv::Point2d(pt.x, pt.y);
@@ -43,14 +44,4 @@ void Misc::sort(std::vector<std::vector<cv::Point2f>>& pointsPerEllipse, const s
 		pointsPerEllipse[i] = sorted;
 	}
 
-	/*cv::Mat debug = cv::Mat::zeros(726, 1000, CV_8UC3);
-	cv::circle(debug, innerMostCenter, 4, cv::Scalar(255, 255, 0), -1);
-	for(const auto& ptList : pointsPerEllipse)
-	{
-		for(const auto& pt : ptList)
-		{
-			cv::circle(debug, pt, 4, cv::Scalar(255, 255, 255), -1);
-			//std::cout << angleWithX(cv::Point2d(pt.x, pt.y), innerMostCenter) << std::endl;
-		}
-	}*/
 }
