@@ -5,19 +5,19 @@ In der vorliegenden Arbeit wurden zwei Verfahren vorgestellt, mit denen Kegelobe
 
 Der Vorteil der Rückwärtsentfaltung gegenüber der Vorwärtsentfaltung ist die Abwesenheit von Defekten. Diese lieferte darüber hinaus auch bei starken Abweichungen der Kamera vom Lot gute Ergebnisse und bei einer Ausgabeauflösung der Seitenhöhe unter 850 Pixel sogar eine bessere Laufzeit.
 
-Dennoch sollen an dieser Stelle ein Ausblick auf mögliche Verbesserungsvorschläge für die verwendeten Verfahren gegeben werden.
+An dieser Stelle soll ein Ausblick auf mögliche Verbesserungsvorschläge für die verwendeten Verfahren gegeben werden.
 
 \section{Parallelisierung}
 Da der Kalibrierungsprozess nur ein Mal vor der eigentlichen Entzerrung durchgeführt wird, bietet sich eine Parallelisierung hier deshalb nur bedingt an.
-Dennoch könnte man hier besonders bei den komplexeren Aufgaben, wie der Liniendetektion und anschließenden Schnittpunktberechnung, sowie der Ellipsendetektion auf parallele Methoden zurückgreifen.
+Dennoch könnte hier besonders bei den komplexeren Aufgaben, wie der Liniendetektion und anschließenden Schnittpunktberechnung, sowie der Ellipsendetektion auf parallele Methoden zurückgegriffen werden.
 Für eine parallele Implementierung der Hough-Transformation sei auf die Arbeit von Havel \cite{Havel2014} verwiesen.
 Bei der Ellipsendetektion mittels RANSAC werden für eine vorher definierte Anzahl an Iterationen, wiederholt Punkte ausgewählt mit denen anschließend eine Ellipse geschätzt wird. Es bietet sich hier an, mehrere Gruppen von Punkten parallel zu verarbeiten.
 
-Von größerer Bedeutung ist eine Laufzeitverbesserung der Entzerrung. Nach der Bestimmung der Abbildungsmatrizen werden nach dem, in Kapitel \ref{ch:implementation}, beschriebenen Schema eine Reihe von Bildern entzerrt. Um die aufgenommenen Bilder nicht zwischenspeichern zu müssen, wäre eine echtzeitfähige Entfaltung wünschenswert. Die Bilder könnten somit direkt entzerrt gespeichert werden.  Um die Laufzeit der Entfaltung zu verbessern könnte man hier beispielsweise parallel mehrere Blöcke von Pixeln gleichzeitig verarbeiten.
+Von größerer Bedeutung ist eine Laufzeitverbesserung der Entzerrung. Nach der Bestimmung der Abbildungsmatrizen werden nach dem in Kapitel \ref{ch:implementation} beschriebenen Schema eine Reihe von Bildern entzerrt. Um die aufgenommenen Bilder nicht zwischenspeichern zu müssen, wäre eine echtzeitfähige Entfaltung wünschenswert. Die Bilder könnten somit direkt entzerrt gespeichert werden.  Um die Laufzeit der Entfaltung zu verbessern könnte beispielsweise parallel mehrere Blöcke von Pixeln gleichzeitig verarbeitet werden.
 
 
 \section{Verbesserung der Linien-Detektion}
-Die Linien-Detektion basiert auf Hough-Transformationen und funktioniert nur mit relativ homogenen Hintergründen. Darüber hinaus werden durch den aktuellen Ansatz sehr viele Linien detektiert, wobei anschließend die Schnittpunkte zwischen all diesen Kandidaten bestimmt werden müssen. Ein besserer Ansatz wäre, die Gradientenrichtung des Kantenbilds miteinzubeziehen. Dies reduziert die Anzahl falscher Votes und verbessert darüber hinaus die Laufzeit \cite{Gorman1976}.
+Die Linien-Detektion basiert auf der Hough-Transformation und funktioniert nur mit relativ homogenen Hintergründen. Darüber hinaus werden durch den aktuellen Ansatz sehr viele Linien detektiert, wobei anschließend die Schnittpunkte zwischen all diesen Kandidaten bestimmt werden müssen. Ein besserer Ansatz wäre, die Gradientenrichtung des Kantenbilds miteinzubeziehen. Dies reduziert die Anzahl falscher Votes und verbessert darüber hinaus die Laufzeit \cite{Gorman1976}.
 
 
 \section{Verbesserung der Vorwärtsentfaltung}
@@ -43,7 +43,7 @@ Die auf die Mantelfläche abgebildeten Punkte werden bei diesem Verfahren nicht 
 
 \section{Verbesserung der Rückwärtsentfaltung}
 Aktuell wird die Projektionsmatrix bei der Rückwärtsentfaltung durch Direct Linear Transformation bestimmt. Dieses Verfahren minimiert jedoch nicht den Reprojektionsfehler. Besser wäre hier deshalb ein iteratives Verfahren, wie der Levenberg–Marquardt-Algorithmus (konkret für Projektionsmatrizen beschrieben in \cite{Hartley2000}).
-Im Gegensatz dazu könnte auch ein RANSAC-Ansatz verwendet werden. Statt eine optimale Lösung für alle detektierte Samples zu bestimmen, berechnet man wiederholt für sechs Punkte\footnote{sechs Punkte sind mindestens notwendig um eine Projektionsmatrix bestimmen zu können, da es elf unbekannte gibt (siehe Kapitel \ref{s:calib}).} eine Projektionsmatrix und untersucht dann den Reprojektionsfehler für alle anderen Punkte und wählt schließlich die Projektionsmatrix mit dem größten Consensus Set aus.
+Im Gegensatz dazu könnte auch ein RANSAC-Ansatz verwendet werden. Statt eine optimale Lösung für alle detektierte Samples zu bestimmen, berechnet man wiederholt für sechs Punkte\footnote{sechs Punkte sind mindestens notwendig um eine Projektionsmatrix bestimmen zu können, da es elf unbekannte gibt (siehe Kapitel \ref{s:calib}).} eine Projektionsmatrix, untersucht dann den Reprojektionsfehler für alle anderen Punkte und wählt schließlich die Projektionsmatrix mit dem größten Consensus Set aus.
 
 
 \section{Verbesserung der Ellipsendetektion mittels Deformable Templates}
