@@ -641,20 +641,20 @@ Es werden hierbei nur Ellipsen im Ursprung betrachtet, die achsenausgerichtet si
 Der untersuchte Punkt wird anschließende analog zur Ellipse transformiert.
 Da die Ellipse dann bezüglich der $x$- und $y$- Achse symmetrisch ist, kann der Punkt einfach durch Spiegelung in den richtigen Quadranten verschoben werden. Der Abstand zur Ellipse ändert sich dadurch nicht.
 
-Sei $Q = (y_0, y_1)$ ein Punkt, dessen Distanz zur Ellipse berechnet werden soll und $E = (x_0, x_1)$ derjenige eindeutige Punkt, welcher auf der Ellipse liegt und die kürzeste euklidische Distanz zum Punkt $Q$ hat.
+Sei $Q = (x_1, y_1)$ ein Punkt, dessen Distanz zur Ellipse berechnet werden soll und $E = (x_0, y_0)$ derjenige eindeutige Punkt, welcher auf der Ellipse liegt und die kürzeste euklidische Distanz zum Punkt $Q$ hat.
 
 Aufgrund dieser Forderungen können ohne Beschränkung der Allgemeinheit folgende Aussagen getroffen werden:
 \begin{itemize}
 	\item Die Ellipse kann stets durch die implizite Gleichung
-	\begin{equation}\label{eq:distEqParam} \frac{x_0^2}{a^2} + \frac{x_1^2}{b^2} = 1\end{equation}
+	\begin{equation}\label{eq:distEqParam} \frac{x_0^2}{a^2} + \frac{y_0^2}{b^2} = 1\end{equation}
 	 mit $a \geq b \geq 0$ beziehungsweise
 	in der parametrischen Form \[\mathcal{E}(\phi) = (a\cos\phi, b\sin\phi)  \tag*{$\phi \in [0, 2\pi)$}\] beschrieben werden.
-	\item Es gilt $y_0,y_1,x_0, x_1 \geq 0$.
+	\item Es gilt $x_0,y_0,x_1,y_1 \geq 0$.
 \end{itemize}
 
-Für die quadratische Distanz von einem beliebigen Punkt $Q$ zu einem Punkt $\mathcal{E}(\theta)$ auf der Ellipse gilt dann
+Für die quadratische Distanz von einem beliebigen Punkt $Q$ zu einem Punkt $\mathcal{E}(\phi)$ auf der Ellipse gilt dann
 \begin{equation}
-	F(\phi) = \abs{\mathcal{E}(\phi) - Q}^2.
+	F(\phi) = \left(\mathcal{E}(\phi) - Q\right)^2.
 \end{equation}
 
 Die Funktion $F$ soll bezüglich $\phi$ minimiert werden. Dazu muss ihre Ableitung betrachtet werden:
@@ -674,24 +674,24 @@ $F'$ wird null, wenn $\left(\mathcal{E}(\phi) - Q\right)$ und $ \mathcal{E}'(\ph
 
 Die Nullstellen der Funktion
 \begin{equation} \label{eq:ellipseDistEq}
-	G(z_0,z_1) = \frac{z_0^2}{a^2} + \frac{z_1^2}{b^2} - 1.
+	G(x,y) = \frac{x^2}{a^2} + \frac{y^2}{b^2} - 1.
 \end{equation}
 basierend auf der impliziten Darstellung aus Gleichung \ref{eq:distEqParam}
-beschreiben eine Ellipse. Sei nun solch eine Nullstelle gegeben als $(x_0,y_0)$. Der Gradient $\nabla G$ ist dann in $(x_0,x_1)$ ein Normalenvektor der Ellipse. Somit ist auch der halbe Gradient $\nabla G(x_0,x_1)/2$ ein Normalenvektor. Da aus Gleichung \ref{eq:perp}, die Orthogonalität von $\overrightarrow{QE}$ zur Ellipse folgt,  muss der Vektor  $\overrightarrow{QE}$ ein skalares Vielfaches des halben Gradienten sein. Es gilt somit:
+beschreiben eine Ellipse. Sei nun solch eine Nullstelle gegeben als $(x_0,y_0)$. Der Gradient $\nabla G$ ist dann in $(x_0,y_0)$ ein Normalenvektor der Ellipse. Somit ist auch der halbe Gradient $\nabla G(x_0,y_0)/2$ ein Normalenvektor. Da aus Gleichung \ref{eq:perp} die Orthogonalität von $\overrightarrow{QE}$ zur Ellipse folgt,  muss der Vektor  $\overrightarrow{QE}$ ein skalares Vielfaches des halben Gradienten sein. Es gilt somit:
 
 \begin{equation}
-	(y_0,y_1) - (x_0, x_1) = t\frac{\nabla G(x_0,x_1)}{2} = t\left(\frac{x_0}{a^2},\frac{x_1}{b^2}\right)
+	(x_1,y_1) - (x_0, y_0) = t\frac{\nabla G(x_0,y_0)}{2} = t\left(\frac{x_0}{a^2},\frac{y_0}{b^2}\right)
 \end{equation}
 für ein $t\in\mathbb{R}$.
 
-Umgestellt nach $y_0$ und $y_1$, beziehungsweise nach $x_0$ und $x_1$ ergeben sich folgende Gleichungen:
+Umgestellt nach $x_1$ und $y_1$, beziehungsweise nach $x_0$ und $y_0$ ergeben sich folgende Gleichungen:
 
 \begin{equation}\label{eq:ellipseDistY}
-y_0 = x_0\left(1 + \frac{t}{a^2}\right), \quad y_1 = x_1\left(1 + \frac{t}{b^2}\right)
+x_1 = x_0\left(1 + \frac{t}{a^2}\right), \quad y_1 = y_0\left(1 + \frac{t}{b^2}\right)
 \end{equation}
 
 \begin{equation}\label{eq:ellipseDistX}
-x_0 = \frac{a^2y_0}{t+a^2},\quad x_1 = \frac{b^2y_1}{t+b^2}
+x_0 = \frac{a^2x_1}{t+a^2},\quad y_0 = \frac{b^2y_1}{t+b^2}
 \end{equation}
 
 
@@ -699,39 +699,39 @@ x_0 = \frac{a^2y_0}{t+a^2},\quad x_1 = \frac{b^2y_1}{t+b^2}
 Man macht nun eine Fallunterscheidung:
 
 \begin{enumerate}
-	\item Der einfachste Fall ist, wenn sich der Punkt $Q$ auf der $y$-Achse (außer $(0,0)$) befindet, wenn also gilt $y_0 = 0, y_1 > 0$.
-	Da die Hauptachse nach der $y$-Achse ausgerichtet ist und $a >= b$ gilt, ist der Punkt auf der Ellipse mit der kürzesten Distanz zu $Q$ offenbar $E = (0, b)$ und für die Distanz gilt $d = \abs{y_1 - b}$.
-	\item Als nächstes befinde sich ein $Q$ auf der $x$-Achse (einschließlich $(0,0)$), wenn also gilt  $y_0 \geq 0, y_1 = 0$. Es gilt also mit \ref{eq:ellipseDistY}
+	\item Der einfachste Fall ist, wenn sich der Punkt $Q$ auf der $y$-Achse (außer $(0,0)$) befindet, wenn also gilt $x_1 = 0, y_1 > 0$.
+	Da die Hauptachse nach der $x$-Achse ausgerichtet ist und $a \geq b$ gilt, ist der Punkt auf der Ellipse mit der kürzesten Distanz zu $Q$ offenbar $E = (0, b)$ und für die Distanz gilt $d = \abs{y_1 - b}$.
+	\item Als nächstes befinde sich $Q$ auf der $x$-Achse (einschließlich $(0,0)$), wenn also gilt  $x_1 \geq 0, y_1 = 0$. Es gilt also mit \ref{eq:ellipseDistY}
 	\begin{equation} \label{eq:xAxisQ}
-		y_0 = x_0\left(1 + \frac{t}{a^2}\right), \quad 0 = x_1\left(1 + \frac{t}{b^2}\right)
+		x_1 = x_0\left(1 + \frac{t}{a^2}\right), \quad 0 = y_0\left(1 + \frac{t}{b^2}\right)
 	\end{equation}
 
-	Wenn $x_1 = 0$ gilt, muss $x_0 = a$ gelten, damit $E(x_0,x_1)$ auf der Ellipse ist. Es  gilt analog zum ersten Fall $E=(a,0)$ mit $d = \abs{y_0 - a}$
+	Wenn $y_0 = 0$ gilt, muss $x_0 = a$ gelten, damit $E(x_0,y_0)$ auf der Ellipse ist. Es  gilt analog zum ersten Fall $E=(a,0)$ mit $d = \abs{x_1 - a}$
 
-	Gilt $x_1 \neq 0$, so kann in der zweiten Gleichung aus Gleichung \ref{eq:xAxisQ} durch $x_1$ geteilt werden und es folgt $t = -b^2$ und somit $y_0 = x_0\left(1 - \frac{b^2}{a^2}\right)$. Der Punkt $E(x_0,x_1)$ liegt außerdem oberhalb von $(a,0)$ und es gilt deshalb auf Grund der Krümmung der Ellipse $x_0 < a$.
+	Gilt $y_0 \neq 0$, so kann in der zweiten Gleichung aus Gleichung \ref{eq:xAxisQ} durch $y_0$ geteilt werden und es folgt $t = -b^2$ und somit $x_1 = x_0\left(1 - \frac{b^2}{a^2}\right)$. Der Punkt $E(x_0,y_0)$ liegt außerdem oberhalb von $(a,0)$ und es gilt deshalb auf Grund der Krümmung der Ellipse $x_0 < a$.
 
 	Insgesamt ergibt sich mit Gleichung \ref{eq:ellipseDistX} die Ungleichung
 	\[
 	\begin{aligned}
-		&x_0 = \frac{a^2y_0}{a^2 - b^2} < a \\
-		\Leftrightarrow\quad &y_0 < \frac{a^2 - b^2}{a} < a.
+		&x_0 = \frac{a^2x_1}{a^2 - b^2} < a \\
+		\Leftrightarrow\quad &x_1 < \frac{a^2 - b^2}{a} < a.
 	\end{aligned}
 	\]
 
-	Das bedeutet, dass sich der Punkt $Q(y_0,y_1)$ in der Ellipse befindet.
+	Das bedeutet, dass sich der Punkt $Q(x_1,y_1)$ in der Ellipse befindet.
 
-	Für Punkte $Q(y_0,0)$ mit $y_0 \geq \frac{a^2 - b^2}{a}$ muss dementsprechend $x_1 = 0$ gelten und der kürzeste Punkt ist wieder $E(a,0)$.
+	Für Punkte $Q(x_1,0)$ mit $x_1 \geq \frac{a^2 - b^2}{a}$ muss dementsprechend $y_0 = 0$ gelten und der kürzeste Punkt ist wieder $E(a,0)$.
 
-	Für Punkte $Q(y_0,0)$ mit $y_0 < \frac{a^2 - b^2}{a}$, muss für $E(x_0,x_1)$ nach Umstellen der Ellipsengleichung \ref{eq:distEqParam}\quad$x_1 = b\cdot\sqrt{1-\left(\frac{x_0}{a}\right)}$ gelten.
+	Für Punkte $Q(x_1,0)$ mit $x_1 < \frac{a^2 - b^2}{a}$, muss für $E(x_0,y_0)$ nach Umstellen der Ellipsengleichung \ref{eq:distEqParam}\quad$y_0 = b\cdot\sqrt{1-\left(\frac{x_0}{a}\right)^2}$ gelten.
 	Die Distanz beträgt dann:
 
 	\[
-		d^2 = (x_0 - y_0)^2 + x_1^2 = b^2\left(1 - \frac{y_0^2}{a^2 - b^2}\right).
+		d^2 = (x_0 - x_1)^2 + y_0^2 = b^2\left(1 - \frac{x_1^2}{a^2 - b^2}\right).
 	\]
-	\item Der letzte Fall ist der allgemeinste Fall. Es gilt $y_0 > 0$, sowie $y_1 > 0$. Da sich laut Voraussetzung alle Punkte im ersten Quadranten befinden, gilt darüber hinaus $x_0, x_1 \geq 0$. Mit diesen Eigenschaften und Gleichung \ref{eq:ellipseDistY} lässt sich folgende Einschränkung für $t$ herleiten:
+	\item Der letzte Fall ist der allgemeinste Fall. Es gilt $x_1 > 0$, sowie $y_1 > 0$. Da sich laut Voraussetzung alle Punkte im ersten Quadranten befinden, gilt darüber hinaus $x_0, y_0 \geq 0$. Mit diesen Eigenschaften und Gleichung \ref{eq:ellipseDistY} lässt sich folgende Einschränkung für $t$ herleiten:
 \[
 	\begin{aligned}
-	& 0 < y_0 = x_0\left(1 + \frac{t}{a^2}\right)\\
+	& 0 < x_1 = x_0\left(1 + \frac{t}{a^2}\right)\\
 	\Leftrightarrow\quad& -1\cdot a^2 < t.
 	\end{aligned}
 \]
@@ -739,8 +739,8 @@ Man macht nun eine Fallunterscheidung:
 
 \[
 	\begin{aligned}
-		F(t) &= \left(\frac{a^2y_0}{a\left(t+a^2\right)}\right)^2 + \left(\frac{b^2y_1}{b\left(t+b^2\right)}\right)^2 - 1 \\
-		&= \left(\frac{ay_0}{t+a^2}\right)^2 + \left(\frac{by_1}{t+b^2}\right)^2 - 1
+		F(t) &= \left(\frac{a^2x_1}{a\left(t+a^2\right)}\right)^2 + \left(\frac{b^2y_1}{b\left(t+b^2\right)}\right)^2 - 1 \\
+		&= \left(\frac{ax_1}{t+a^2}\right)^2 + \left(\frac{by_1}{t+b^2}\right)^2 - 1
 	\end{aligned}
 \]
 
