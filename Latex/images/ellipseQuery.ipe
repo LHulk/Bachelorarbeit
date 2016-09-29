@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70107" creator="Ipe 7.2.5">
-<info created="D:20160829203039" modified="D:20160911181025"/>
+<info created="D:20160829203039" modified="D:20160929175441"/>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
 <path stroke="sym-stroke" fill="sym-stroke" pen="sym-pen">
@@ -220,13 +220,13 @@ h
 <dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
 <dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
 <textsize name="large" value="\large"/>
-<textsize name="small" value="\small"/>
-<textsize name="tiny" value="\tiny"/>
 <textsize name="Large" value="\Large"/>
 <textsize name="LARGE" value="\LARGE"/>
 <textsize name="huge" value="\huge"/>
 <textsize name="Huge" value="\Huge"/>
+<textsize name="small" value="\small"/>
 <textsize name="footnote" value="\footnotesize"/>
+<textsize name="tiny" value="\tiny"/>
 <textstyle name="center" begin="\begin{center}" end="\end{center}"/>
 <textstyle name="itemize" begin="\begin{itemize}" end="\end{itemize}"/>
 <textstyle name="item" begin="\begin{itemize}\item{}" end="\end{itemize}"/>
@@ -267,12 +267,12 @@ h
 192 0 0 192 256 608 256 800 a
 </path>
 <use matrix="1 0 0 1 8.04922 2.74127" name="mark/disk(sx)" pos="416 736" size="normal" stroke="black"/>
-<text matrix="1 0 0 1 -3.59481 1.95673" transformations="translations" pos="432 736" stroke="black" type="label" width="38.76" height="7.473" depth="2.49" valign="baseline">$Q(y_0,y_1)$</text>
+<text matrix="1 0 0 1 -3.59481 1.95673" transformations="translations" pos="432 736" stroke="black" type="label" width="39.57" height="7.473" depth="2.49" valign="baseline">$Q(x_1,y_1)$</text>
 <path stroke="black">
 392.296 676.17 m
 256 608 l
 </path>
-<text matrix="1 0 0 1 -9.32003 2.03313" transformations="translations" pos="407.758 674.378" stroke="black" type="label" width="40.432" height="7.473" depth="2.49" valign="baseline">$E(x_0,x_1)$</text>
+<text matrix="1 0 0 1 -9.32003 2.03313" transformations="translations" pos="407.758 674.378" stroke="black" type="label" width="39.622" height="7.473" depth="2.49" valign="baseline">$E(x_0,y_0)$</text>
 <text matrix="1 0 0 1 -2.10077 -7.70281" transformations="translations" pos="480 608" stroke="black" type="label" width="5.694" height="4.289" depth="0" valign="baseline">$x$</text>
 <text matrix="1 0 0 1 -2.45089 -7.35268" transformations="translations" pos="251.595 769.717" stroke="black" type="label" width="5.242" height="4.297" depth="1.93" valign="baseline">$y$</text>
 <text matrix="1 0 0 1 -0.31851 -3.82212" transformations="translations" pos="447.756 600.381" stroke="black" type="label" width="6.149" height="6.808" depth="0" valign="baseline">$\mathcal E$</text>

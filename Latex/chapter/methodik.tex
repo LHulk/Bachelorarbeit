@@ -66,15 +66,16 @@ Bedingt durch die Wahl einer Weitwinkelkamera, sind die Bilder von einer starken
 \section{Detektion der charakteristischen Punkte}
 
 Nach der Kamerakalibrierung und entsprechender Entzerrung werden die Bildkoordinaten der Samples bestimmt. Dazu wird ein Blob-Detektor (siehe Kapitel \ref{s:blob}) benutzt.
-Um ein Sample korrekt detektieren zu können, muss sich der Punkt farblich stark von seiner Umgebung abheben (siehe Definition eines Blobs \ref{def:blob}). Das bedeutet, dass ein Sample freigestellt (helle homogene Umgebung) sein muss. Insbesondere dürfen die Kreislinien und Liniensegmente des Kalibrierungsmusters demnach nicht durchgezogen sein. \todo{Formulierung}
+Um ein Sample korrekt detektieren zu können, muss sich der Punkt farblich stark von seiner Umgebung abheben (siehe Definition eines Blobs \ref{def:blob}). Das bedeutet, dass ein Sample freigestellt (helle homogene Umgebung) sein muss. Insbesondere dürfen die Kreislinien und Liniensegmente des Kalibrierungsmusters demnach ein Sample nicht berühren, wie es in Abbildung \ref{fig:calibPatternLines} am Beispiel eines einzelnen Samples zu sehen ist.
 
-Nach der Detektion werden die Blobs nach folgenden Kriterien gefiltert:
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=.25\textwidth]{images/calibrationPatternLines.eps}
+	\caption{Kreislinien und Liniensegmente berühren das Sample nicht.}
+	\label{fig:calibPatternLines}
+\end{figure}
 
-\begin{itemize}
-	\item \textbf{Fläche:} zu kleine Blobs werden verworfen
-	\item \textbf{Rundheit:} zu unrunde Blobs werden verworfen. Rundheit ist hier definiert als $circ = \frac{4\pi\cdot \textrm{Fläche}}{\left(\textrm{Umfang}\right)^2}\in[0,1]$, wobei ein Kreis mit $circ = 1$ maximal rund ist.
-	\item  \textbf{Konvexität:} zu unkonvexe Blobs werden verworfen. Konvexität ist hier definiert \\als $conv = \frac{\textrm{Fläche Blob}}{\textrm{Fläche konvexe Hülle}}$
-\end{itemize}
+Nach der Detektion werden die Blobs nach Fläche, Rundheit, sowie Konvexität mittels experimentell ermittelter Werte gefiltert. Konkret werden zu kleine ($\textrm{Fläche Blob} < 50$), zu unrunde ($circ < 0.4$) und zu unkonvexe ($conv < 0.75$) Blobs verworfen.
 
 In Abbildung \ref{fig:blobDetect} ist beispielhaft links ein Grauwertbild und rechts die detektierten Blobs (rot) auf dem gleichen Bild nach der Kameraentzerrung zu sehen.
 
@@ -126,7 +127,7 @@ detektiert werden.
 
 Zunächst werden die Kanten mit Hilfe des Canny-Kantendektors \cite{Canny1986} erfasst (siehe Abbildung \ref{fig:canny}).
 Anschließend wird eine möglichst genau Schätzung des Zentrum der innersten Ellipse vorgenommen.
-Dafür wird Hough-Transformation (siehe Kapitel \ref{s:hough}) benutzt, um Linien im Kantenbild zu detektieren.
+Dafür wird eine Hough-Transformation (siehe Kapitel \ref{s:hough}) benutzt, um Linien im Kantenbild zu detektieren.
 Es werden anschließend die Schnittpunkte aller Liniensegmente bestimmt.
 Die Liniensegmente schneiden sich dabei genau dann in einem Punkt, wenn sich die Kamera genau im Lot befindet und perfekt auf das Zentrum des Deckkreises ausgerichtet ist.
 Darüber hinaus werden, auf Grund der Liniendicke auf dem Kalibrierungsmuster, durch den Canny-Algorithmus viele Linien als doppelte Linien gekennzeichnet\footnote{Stellt man sich ein relativ breites Liniensegment vor, so gibt es einmal den Übergang vom Hintergrund auf die Linie, sowie den Übergang von der Linie wieder auf den Hintergrund}. Auch ein inhomogener Hintergrund erschwert die Ermittlung eines Mittelpunkts. Befinden sich Objekte im Hintergrund, werden durch die Kantendetektion auch deren Kanten ermittelt. Die Hough-Transformation detektiert auch außerhalb des Kalibrierungsmusters Linien. Die Schnittpunkte mit solchen Linien können beliebig stark von dem eigentlichen Mittelpunkt abweichen. Würde man an dieser Stelle beispielsweise den Mittelwert aller Schnittpunkte (elementweise) berechnen, könnten solche Ausreißer die Lokalisierung des Mittelpunkts erheblich verschlechtern.
@@ -136,7 +137,7 @@ Um möglichst robust einen Kandidaten auszuwählen, wird der Median der $x$-Koor
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=.25]{images/houghLines.png}
-	\caption{Hough-Transformation zur Linien-Detektion (rot) und bestimmter Schnittpunkt (grün) }
+	\caption[Hough-Transformation zur Linien-Detektion und bestimmter Schnittpunkt]{Hough-Transformation zur Linien-Detektion (rot) und bestimmter Schnittpunkt (grün) }
 	\label{fig:houghLines}
 \end{figure}
 
@@ -145,19 +146,19 @@ Trifft ein Strahl ein Kantenpixel, wird dessen Position gekennzeichnet, trifft e
 
 \begin{figure}[!htb]
 	\centering
-	\begin{subfigure}{.5\textwidth}
+	\begin{subfigure}{.46\textwidth}
 		\centering
 		\includegraphics[width=.9\textwidth]{images/rayCast0.png}
-		\caption{bestimme Pixel-Positionen}
+		\caption{bestimmte Pixel-Positionen}
 		\label{fig:rayCastWOE}
 	\end{subfigure}%
-	\begin{subfigure}{.5\textwidth}
+	\begin{subfigure}{.46\textwidth}
 		\centering
 		\includegraphics[width=.9\textwidth]{images/rayCast0Ellipse.png}
 		\caption{bestimme Ellipse (grün)}
 		\label{fig:rayCastWE}
 	\end{subfigure}
-	\caption{Ellipsendetektion: bestimme Pixel-Positionen (weiß), Aussendepunkt (gelb)}
+	\caption[Ellipsendetektion: bestimmte Pixel-Positionen und Aussendepunkt]{Ellipsendetektion: bestimmte Pixel-Positionen (weiß), Aussendepunkt (gelb)}
 	\label{fig:rayCast}
 \end{figure}
 
@@ -181,22 +182,19 @@ gelöst, was auf der Gleichung \ref{eq:ellipseQuadratic} aus Kapitel \ref{s:elli
 Diese wird dann mittels Hauptachsentransformation, wie in Kapitel \ref{s:ellipse} beschrieben, in die Ellipsenform $(x_0,y_0,a,b,\theta)$ umgewandelt.
 
 Um die für RANSAC benötigte Distanz zu berechnen, wird das Verfahren aus Kapitel \ref{sc:distPointEllipse} genutzt, was die exakte euklidische Distanz eines Punktes zu einer Ellipse in der Form $(x_0,y_0,a,b,\theta)$ approximiert.
-Ein Verfahren wie das Verfahren der kleinsten Quadraten anstelle von RANSAC funktioniert hier nicht, da die weißen Pixel bezüglich einer zu bestimmenden Ellipse von Ausreißern behaftet sind. Wird zum Beispiel auf Grund schlechter Lichtverhältnisse eine Kreislinie nicht deutlich aufgenommen, kann es in dem Kantenbild dazu kommen, dass Kreislinien nicht zusammenhängend sind und folglich treffen die ausgesendeten Strahlen teilweise die nächst äußere Kreislinie. Dieses Problem ist in Abbildung \ref{fig:rayCastR} zu sehen. Man sieht, dass die Anzahl der Pixel auf der Ellipse, deren Parameter geschätzt werden sollen, im Vergleich zur Abbildung \ref{fig:rayCast} abgenommen hat. Die Strahlen treffen vermehrt auf die nächste äußere Ellipse. Die Ausreißeranzahl nimmt stark zu.
-
-Da die Laufzeit nicht im Vordergrund steht, kann eine großzügige Schätzung des Fehleranteils von $\epsilon = 0.4$ mit einer gewünschten Wahrscheinlichkeit $p = 0.9999$ gewählt werden, was zu einer Mindestanzahl an von circa $200$ Iterationen führt (siehe Kapitel \ref{s:ransac}). Die letztendlich bestimmten Ellipsen sind beispielhaft in Abbildung \ref{fig:detectedEllipses} zu sehen.
-
+Ein Verfahren wie das Verfahren der kleinsten Quadraten anstelle von RANSAC funktioniert hier nicht, da die Kantenpixel bezüglich einer zu bestimmenden Ellipse von Ausreißern behaftet sind. Wird zum Beispiel auf Grund schlechter Lichtverhältnisse eine Kreislinie nicht deutlich aufgenommen, kann es in dem Kantenbild dazu kommen, dass Kreislinien nicht zusammenhängend sind und folglich treffen die ausgesendeten Strahlen teilweise die nächst äußere Kreislinie. Dieses Problem ist in Abbildung \ref{fig:rayCastR} zu sehen. Man sieht, dass die Anzahl der Pixel auf der Ellipse, deren Parameter geschätzt werden sollen, im Vergleich zur Abbildung \ref{fig:rayCast} abgenommen hat. Die Strahlen treffen vermehrt auf die nächste äußere Ellipse. Die Ausreißeranzahl nimmt zu.
 
 \begin{figure}[!htb]
 	\centering
-	\begin{subfigure}{.5\textwidth}
+	\begin{subfigure}{.46\textwidth}
 		\centering
-		\includegraphics[scale=.6]{images/rayCastRobust.png}
+		\includegraphics[width=.9\textwidth]{images/rayCastRobust.png}
 		\caption{bestimme Pixel-Positionen}
 		\label{fig:rayCastRWOE}
 	\end{subfigure}%
-	\begin{subfigure}{.5\textwidth}
+	\begin{subfigure}{.46\textwidth}
 		\centering
-		\includegraphics[scale=.6]{images/rayCastRobustEllipse.png}
+		\includegraphics[width=.9\textwidth]{images/rayCastRobustEllipse.png}
 		\caption{bestimme Ellipse (grün)}
 		\label{fig:rayCastRWE}
 	\end{subfigure}
@@ -204,6 +202,7 @@ Da die Laufzeit nicht im Vordergrund steht, kann eine großzügige Schätzung de
 	\label{fig:rayCastR}
 \end{figure}
 
+Da die Laufzeit nicht im Vordergrund steht, kann eine großzügige Schätzung des Fehleranteils von $\epsilon = 0.4$ mit einer gewünschten Wahrscheinlichkeit $p = 0.9999$ gewählt werden, was zu einer Mindestanzahl an von circa $200$ Iterationen führt (siehe Kapitel \ref{s:ransac}). Die letztendlich bestimmten Ellipsen sind beispielhaft in Abbildung \ref{fig:detectedEllipses} zu sehen.
 
 \begin{figure}[!htb]
 	\centering
@@ -212,10 +211,10 @@ Da die Laufzeit nicht im Vordergrund steht, kann eine großzügige Schätzung de
 	\label{fig:detectedEllipses}
 \end{figure}
 
-
+\FloatBarrier
 \subsection{Analytical Deformable Templates}
 
-Als Alternative zu RANSAC können die Ellipsen auch mittels \textit{Analytical Deformable Templates} (siehe Kapitel \ref{s:anaDef}) detektiert werden. Dazu wird folgende Funktion betrachtet, deren Nullstellen eine um $\theta$ gedrehte Ellipse, mit Zentrum $(x_0,y_0)$ und Haupt- und Nebenachse $a$ und $b$ beschreiben.
+Als Alternative zu RANSAC können die Ellipsen auch mittels Analytical Deformable Templates (siehe Kapitel \ref{s:anaDef}) detektiert werden. Dazu wird folgende Funktion betrachtet, deren Nullstellen eine um $\theta$ gedrehte Ellipse, mit Zentrum $(x_0,y_0)$ und Haupt- und Nebenachse $a$ und $b$ beschreiben.
 \[
 	G(x,y) = \frac{((x - x_0)\cos\theta + (y - y_0)\sin\theta)^2}{a^2} + \frac{((x - x_0)\sin\theta - (y - y_0)\cos\theta)^2}{b^2} - 1
 \] %%
@@ -242,7 +241,7 @@ Konkret sehen die Terme wie folgt aus
 \end{equation}
 
 wobei $n$ die Anzahl der Punkte auf dem Ellipsenrand sind. $p_i$ ist definiert als der $i$-te Punkt auf der Ellipse, also als $H(\phi_i)$ mit $\phi_i = \frac{i}{n}\cdot2\pi ~\forall i = 0,\dotsc,n-1$.
-Der Term $I_M(p_i)$ ist definiert als $I_M(p_i) = \sqrt{I_x(p_i)^2 + I_y(p_i)^2}$, wobei $I_x$, sowie $I_y$ für die diskreten partiellen Ableitungen nach $x$ respektive $y$ stehen. Durch $I_M(p_i)$ wird somit die Kantenstärke in Punkt $p_i$ charakterisiert. Der Term $I_O(p_i)$ ist definiert als $I_O(p_i) = \atant\left(I_y(p_i),I_x(p_i)\right)$
+Der Term $I_M(p_i)$ ist definiert als $I_M(p_i) = \sqrt{I_x(p_i)^2 + I_y(p_i)^2}$, wobei $I_x$, sowie $I_y$ für die diskreten partiellen Ableitungen nach $x$, respektive $y$ stehen. Durch $I_M(p_i)$ wird somit die Kantenstärke in Punkt $p_i$ angegeben. Der Term $I_O(p_i)$ ist definiert als $I_O(p_i) = \atant\left(I_y(p_i),I_x(p_i)\right)$
 und beschreibt somit die Gradientenrichtung der Kanten.
 
 Man wählt dabei als Startwert eine Ellipse, deren Zentrum dem Bildzentrum entspricht und deren Hauptachse und Nebenachse möglichst groß sind ($a = w/2$ und $b = h/2$ für ein Bild mit Breite $w$ und Höhe $h$) und bestimmt dann numerisch ein Minimum der Funktion. Der Term $E_M$ wird minimal, wenn entlang der Ellipse die Kantenstärke groß ist. Der Term $E_A$ wird minimal, wenn die Winkel der Normalenvektoren ähnlich zu denen der Kanten sind und $E_S$ wird minimal, wenn die Distanz aufeinanderfolgender Ellipsenpunkte klein wird, also der Ellipsenumfang klein wird. Der Term lässt die Ellipse schrumpfen. $\alpha, \beta$ und $\gamma$ steuern hierbei den Einfluss der einzelnen Terme. Das Minimum der Funktion sollte die äußerste Ellipse im Kalibrierungsmuster sein. Anschließend wird diese Ellipse vom Bild entfernt und man sucht wiederholt Minima der Funktion, bis alle Ellipsen detektiert wurden.
@@ -257,23 +256,23 @@ Zunächst wird für jeden Punkt diejenige Kreislinie ausgewählt, deren zugehör
 
 Um nun die Samples auch ihren Liniensegmenten zuzuordnen, wird zunächst der Mittelpunkt der Samples auf der innersten Ellipse bestimmt. Anschließend werden die Samples auf der innersten Ellipse nach dem Winkel der Verbindungslinien zwischen Sample und Mittelpunkt mit der $x$-Achse sortiert.
 Die restlichen Samples können nicht nach dem gleichen Schema sortiert werden, da der bestimme Mittelpunkt nicht der genaue Schnittpunkt aller Liniensegmente ist.
-Das Problem ist in Abbildung \ref{fig:sampleMappingProblem1} am Beispiel eines Liniensegments für zwei Samples illustriert. Das bestimme Zentrum $C$ liegt nicht auf der Verlängerung des Liniensegments.  Die Winkel der Verbindungslinien zum Zentrum $\alpha_1$, sowie $\alpha_2$ unterscheiden sich. Bei einer Sortierung nach Winkel ist nicht mehr gewährleistet, dass die Samples zu einer Verbindungslinie gehören, da die Winkel der Samples eines Liniensegments beliebig voneinander abweichen können.  Damit dieses Verfahren funktioniert müsste die Situation aus Abbildung \ref{fig:sampleMappingProblem2} für alle Liniensegmente gelten, das heißt der Winkel (hier: $\beta$) ist für alle Verbindungslinien identisch.
+Das Problem ist in Abbildung \ref{fig:sampleMappingProblem1} am Beispiel eines Liniensegments für zwei Samples illustriert. Das bestimme Zentrum $C$ liegt nicht auf der Verlängerung des Liniensegments.  Die Winkel der Verbindungslinien zum Zentrum $\alpha_1$, sowie $\alpha_2$ unterscheiden sich. Bei einer Sortierung nach Winkel ist nicht mehr gewährleistet, dass die sortierten Samples zu einer Verbindungslinie gehören, da die Winkel der Samples eines Liniensegments beliebig voneinander abweichen können.  Damit dieses Verfahren funktioniert, müsste die Situation aus Abbildung \ref{fig:sampleMappingProblem2} für alle Liniensegmente gelten, das heißt der Winkel (hier: $\beta$) ist für alle Verbindungslinien identisch.
 
 \begin{figure}[!htb]
 	\centering
 	\begin{subfigure}[t]{.6\textwidth}
 		\centering
 		\includegraphics[width=.9\textwidth]{images/sampleMappingProblem.eps}
-		\caption{Zuordnung von Punkten zu Ellipsen}
+		\caption{Das Zentrum befindet sich nicht auf der Verlängerung.}
 		\label{fig:sampleMappingProblem1}
 	\end{subfigure}%
 	\begin{subfigure}[t]{.4\textwidth}
 		\centering
 		\includegraphics[width=.9\textwidth]{images/sampleMappingProblem2.eps}
-		\caption{Zuordnung von Punkten zu Liniensegmenten}
+		\caption{Das Zentrum befindet sich auf der Verlängerung.}
 		\label{fig:sampleMappingProblem2}
 	\end{subfigure}
-	\caption{Zuordnung von Punkten zu Ellipsen (links) und Liniensegmenten (rechts)}
+	\caption{Winkel der Samples zum bestimmen Zentrum}
 	\label{fig:sampleMappingProblem}
 \end{figure}
 
@@ -296,15 +295,16 @@ Die Samples können nun entsprechend sortiert werden. Die zugeordneten Linienseg
 		\caption{Zuordnung von Punkten zu Liniensegmenten}
 		\label{fig:lineMapping}
 	\end{subfigure}
-	\caption{Zuordnung von Punkten zu Ellipsen (links) und Liniensegmenten (rechts) farblich sortiert: 1. rot, 2. gelb, 3. grün, 4. blau, 5. magenta}
+	\caption[Zuordnung von Punkten zu Ellipsen und Liniensegmenten]{Zuordnung von Punkten zu Ellipsen (links) und Liniensegmenten (rechts) farblich sortiert: 1. rot, 2. gelb, 3. grün, 4. blau, 5. magenta}
 	\label{fig:mapping}
 \end{figure}
 
 
-Mit Hilfe dieser Zuordnung werden die Ellipsen erneut geschätzt. Die Samples dienen als Messpunkte und das Verfahren der kleinsten Quadrate wird genutzt, da eine optimale Lösung für alle Samples angestrebt wird.
+Mit Hilfe dieser Zuordnung werden die Ellipsen erneut geschätzt. 
+Die Samples dienen als Messpunkte und das Verfahren der kleinsten Quadrate wird genutzt, da eine optimale Lösung für alle Samples angestrebt wird.
 
-\section{Weltkoordinaten bestimmen}
-Jedem Sample kann nun eine eindeutige Kreislinie, sowie ein eindeutiges Liniensegment zugeordnet werden. Damit Korrespondenzen zwischen den Samples und dem Kegel im Weltkoordinatensystem herstellt werden können, muss im nächsten Schritt jedem Sample dreidimensionale Koordinaten auf der Kegeloberfläche zugewiesen werden.
+\section{Bestimmung der Weltkoordinaten}
+Jedem Sample kann nun eine eindeutige Kreislinie, sowie ein eindeutiges Liniensegment zugeordnet werden. Damit Korrespondenzen zwischen den Samples und dem Kegel im Weltkoordinatensystem herstellt werden können, müssen im nächsten Schritt jedem Sample dreidimensionale Koordinaten auf der Kegeloberfläche zugewiesen werden.
 
 Mit Hilfe der Parametrisierung des Kegelstumpfs können die 3D-Koordinaten eines Samples folgendermaßen angegeben werden:
 
@@ -358,7 +358,7 @@ x_0 \\ y_0
 x_1 - x_0 \\ y_1 - y_0
 \end{pmatrix}
 \] %%
-für $\lambda \in [0,1]$ und zwei Punkte $(x_0,y_0)$, sowie $(x_1,y_1)$, nach einer Transformation in das Ellipsenkoordinatensystem, in die implizite Gleichung der Ellipse
+für $\lambda \in [0,1]$ und zwei Punkte $(x_0,y_0)$, sowie $(x_1,y_1)$, nach einer Transformation in das Ellipsenkoordinatensystem\footnote{Im Ellipsenkoordinatensystem befindet sich die Ellipse im Ursprung und ist achsenausgerichtet}, in die implizite Gleichung der Ellipse
 \[
 \frac{x^2}{a^2} + \frac{y^2}{b^2} = 1
 \] %
@@ -368,17 +368,17 @@ Es wird nun die erhaltene quadratische Gleichung nach $\lambda$ aufgelöst. Auf 
 Da sich $t_l$, $L$ und $b_l$ nun auf einem gemeinsamen Liniensegment befinden, kann bezüglich der Weltkoordinaten linear interpoliert werden. Analoges gilt für $t_r$,$R$ und $b_r$.
 Die interpolierten Weltkoordinaten von $L$, sowie $R$ werden als $L_W$ und $R_W$ bezeichnet.
 
-Die drei Punkte $(L, P, R)$ befinden sich auf der Interpolationsellipse und somit können die  Winkel $(\phi_L, \phi_P, \phi_R)$ bezüglich des gemeinsamen Ellipsenkoordinatensystems bestimmt werden. Dazu wird die Ellipse, sowie der Punkt in das Koordinatensystem, indem die Ellipse im Ursprung und ihre Hauptachsen achsenausgerichtet sind, transformiert. Diese Abbildung ist rigide und erhält somit Längen und Winkel. Die Ellipse kann nun parametrisch beschrieben werden durch
+Die drei Punkte $(L, P, R)$ befinden sich auf der Interpolationsellipse und somit können die  Winkel $(\phi_L, \phi_P, \phi_R)$ bezüglich des gemeinsamen Ellipsenkoordinatensystems bestimmt werden. Dazu wird die Ellipse, sowie der Punkt in das Ellipsenkoordinatensystem, transformiert. Diese Abbildung ist rigide und erhält somit Längen und Winkel. Die Ellipse kann nun parametrisch beschrieben werden durch
 \[
 \begin{pmatrix}x \\ y\end{pmatrix} = \begin{pmatrix}a\cos\phi \\
 b\sin\phi\end{pmatrix}
 \] %%
-mit $\phi \in [0, 2\pi)$ und der Haupt- und Nebenachse $a$, beziehungsweise $b$. Zu einem gegeben Ellipsenpunkt $(x,y)$ kann nun wieder der Winkel $\phi$ bezüglich der Ellipse bestimmen werden mit
+mit $\phi \in [0, 2\pi)$ und der Haupt- und Nebenachse $a$, beziehungsweise $b$. Zu einem gegeben Ellipsenpunkt $(x,y)$ kann nun der Winkel $\phi$ bezüglich der Ellipse bestimmen werden mit
 \[
-\phi = \atant \frac{y/b}{x/a} \bmod 2\pi.
+\phi = \atant\left(y/b,x/a\right) \bmod 2\pi.
 \] %%
 
-Analog zu oben werden nun die 3D-Koordinaten von $P$ als lineare Interpolation zwischen den bestimmen 3D-Koordinaten von $L$ und $R$ bestimmt. Als Interpolationsfaktor werden die Winkeldifferenzen
+Analog zu oben werden nun die 3D-Koordinaten von $P$ als lineare Interpolation zwischen den 3D-Koordinaten von $L$ und $R$ bestimmt. Als Interpolationsfaktor werden die Winkeldifferenzen
 $\frac{\phi_L - \phi_P}{\phi_L - \phi_R}$ benutzt. Für die Weltkoordinaten $P_W$ des Pixels $P$ gilt insgesamt:
 \[
 P_W = \left(\frac{\phi_L - \phi_P}{\phi_L - \phi_R}\right) R_W + \left(1 - \frac{\phi_L - \phi_P}{\phi_L - \phi_R}\right) L_W.
@@ -419,7 +419,7 @@ Bei der Rückwärtsentfaltung geht man von dem entzerrten Bild aus, dessen geome
 
 Zunächst müssen für einen Punkt auf dem entzerrten Bild dreidimensionale Koordinaten auf der Kegeloberfläche berechnet werden. Dafür wird die konstruierte Umkehrabbildung \ref{eq:LateralToCone} aus Kapitel \ref{s:cone} genutzt. Im nächsten Schritt müssen die erhaltenen Kegelkoordinaten auf das Ursprungsbild abgebildet werden, um die Pixelkandidaten bestimmen zu können.
 
-Dazu wird eine Projektionsmatrix konstruiert. Wie in Kapitel \ref{s:calib} werden die  Punktkorrespondenzen der Samples genutzt, um mittels \textit{Direct Linear Transformation} eine Projektionsmatrix zu bestimmen.
+Dazu wird eine Projektionsmatrix konstruiert. Wie in Kapitel \ref{s:calib} werden die  Punktkorrespondenzen der Samples genutzt, um mittels Direct Linear Transformation eine Projektionsmatrix zu bestimmen.
 Es ergibt die gewünschte Abbildung, die auf jede 3D-Koordinate angewandt werden muss. Sie gibt Bildkoordinaten zurück. Im Allgemeinen sind diese Koordinaten nicht ganzzahlig und es muss entsprechend interpoliert werden (linear oder bikubisch siehe Kapitel \ref{ch:analysis}).
 
 \begin{figure}[!htb]

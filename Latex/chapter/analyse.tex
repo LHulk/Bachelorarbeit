@@ -2,7 +2,7 @@
 \chapter{Analyse}
 \label{ch:analysis}
 
-Im folgenden Kapitel werden die beiden, in Kapitel \ref{ch:method}, vorgestellten Verfahren zur Entzerrung verglichen. Anschließend wird auf verschiedene Einflussfaktoren in Bezug auf die Qualität und Präzision der Entzerrung eingegangen, woraufhin deren Laufzeiten analysiert werden. Im letzten Teil des Kapitels werden beide Ansätze zur Ellipsendetektion evaluiert.
+Im folgenden Kapitel werden die beiden in Kapitel \ref{ch:method} vorgestellten Verfahren zur Entzerrung verglichen. Anschließend wird auf verschiedene Einflussfaktoren in Bezug auf die Qualität und Präzision der Entzerrung eingegangen, woraufhin deren Laufzeiten analysiert werden. Im letzten Teil des Kapitels werden beide Ansätze zur Ellipsendetektion evaluiert.
 
 
 Die Laufzeitanalysen wurden dabei auf einem \textbf{Raspberry Pi 2 Model B} mit folgenden Eigenschaften durchgeführt:
@@ -47,7 +47,7 @@ Es soll untersucht werden, wie sich die Anzahl der Defekte bei einer Änderung d
 \end{figure}
 
 Wie erwartet, verhält sich die Anzahl der Defekte quadratisch zur gewählten Ausgabeauflösung. Der Informationsgehalt (Pixelanzahl) des Ursprungsbild bleibt trotz erhöhter Ausgabeauflösung konstant. Wie in Abbildung \ref{fig:sizeOutput} zu sehen, verhält sich die Ausgabeauflösung $res_S$ quadratisch zur Gesamtzahl der Pixel für ein konstantes $\alpha$. Für die Breite $b$ des Ausgabebildes gilt $b = res_S$.
-Die Höhe $h$ setzt sich wie folgt zusammen: $h = res_S + res_S\cdot\cos(2\pi-\alpha) = res_S\cdot(1 + cos(2\pi-\alpha)) = res_S\cdot(1+\cos\alpha)$. Dazu betrachtet man das rechtwinklige Dreieck in der rechten oberen Ecke der Abbildung (in magenta). Die Hypotenuse des Dreiecks beträgt $res_S$ und mit $\beta = 2\pi - \alpha$ ergibt sich für die Ankathete eine Länge von $res_S\cdot\cos(2\pi-\alpha)$. Die Gesamtzahl der Pixel beträgt demnach $b\cdot h = res_S^2(1+\cos(\alpha))$.
+Die Höhe $h$ setzt sich wie folgt zusammen: $h = res_S + res_S\cdot\cos(2\pi-\alpha) = res_S\cdot(1 + cos(2\pi-\alpha)) = res_S\cdot(1+\cos\alpha)$. Dazu betrachtet man das rechtwinklige Dreieck in der rechten oberen Ecke der Abbildung (in magenta). Die Hypotenuse des Dreiecks beträgt $res_S$ und mit $\beta = 2\pi - \alpha$ ergibt sich für die Ankathete eine Länge von $res_S\cdot\cos(2\pi-\alpha)$. Die Gesamtzahl der Pixel beträgt demnach $b\cdot h = res_S^2(1+\cos(\alpha))$ und verhält sich quadratisch zu $res_S$.
 
 \begin{figure}[!htb]
 	\centering
@@ -66,7 +66,7 @@ Bei der Rückwärtsentfaltung hingegen, wächst der Interpolationsaufwand quadra
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.9\textwidth]{images/runningTimeCalibration.eps}
-	\caption{Laufzeitvergleich zwischen Vorwärtsentfaltung (blau) und Rückwärtsentfaltung (rot)}
+	\caption[Laufzeitvergleich zwischen Vorwärtsentfaltung und Rückwärtsentfaltung]{Laufzeitvergleich zwischen Vorwärtsentfaltung (blau) und Rückwärtsentfaltung (rot)}
 	\label{fig:runningTimeComparision}
 \end{figure}
 
@@ -82,11 +82,11 @@ Bei der Vorwärtsentfaltung sind die gemessenen Punkte durch die bekannten Sampl
 Obwohl das Endergebnis, bedingt durch die Defekte, bei der Vorwärtsentfaltung optisch schlechter ist, ist der Reprojektionsfehler bei der Vorwärtsentfaltung im Allgemeinen kleiner.
 Als Vergleich zwischen den beiden Verfahren eignet sich der Reprojektionsfehler demnach nicht.
 
-Auf Grund der fehlenden Defekte bei der Rückwärtsentfaltung und der besseren Laufzeit bei Auflösungen unter 850 Pixeln, beziehen sich alle folgenden Auswertungen nur noch auf die Rückwärtsentfaltung.
+Auf Grund der fehlenden Defekte bei der Rückwärtsentfaltung und der besseren Laufzeit bei Auflösungen bis 850 Pixeln, beziehen sich alle folgenden Auswertungen nur noch auf die Rückwärtsentfaltung.
 
 
 \section{Einfluss der intrinsischen Kalibrierung}
-Ein wichtiger Einflussfaktor auf die Qualität der Entzerrung ist die intrinsische Kamerakalibrierung, die vor der eigentlichen Kegelkalibrierung stattfindet. Ihre Hauptaufgabe besteht darin, die Linsenverzerrungen der Kamera herauszurechnen.
+Ein wichtiger Einflussfaktor in Bezug auf die Qualität der Entzerrung ist die intrinsische Kamerakalibrierung, die vor der eigentlichen Kegelkalibrierung stattfindet. Ihre Hauptaufgabe besteht darin, die Linsenverzerrungen der Kamera herauszurechnen.
 
 Der Einfluss der Kamerakalibrierung wird mit Hilfe des Reprojektionsfehlers gemessen. Dazu werden fünf verschiedene Bilder untersucht, die ein Mal mit und ein Mal ohne intrinsische Kalibrierung entzerrt werden. Bei beiden Gruppen wird anschließend jeweils der Reprojektionsfehler pro Sample bestimmt und verglichen. Die Ergebnisse sind in Abbildung \ref{fig:influenceCalib} zu sehen. In der linken Abbildung sind hierbei die Fehler im kalibrierten Fall zu sehen, in der Rechten im unkalibrierten Fall. In der Abbildung ist dabei ein Kreuz an der Stelle $(u,v)$, falls die Abweichung des projizierten Punktes in $x$-Richtung $u$, sowie in $y$-Richtung $v$ beträgt.
 
@@ -101,7 +101,7 @@ Der Einfluss der Kamerakalibrierung wird mit Hilfe des Reprojektionsfehlers geme
 Es ist klar zu erkennen, dass der Reprojektionsfehler bei den Bildern ohne intrinsische Kamerakalibrierung wesentlich größer ist. Der starke Einfluss kommt unter Anderem daher, dass eine Weitwinkelkamera mit starker tonnenförmiger Verzerrung eingesetzt wurde. Ohne eine Modellierung der Linsenverzerrungen weichen die Abstände zwischen den Sample-Positionen stark von der Realität ab. Die Projektionsmatrix wird mit fehlerhaften Daten bestimmt. Die eigentlichen Sample-Positionen auf dem entzerrten Bild werden nicht korrekt auf die Sample-Positionen im Ursprungsbild abgebildet.
 
 \section{Einfluss der Rotation der Kamera}
-Um den Einfluss der Rotation der Kamera untersuchen zu können, wurde der Kegel mittels Blender\footnote{Blender (Version 2.77a), \textit{Blender Foundation}, \url{www.blender.org}} mit Kalibrierungsmuster gerendert, da die Kameraposition dann exakt bekannt ist und äußere Faktoren wie Lichtverhältnisse und inhomogene Hintergründe kontrolliert werden können. In Abbildung \ref{fig:blender} ist bei zwei unterschiedlichen Winkeln der gerenderte Kegel zu sehen.
+Um den Einfluss der Rotation der Kamera untersuchen zu können, wurde der Kegel mittels Blender\footnote{Blender (Version 2.77a), \textit{Blender Foundation}, \url{www.blender.org}} mit Kalibrierungsmuster gerendert, da die Kameraposition dann exakt bekannt ist und äußere Faktoren wie Lichtverhältnisse und inhomogene Hintergründe kontrolliert werden können. In Abbildung \ref{fig:blender} ist zu zwei unterschiedlichen Betrachtungswinkeln der gerenderte Kegel zu sehen.
 
 \begin{figure}[!htb]
 	\centering
@@ -120,13 +120,13 @@ Um den Einfluss der Rotation der Kamera untersuchen zu können, wurde der Kegel 
 \end{figure}
 
 
-Es werden anschließend Bilder erzeugt, in denen in 1° Schritten die Kamera von 0° bis 16° um die $x$-Achse rotiert wird. Für jedes dieser Bilder wird anschließend eine Rückwärtsentfaltung durchgeführt und der durchschnittliche Reprojektionsfehler ermittelt. Abbildung \ref{fig:influenceRot} zeigt, dass der Reprojektionsfehler relativ rotationsinvariant ist. Der durchschnittliche Reprojektionsfehler beträgt $1.925$. Ab einem Winkel von  13°, werden die Samples teilweise vom Blob-Detektor nicht mehr erkannt (bei 13° und 14° werden zwei nicht erkannt, bei 15° und 16° jeweils vier) und mussten per Hand markiert werden. Ab einem Winkel von 16° sind die Abstände zischen den Kreislinien so klein, sodass die Ellipsendetektion fehlschlägt.
+Es werden anschließend Bilder erzeugt, in denen in 1° Schritten die Kamera von 0° bis 16° um die $x$-Achse rotiert wird. Für jedes dieser Bilder wird anschließend eine Rückwärtsentfaltung durchgeführt und der durchschnittliche Reprojektionsfehler ermittelt. Abbildung \ref{fig:influenceRot} zeigt, dass der Reprojektionsfehler relativ rotationsinvariant ist. Der durchschnittliche Reprojektionsfehler beträgt $1.925$. Ab einem Winkel von  13°, werden die Samples teilweise vom Blob-Detektor nicht mehr erkannt (bei 13° und 14° werden zwei nicht erkannt, bei 15° und 16° jeweils vier) und mussten per Hand markiert werden. Ab einem Winkel von 16° sind die Abstände zwischen den Kreislinien so klein, sodass die Ellipsendetektion fehlschlägt.
 
 
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[width=\textwidth]{images/reprojectionErrorDeg3.eps}
-	\caption{Einfluss der Rotation der Kamera}
+	\caption{Einfluss der Rotation der Kamera auf den Reprojektionsfehler}
 	\label{fig:influenceRot}
 \end{figure}
 
@@ -146,7 +146,7 @@ Wie in Abbildung \ref{fig:influenceRes2} zu sehen, wächst die Laufzeit bei beid
 \end{figure}
 
 \section{Evaluierung der Ellipsendetektion mittels Deformable Templates}
-Das Problem bei der Ellipsendetektion mittels {Deformable Templates ist, dass die Energiefunktion, auch nach starker Glättung des Kanten- und Kantenrichtungsbildes, schnell in kleine lokale Minima läuft, obwohl ein wesentlich stärkeres Minimum in näherer Umgebung wäre.
+Das Problem bei der Ellipsendetektion mittels {Deformable Templates ist, dass die Energiefunktion, auch nach starker Glättung des Kanten- und Kantenrichtungsbildes, schnell in vergleichsweise schwache lokale Minima läuft, obwohl ein wesentlich ausgeprägtes Minimum in näherer Umgebung wäre.
 
 In Abbildung \ref{fig:deformable} sieht man beispielhaft einen Auschnitt der Energiefunktion, wobei in diesem Fall zwecks Veranschaulichung nur die Haupt- und Nebenachse der Ellipse variabel sind. 
 Die $x$-Achse steht für die Hauptachse, die $y$-Achse für die Nebenachse und die $z$-Achse für den Wert der Energiefunktion.
@@ -154,14 +154,12 @@ Das Zentrum bleibt das Zentrum des Bildes und der Winkel $\theta$ ist konstant n
 
 Darüber hinaus muss für ein robustes und effizientes Optimierungsverfahren der Gradient und im besten Fall sogar die Hesse-Matrix der zu minimierenden Funktion zur Verfügung gestellt werden.  Jede Ableitung des Kanten- und Kantenorientierungsbilds bringt Unstetigkeitsstellen mit sich. Mit einer zu starken Glättung geht jedoch viel Informationsverlust einher.
 
-
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=.4]{images/deformableHighlighted.png}
 	\caption{Deformable Templates: Ausschnitt der Energiefunktion für variable Haupt- und Nebenachse}
 	\label{fig:deformable}
 \end{figure}
-
 
 \section{Evaluierung der Ellipsendetektion mittels RANSAC}
 Die robuste Ellipsendetektion ist der wichtigste Schritt bei der Entzerrung. Bei beiden Verfahren werden die bestimmten Ellipsen genutzt um Korrespondenzen zwischen den Sample-Positionen und Punkten auf dem Kegel im Weltkoordinatensystem herzustellen. Bei der Vorwärtsentfaltung werden die Ellipsen darüber hinaus benötigt, um für die Pixel geeignete 3D-Koordinaten interpolieren zu können. Es ist also von großer Bedeutung, wie gut die Ellipsendetektion mittels RANSAC funktioniert.
@@ -205,7 +203,7 @@ In Abbildung \ref{fig:uniformEval} sieht man, dass die Dice-Koeffizienten bei RA
 	\label{fig:uniformEval}
 \end{figure}
 
-In unserem Verfahren ist eine Gleichverteilung der Ausreißer unwahrscheinlich. Viel wahrscheinlicher ist es, dass eine der nächst äußeren Ellipsen frühzeitig sichtbar wird (siehe Kapitel \ref{s:ellipseDetection}).
+Im genutzten Verfahren ist eine Gleichverteilung der Ausreißer unwahrscheinlich. Viel wahrscheinlicher ist es, dass eine der nächst äußeren Ellipsen frühzeitig sichtbar wird (siehe Kapitel \ref{s:ellipseDetection}).
 Dieser Fall ist in Abbildung \ref{fig:nonmUniformRansac} illustriert. Es soll nun untersucht werden, wie stark solche Ellipsen das korrekte Ergebnis beeinflussen. 
 %Dabei wird analog zu dem Verfahren zur Untersuchung von gleichverteilten Ausreißern vorgegangen. 
 Ein Fehleranteil von 50\% bedeutet hier, dass auf der inneren Ellipse genauso viele Punkten sind, wie auf der äußeren.
@@ -225,7 +223,7 @@ In Abbildung \ref{fig:nonUniformEval} sieht man, dass bei der Schätzung mittels
 		\caption{geschätzte Ellipsen: RANSAC (grün), LSQ (cyan)}
 		\label{fig:nonmUniformRansac2}
 	\end{subfigure}
-	\caption{Vergleich RANSAC und LSQ bei bei Ausreißern auf einer äußeren Ellipse mit $p = 0.99$ und $\epsilon = 0.33$}
+	\caption{Vergleich RANSAC und LSQ bei Ausreißern auf einer äußeren Ellipse mit $p = 0.99$ und $\epsilon = 0.33$}
 	\label{fig:nonmUniformRansac}
 \end{figure}
 

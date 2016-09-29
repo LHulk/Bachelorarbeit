@@ -13,7 +13,7 @@ Dennoch könnte hier besonders bei den komplexeren Aufgaben, wie der Liniendetek
 Für eine parallele Implementierung der Hough-Transformation sei auf die Arbeit von Havel \cite{Havel2014} verwiesen.
 Bei der Ellipsendetektion mittels RANSAC werden für eine vorher definierte Anzahl an Iterationen wiederholt Punkte ausgewählt, mit denen anschließend eine Ellipse geschätzt wird. Es bietet sich hier an, mehrere Gruppen von Punkten parallel zu verarbeiten.
 
-Von größerer Bedeutung ist eine Laufzeitverbesserung der Entzerrung. Nach der Bestimmung der Abbildungsmatrizen werden nach dem in Kapitel \ref{ch:implementation} beschriebenen Schema eine Reihe von Bildern entzerrt. Um die aufgenommenen Bilder nicht zwischenspeichern zu müssen, wäre eine echtzeitfähige Entfaltung wünschenswert. Die Bilder könnten somit direkt entzerrt gespeichert werden.  Um die Laufzeit der Entfaltung zu verbessern, könnten beispielsweise parallel mehrere Blöcke von Pixeln gleichzeitig verarbeitet werden.
+Von größerer Bedeutung ist eine Laufzeitverbesserung der Entzerrung. Nach der Bestimmung der Abbildungsmatrizen wird, nach dem in Kapitel \ref{ch:implementation} beschriebenen Schema, eine Reihe von Bildern entzerrt. Um die aufgenommenen Bilder nicht zwischenspeichern zu müssen, wäre eine echtzeitfähige Entfaltung wünschenswert. Die Bilder könnten somit direkt entzerrt gespeichert werden.  Um die Laufzeit der Entfaltung zu verbessern, könnten beispielsweise parallel mehrere Blöcke von Pixeln gleichzeitig verarbeitet werden.
 
 
 \section{Verbesserung der Linien-Detektion}
@@ -47,5 +47,10 @@ Im Gegensatz dazu könnte auch ein RANSAC-Ansatz verwendet werden. Statt eine op
 
 
 \section{Verbesserung der Ellipsendetektion mittels Deformable Templates}
-Die Minimierung der konstruierten Energiefunktion wird stark durch irrelevante lokale Minima erschwert. Ein Umformulieren der Energiefunktion könnte hier Abhilfe schaffen.
+Die Minimierung der konstruierten Energiefunktion wird stark durch wenig ausgeprägte lokale Minima erschwert. Ein Umformulieren der Energiefunktion könnte hier Abhilfe schaffen. 
+Außerdem hängt das Ergebnis des Verfahrens, wie bei allen iterativen Ansätzen, stark vom gewählten Initialwert (beziehungsweise Initialellipse) ab. 
+Wird, wie in Kapitel \ref{ch:method} beschrieben, eine möglichst große Ellipse als Initialwert gewählt, so kann es passieren, dass diese nicht gegen die äußerste Ellipse konvergiert. 
+Ein inhomogener Hintergrund oder ein Schatten des Kalibrierungsmusters können für ein nicht stark ausgeprägtes Minimum in der Energiefunktion sorgen, sodass das Verfahren in einem Iterationsschritt hängen bleibt. 
+Stattdessen könnte als Initialwert eine möglichst kleine Ellipse gewählt werden. Der Term der Energiefunktion, der die Größe beeinflusst, wird dabei umformuliert, sodass die Ellipse wächst, statt zu schrumpfen. 
 Darüber hinaus müsste genau untersucht werden, wie die Einflussparameter $\alpha,\beta$ und $\gamma$ eingestellt werden müssen, um zuverlässige Ergebnisse zu liefern.
+

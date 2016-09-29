@@ -8,7 +8,7 @@ Anschließend wird kurz die Theorie linearer Ausgleichsprobleme erklärt, worauf
 beschrieben wird.
 Im Anschluss wird ein kurzer Überblick über Hough-Transformation zur Liniendetektion, sowie RANSAC zur Parameterschätzung gegeben.
 Es werden Ellipsen definiert und beschrieben wie die kürzeste Distanz eines Punktes zu einer Ellipse approximiert werden kann.
-Abschließend wird die Ellipsendetektion mittels Deformable Templates erklärt.
+Abschließend wird das Verfahren der Analytical Deformable Templates zur Detektion von parametrisierbaren Kurven erklärt.
 
 \section{Kegel}
 \label{s:cone}
@@ -18,10 +18,10 @@ Abschließend wird die Ellipsendetektion mittels Deformable Templates erklärt.
 	Die Höhe $H$ eines Kegels ist definiert als die kürzeste Distanz der Spitze zur Grundfläche.
 	Ein Kegel mit Kreis (auch Grundkreis genannt) als Grundfläche wird als Kreiskegel bezeichnet.
 	Wenn die Grundfläche ein Zentrum besitzt, so wird die Verbindungslinie der Spitze mit diesem Zentrum als Achse des Kegels bezeichnet.
-	Als gerade Kegel, wir ein Kegel bezeichnet, dessen Grundfläche senkrecht zu seiner Achse steht \cite{James1992}.
+	Als gerade Kegel wird ein Kegel bezeichnet, dessen Grundfläche senkrecht zu seiner Achse steht \cite{James1992}.
 \end{definition}
 
-Im Folgenden werden nur gerade Kreiskegel betrachtet. Die Oberfläche eines Kegels mit Spitze $T(0,0,0)$, Radius $R$ und Höhe $H$, dessen Zentrum des Grundkreises in $(0,H,0)$ liegt, kann parametrisch beschrieben werden als:
+Im Folgenden werden nur gerade Kreiskegel betrachtet. Die Oberfläche eines Kegels mit Spitze $T(0,0,0)$, Radius $R$ und Höhe $H$, dessen Zentrum des Grundkreises in $(0,H,0)$ liegt, kann parametrisch beschrieben werden durch:
 \begin{equation} \label{eq:paramCone}
 \begin{aligned}
 x &= \frac{u}{H} R~cos \theta \\
@@ -80,7 +80,7 @@ x &= -(s + \frac{u}{\Delta H}(S-s)) ~sin \phi \\
 y &= ~~(s + \frac{u}{\Delta H} (S-s)) ~cos \phi,
 \end{aligned}
 \end{equation}
-wobei  $u\in [0, \Delta H]$ und $\phi \in [0, \alpha) \subseteq [0, 2\pi)$. Die Seitenhöhen $s$ und $S$ gehören zum Ergänzungskegel, beziehungsweise zum ganzen Kegel.
+wobei  $u\in [0, \Delta H]$ und $\phi \in [0, \alpha) \subseteq [0, 2\pi)$. Die Seitenhöhen $s$ und $S$ gehören zum Ergänzungskegel, respektive zum ganzen Kegel.
 
 \begin{figure}[!htb]
 	\centering
@@ -89,6 +89,7 @@ wobei  $u\in [0, \Delta H]$ und $\phi \in [0, \alpha) \subseteq [0, 2\pi)$. Die 
 	\label{fig:coneLateral}
 \end{figure}
 
+\FloatBarrier
 Die Mantelfläche ergibt sich durch Entrollen des Kegelstumpfs. Da der Umfang des Kreises mit Radius $R$, $2\pi R$ beträgt, muss, wie in Abbildung \ref{fig:coneLateral} zu sehen, der äußere Kreisbogen die Bogenlänge $2\pi R$ haben. Analog beträgt die Bogenlänge des inneren Kreisbogens $2\pi r$. Für den Winkel $\alpha$ muss demnach gelten $\alpha S = 2\pi R$, also  $\alpha = 2\pi\frac{R}{S}$. Da sich die Seitenhöhe linear zur Höhe des Kegelstumpfs verhält, kann die Seitenhöhe durch die Höhe ausgedrückt werden. Hierbei gilt $(s + \frac{u}{\Delta H}(S-s))$. Bei Höhe $u = 0$ ergibt sich somit, wie erwartet, die Seitenhöhe $s$, bei Höhe $u = \Delta H$ die Seitenhöhe $S$.
 %\begin{figure}[!htb]
 %	\centering
@@ -105,14 +106,14 @@ Sei dazu ein Punkt $C(x,y,z)$ auf der Oberfläche des Kegelstumpfs gegeben. Gege
 C(x,y,z) = \left(\left(r + \frac{u}{\Delta H} (R - r)\right)cos \theta, u, \left(r + \frac{u}{\Delta H} (R - r)\right)sin \theta\right)
 \]  für ein $u\in [0, \Delta H]$ und $\theta \in [0, 2\pi)$.
 
-Aus der $y$-Koordinate lässt sich direkt die Höhe $u$ ablesen und somit analog zur Gleichung \ref{eq:paramLateral} die zugehörige Seitenhöhe bestimmen. Diese entspricht dem Radius in der parametrischen Gleichung  der Mantelfläche.  Es wird hierfür eine Hilfsfunktion definiert:
+Aus der $y$-Koordinate lässt sich direkt die Höhe $u$ ablesen und somit analog zur Gleichung \ref{eq:paramLateral} die zugehörige Seitenhöhe bestimmen. Diese entspricht dem Radius der Polarkoordinaten in der parametrischen Gleichung der Mantelfläche. Es wird hierfür eine Hilfsfunktion definiert:
 \begin{equation} \label{eq:help1}
 	T(y) := s + \frac{y}{\Delta H} (S-s).
 \end{equation}
 
 
 Da $R, r, \Delta H$  und nun auch die Höhe bekannt sind, kann der Winkel $\theta$ im Kegelstumpf ausgerechnet werden. Anschließend muss dieser noch mit  $\frac{R}{S}$ multipliziert werden, um ihn auf $[0, \alpha]$ zu skalieren (siehe Gleichung \ref{eq:paramLateral}).  In Gleichung \ref{eq:paramFrustum} wird nach $\cos\phi$, beziehungsweise nach $\sin\phi$ umgestellt und anschließend nach $\phi$ aufgelöst.
-Zunächst werden beide Gleichungen durch $r + \frac{y}{\Delta H} (R - r)$ geteilt. Zu beachten ist nun, dass hier nicht die Umkehrfunktionen $\text{acos}$ oder $\text{asin}$ benutzt werden können, da $\sin$ und $\cos$ in einer Periode $[0, 2\pi)$ nicht injektiv sind. Die Wertebereiche der Umkehrfunktionen sind also eingeschränkt. Im Allgemeinen liefern sie nicht den erwünschten Winkel aus $[0, 2\pi)$.
+Zunächst werden beide Gleichungen durch $\left(r + \frac{y}{\Delta H} (R - r)\right)$ geteilt. Zu beachten ist nun, dass hier nicht die Umkehrfunktionen $\text{acos}$ oder $\text{asin}$ benutzt werden können, da $\sin$ und $\cos$ in einer Periode $[0, 2\pi)$ nicht injektiv sind. Die Wertebereiche der Umkehrfunktionen sind also eingeschränkt. Im Allgemeinen liefern sie nicht den erwünschten Winkel aus $[0, 2\pi)$.
 Das gleiche Problem zeigt sich bei $\tan\phi = \frac{\sin\phi}{\cos\phi}$ und der Umkehrfunktion $\atano$. Um dieses Problem zu beheben, wird eine Fallunterscheidung gemacht und es ergibt sich wie folgt die sogenannte $\atant$-Funktion
 \[
 \atant(y,x) = 	\begin{cases}
@@ -126,13 +127,13 @@ Das gleiche Problem zeigt sich bei $\tan\phi = \frac{\sin\phi}{\cos\phi}$ und de
 \]
 
 Mit der Funktion wird untersucht in welchem Quadranten sich der Punkt $(x,y)$ befindet und entsprechend behandelt. Sie gibt den Winkel $\phi$ im Intervall $(-\pi, \pi]$ zurück.
-Um den Winkel in $[0,2\pi)$ zu bestimmen, muss anschließend $\bmod 2\pi$ gerechnet werden.
+Um den Winkel in $[0,2\pi)$ zu bestimmen, muss anschließend $\bmod~2\pi$ gerechnet werden.
 
 Aus diesen Erkenntnissen wird wieder eine Hilfsfunktion definiert
 \begin{equation} \label{eq:help2}
 \Phi(x,y,z) := \frac{R}{S} \left[\left(\atant\left(\frac{z}{r + \frac{y}{\Delta H} (R - r)}, \frac{x}{r + \frac{y}{\Delta H} (R - r)}\right)\right) \bmod 2\pi \right],
 \end{equation}
-die den korrekten Winkel in Polarkoordinaten liefert und auf das Intervall $[0, \alpha)$ skaliert.
+die den korrekten Winkel der Polarkoordinaten liefert und auf das Intervall $[0, \alpha)$ skaliert.
 
 Mit den beiden Hilfsfunktionen \ref{eq:help1} und \ref{eq:help2}, sowie der Gleichung \ref{eq:paramLateral} ergibt sich insgesamt
 \begin{equation}\label{eq:coneToLateral}
@@ -150,7 +151,7 @@ x \\ y \\ z
 
 \subsection{Abbildung von Mantelfläche auf Kegeloberfläche}
 
-Analog zu oben lässt sich die Umkehrabbildung konstruieren.
+Analog lässt sich die Umkehrabbildung konstruieren.
 Sei ein Punkt $L(x,y)$ auf der Mantelfläche des Kegelstumpfs gegeben. Aus der parametrischen Form der Mantelfläche (Gleichung \ref{eq:paramLateral}) ergibt sich
 
 \[
@@ -159,7 +160,7 @@ L(x,y) = (-(s + \frac{u}{\Delta H}(S-s)) ~sin \phi, (s + \frac{u}{\Delta H} (S-s
 
 für ein passendes $u\in [0, \Delta H]$ und $\phi \in [0, \alpha) \subseteq  [0, 2\pi)$.
 
-Da $L(x,y)$ in Polarkoordinaten gegeben ist, kann der Radius durch $\sqrt{x^2+y^2}$ bestimmt werden. Der Winkel $\phi$ mit inverser Skalierung $\frac{S}{R}$ kann analog zur Gleichung \ref{eq:help1} durch folgende Hilfsfunktion bestimmt werden:
+Da $L(x,y)$ in Polarkoordinaten gegeben ist, kann der Radius durch $\sqrt{x^2+y^2}$ bestimmt werden. Der Winkel $\phi$ mit inverser Skalierung $\frac{S}{R}$ kann analog zur Gleichung \ref{eq:help2} durch folgende Hilfsfunktion bestimmt werden:
 
 \begin{equation}\label{eq:help3}
 \Theta(x,y) := \frac{S}{R} \left[\left(\atant\left(-\frac{x}{\sqrt{x^2+y^2}}, \frac{y}{\sqrt{x^2+y^2}}\right)\right) \bmod 2\pi \right].
@@ -241,14 +242,14 @@ A^+ &= V\Sigma^+U^T
 \]
 
 mit orthogonalen Matrizen $U\in\mathbb{R}^{m\times m}$ und $V\in\mathbb{R}^{n\times n}$ und einer Diagonalmatrix $\Sigma\in\mathbb{R}^{m\times n}$.
-Die Diagonale der Matrix $\Sigma$ besteht aus den absteigend sortierten Singulärwerten von $A$, die Matrix $\Sigma^+\in\mathbb{R}^{n\times m}$ aus den jeweiligen reziproken Singulärwerte. Bei beiden Matrizen wird die Diagonale mit Nullen aufgefüllt.
+Die Diagonale der Matrix $\Sigma$ besteht aus den absteigend sortierten Singulärwerten von $A$, die Matrix $\Sigma^+\in\mathbb{R}^{n\times m}$ aus den jeweiligen reziproken Singulärwerten. Bei beiden Matrizen wird die Diagonale mit Nullen aufgefüllt.
 
 
 Die Lösung des Ausgleichsproblems kann dann mittels SVD angeben werden als:
 \[
-c = V\Sigma^+U^Ty
+c = \left(V\Sigma^+U^T\right)y
 \]
-Zu beachten ist, dass dieses Vorgehen auch bei Matrizen $A$ mit $\text{rang}\left(A\right) = n$ funktioniert, also wenn $A^TA$ invertierbar ist und darüber hinaus numerisch stabil implementiert werden kann \cite{Stoer2011}.
+Zu beachten ist, dass dieses Vorgehen auch bei Matrizen $A$ mit $\text{rang}\left(A\right) = n$ funktioniert, also wenn $A^TA$ invertierbar ist. Außerdem lässt es sich numerisch stabil implementieren \cite{Stoer2011}.
 
 
 
@@ -360,6 +361,7 @@ Das beschriebene Verfahren vernachlässigt dabei Linsenverzerrungen. Solche Verz
 
 Es wird grundsätzlich zwischen zwei Typen von Verzerrungen unterschieden: radiale Verzerrung und tangentiale Verzerrung.
 Radiale Verzerrung entsteht durch eine Skalierung des Abstands eines Bildpunktes zum Fokus. Wird der Abstand vergrößert, spricht man von einer tonnenförmigen Verzerrung (siehe Abbildung \ref{fig:barrel}), wird er verkleinert von einer kissenförmigen Verzerrung (siehe Abbildung \ref{fig:cushion}).
+
 Radiale Verzerrung kann wie folgt modelliert werden:
 
 \[
@@ -371,7 +373,7 @@ Radiale Verzerrung kann wie folgt modelliert werden:
 
 wobei $(x,y)$ ein verzerrter Bildpunkt, $(\hat{x}^{(r)}, \hat{y}^{(r)})$ der entzerrte Punkt und $k_1$ und $k_2$ die Koeffizienten der radialen Verzerrung sind \cite{Zhang2002}.
 
-Tangentiale Verzerrung ist auf eine fehlerhafte Fertigung zurückzuführen und entsteht beispielsweise wenn sich eine Linse nicht parallel zur Bildebene befindet.
+Tangentiale Verzerrung ist auf eine fehlerhafte Fertigung zurückzuführen und entsteht beispielsweise, wenn sich eine Linse nicht parallel zur Bildebene befindet.
 Sie kann modelliert werden durch:
 \[
 \begin{aligned}
@@ -414,8 +416,12 @@ wobei $(x,y)$ wieder ein verzerrter Bildpunkt, $(\hat{x}^{(t)}, \hat{y}^{(t)})$ 
 	Ein Blob ist eine glatte zusammenhängende Region in einem Bild, die sich farblich von ihrer Umgebung abhebt \cite{Lindeberg1993}.
 \end{definition}
 
-Ein Blob-Detektor ist ein Verfahren zum Detektieren solcher Blobs. Die gefundenen Blobs können anschließend nach verschiedenen Kriterien, wie beispielsweise Größe, Farbe, Konvexität oder Rundheit gefiltert werden.
-\todo{iwas überlegen}
+Ein Blob-Detektor ist ein Verfahren zum Detektieren solcher Blobs. Die gefundenen Blobs können anschließend unter anderem nach folgenden Kriterien gefiltert werden:
+\begin{itemize}
+	\item \textbf{Fläche} beschreibt die Größe eines Blobs
+	\item \textbf{Rundheit} beschreibt die Ähnlichkeit zu einem Kreis und ist definiert durch $circ = \frac{4\pi\cdot \textrm{Fläche}}{\left(\textrm{Umfang}\right)^2}\in[0,1]$, wobei ein Kreis mit $circ = 1$ maximal rund ist.
+	\item  \textbf{Konvexität} beschreibt die Ähnlichkeit eines Blobs zu seiner konvexen Hülle. Konvexität ist definiert als $conv = \frac{\textrm{Fläche Blob}}{\textrm{Fläche konvexe Hülle}}\in[0,1]$
+\end{itemize}
 
 %\section{Canny}
 %\label{s:canny}
@@ -433,7 +439,7 @@ Eine beliebige zweidimensionale Gerade kann in Polarkoordinaten folgendermaßen 
 x\cos\phi + y\sin\phi = d,
 \end{equation}
 
-wobei $\phi \in [0,2\pi)$ der Winkel der Geraden mit der $x$-Achse und $d \geq 0$ der Radius, also den euklidischen Abstand der Geraden zum Ursprung des Koordinatensystems, ist.
+wobei $\phi \in [0,2\pi)$ der Winkel der Geraden mit der $x$-Achse und $d \geq 0$ der Radius, also der euklidische Abstand der Geraden zum Ursprung des Koordinatensystems, ist.
 
 Eine Gerade wird somit als ein Punkt $(d,\phi)$ in den Parameterraum (auch Hough-Raum) abgebildet.
 
@@ -504,7 +510,7 @@ n_{min} = \frac{\log{\left(1-p\right)}}{\log{\left(1-\left(1-\epsilon\right)^k\r
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=.9]{images/ellipse_focalDef.eps}
-	\caption{Ellipse mit Brennpunkten $f_1, f_2$, Zentrum $C$, Hauptachse $a$, Nebenachse $b$ und Scheitelpunkten $V_1/V_3$ und $V_2/V_4$}
+	\caption{Ellipse mit Brennpunkten $f_1/f_2$, Zentrum $C$, Hauptachse $a$, Nebenachse $b$ und Scheitelpunkten $V_1/V_3$ und $V_2/V_4$}
 	\label{fig:ellipseDef}
 \end{figure}
 
@@ -564,7 +570,7 @@ Die Gleichung \ref{eq:ellipseQuadratic} kann umgeformt werden zu:
 Der gemischte Term wird alleine durch $M = \begin{pmatrix}a & \frac{c}{2} \\ \frac{c}{2} & b\end{pmatrix}$ bestimmt. Die Matrix $M$ ist invertierbar, denn
 \[
 \det M = ab - \dfrac{c^2}{4}
-\] ist nur dann gleich null, wenn $c^2 - 4ab = 0$, was ein Widerspruch zur Annahme in Gleichung \ref{eq:ellipseQuadratic} ist. $M$ hat somit eine von null verschiedene Determinante und somit vollen Rang, hat also zwei von null verschiedene Eigenwerte \cite{Bosch2006}. Insbesondere gibt es zwei Eigenvektoren von $M$, die zueinander orthogonal sind, da Eigenvektoren zu verschiedenen Eigenwerten orthogonal zueinander sind.\cite[S. 198]{Bosch2006}.
+\] ist nur dann gleich null, wenn $c^2 - 4ab = 0$, was ein Widerspruch zur Annahme in Gleichung \ref{eq:ellipseQuadratic} ist. $M$ hat somit eine von null verschiedene Determinante und somit vollen Rang, hat also zwei von null verschiedene Eigenwerte \cite{Bosch2006}. Insbesondere gibt es zwei Eigenvektoren von $M$, die zueinander orthogonal sind, da Eigenvektoren zu verschiedenen Eigenwerten orthogonal zueinander sind.\cite{Bosch2006}.
 
 Da die Matrix $M$ außerdem symmetrisch ist, ist sie orthogonal diagonalisierbar \cite{Bosch2006}.
 
@@ -606,7 +612,7 @@ Formt man nun Gleichung \ref{eq:PCARot} weiter um, ergibt sich:
 \Leftrightarrow\quad &(\lambda_1v_1^2 + d'v_1)+ (\lambda_2v_2^2 + e'v_2) + f = 0\\
 \Leftrightarrow\quad &(\lambda_1v_1^2 + d'v_1) + (\frac{d'^2}{4\lambda_1} - \frac{d'^2}{4\lambda_1}) + (\lambda_2v_2^2 + e'v_2) + (\frac{e'^2}{4\lambda_2} - \frac{e'^2}{4\lambda_2}) + f = 0 \\
 \Leftrightarrow\quad &\left[\lambda_1\left(v_1^2 + \frac{2d'}{2\lambda_1}v_1 + \frac{d'^2}{4\lambda_1^2}\right) - \frac{d'^2}{4\lambda_1}\right] +\left[\lambda_2\left(v_2^2 + \frac{2e'}{2\lambda_2}v_2 + \frac{e'^2}{4\lambda_2^2}\right) - \frac{e'^2}{4\lambda_2}\right] + f = 0 \\
-\Leftrightarrow\quad &\lambda_1(v_1 + \underbrace{\frac{d'}{2\lambda_1}}_{ = -x'_0})^2 +\lambda_2(v_2 + \underbrace{\frac{e'}{2\lambda_2}}_{ = -y'_0})^2 - \underbrace{(\frac{d'^2}{4\lambda_1} + \frac{e'^2}{4\lambda_2} - f)}_{=:\sigma} = 0,
+\Leftrightarrow\quad &\lambda_1(v_1 + \underbrace{\frac{d'}{2\lambda_1}}_{ = -x'_0})^2 +\lambda_2(v_2 + \underbrace{\frac{e'}{2\lambda_2}}_{ = -y'_0})^2 - \underbrace{\left(\frac{d'^2}{4\lambda_1} + \frac{e'^2}{4\lambda_2} - f\right)}_{=:\sigma} = 0,
 \end{aligned}
 \end{equation}
 
@@ -677,7 +683,7 @@ $F'$ wird null, wenn $\left(\mathcal{E}(\phi) - Q\right)$ und $ \mathcal{E}'(\ph
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=.9]{images/ellipseQuery.eps}
-	\caption{Ellipsenausschnitt im ersten Quadranten mit Abfragepunkt $Q$ und eingezeichneter kürzester Distanz zum Ellipsenpunkt $E$. Die Ellipse wird beschrieben durch $\mathcal{E}$}
+	\caption[Ellipsenausschnitt im ersten Quadranten mit Abfragepunkt $Q$ und eingezeichneter kürzester Distanz zum Ellipsenpunkt $E$]{Ellipsenausschnitt im ersten Quadranten mit Abfragepunkt $Q$ und eingezeichneter kürzester Distanz zum Ellipsenpunkt $E$. Die Ellipse wird beschrieben durch $\mathcal{E}$}
 	\label{fig:ellipseDist}
 \end{figure}
 
@@ -731,12 +737,11 @@ Man macht nun eine Fallunterscheidung:
 	Für Punkte $Q(x_1,0)$ mit $x_1 \geq \frac{a^2 - b^2}{a}$ muss dementsprechend $y_0 = 0$ gelten und der kürzeste Punkt ist wieder $E(a,0)$.
 
 	Für Punkte $Q(x_1,0)$ mit $x_1 < \frac{a^2 - b^2}{a}$ muss für $E(x_0,y_0)$, nach Umstellen der Ellipsengleichung \ref{eq:distEqParam},~$y_0 = b\cdot\sqrt{1-\left(\frac{x_0}{a}\right)^2}$ gelten.
-	Die quadratische Distanz von $E(x_0,y_0)$ zu $Q(x_1,0)$  beträgt dann:
-
+	Die quadratische Distanz von $E(x_0,y_0)$ zu $Q(x_1,0)$ beträgt dann:
 	\[
 		d^2 = (x_0 - x_1)^2 + (y_0 - 0)^2.
 	\] %%
-	Setzt man nun $y_0 = b\cdot\sqrt{1-\left(\frac{x_0}{a}\right)^2}$ ein und für jedes Vorkommen von $x_0$ die Gleichung $x_0 = \frac{a^2x_1}{a^2 - b^2}$ ein so ergibt sich insgesamt:
+	Setzt man nun $y_0 = b\cdot\sqrt{1-\left(\frac{x_0}{a}\right)^2}$ ein und für jedes Vorkommen von $x_0$ die Gleichung $x_0 = \frac{a^2x_1}{a^2 - b^2}$ ein, so ergibt sich insgesamt:
 	\[
 	\begin{aligned}
 	d^2 &= (x_0 - x_1)^2 + (y_0 - 0)^2 \\
@@ -778,7 +783,6 @@ Man macht nun eine Fallunterscheidung:
 \label{s:anaDef}
 Analytical Deformable Templates ist ein Verfahren zur Detektion von analytischen Kurven.
 Ein Template ist dabei definiert durch eine Menge von Parametern, die a-priori Wissen über die erwartete Form ermöglichen.
-Als Beispiel sei eine  Ellipse genannt, die durch ihr Zentrum, ihren beiden Achsen und den Drehwinkel also $(x_0,y_0,a,b,\theta)$ definiert ist.
+Als Beispiel sei eine  Ellipse genannt, die durch ihr Zentrum, ihren beiden Achsen und den Drehwinkel, also $(x_0,y_0,a,b,\theta)$ definiert ist.
 Es wird dann eine Energiefunktion konstruiert, deren Terme eine Anziehung des Templates an Hauptmerkmale (wie Kantenstärke, Kantenorientierung, Farbintensität, etc. ) des Bildes hervorrufen.
 Die Energiefunktion wird dabei durch numerische Verfahren, wie dem Gradientenverfahren, minimiert \cite{Yuille1992}.
-\todo{was überlegen}
