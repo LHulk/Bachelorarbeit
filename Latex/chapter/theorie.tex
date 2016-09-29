@@ -7,7 +7,7 @@ Zunächst wird auf die Definition eines Kegels, eines Kegelstumpfs und dessen Ma
 Anschließend wird kurz die Theorie linearer Ausgleichsprobleme erklärt, woraufhin der Prozess der Kamerakalibrierung
 beschrieben wird.
 Im Anschluss wird ein kurzer Überblick über Hough-Transformation zur Liniendetektion, sowie RANSAC zur Parameterschätzung gegeben.
-Es werden Ellipsen definiert und beschrieben wie die kürzeste Distanz eines Punktes zu einer Ellipsen approxmiert werden kann.
+Es werden Ellipsen definiert und beschrieben wie die kürzeste Distanz eines Punktes zu einer Ellipse approximiert werden kann.
 Abschließend wird die Ellipsendetektion mittels Deformable Templates erklärt.
 
 \section{Kegel}
@@ -29,13 +29,13 @@ y &= u \\
 z &= \frac{u}{H} R~sin \theta
 \end{aligned}
 \end{equation} %
-mit $u\in [0, H]$ und $\theta \in [0, 2\pi)$. Hierbei steht $u$ für die aktuelle Höhe im Kegel. Um die vollständige Oberfläche zu beschreiben muss $u$ das Intervall $[0, H]$ abdecken. Zu jedem $u$ ergibt sich ein Kreis mit Radius $\frac{u}{H} R$. Um einen vollständigen Kreis zu erhalten muss $\theta$ demnach $[0, 2\pi)$ abdecken. Der Radius des Kreises nimmt zu bis er sein Maximum bei $u = H$ mit einem Wert von $R$ erreicht.
+mit $u\in [0, H]$ und $\theta \in [0, 2\pi)$. Hierbei steht $u$ für die aktuelle Höhe im Kegel. Um die vollständige Oberfläche zu beschreiben, muss $u$ das Intervall $[0, H]$ abdecken. Zu jedem $u$ ergibt sich ein Kreis mit Radius $\frac{u}{H} R$. Um einen vollständigen Kreis zu erhalten, muss $\theta$ demnach $[0, 2\pi)$ abdecken. Der Radius des Kreises nimmt zu bis er sein Maximum bei $u = H$ mit einem Wert von $R$ erreicht.
 
 $S$ bezeichne die Seitenhöhe des Kegels und sei definiert durch das rechtwinklige Dreieck mit den Seitenlängen $H,R$ und $S$ (siehe Abbildung \ref{fig:cone}). Es gilt $S = \sqrt{H^2 + R^2}$.
 \bigskip
 \begin{definition}[Kegelstumpf und Ergänzungskegel]
 	Ein Kegelstumpf entsteht aus einem Schnitt eines geraden Kreiskegels mit einer zur Grundfläche parallelen Ebene (siehe Abbildung \ref{fig:coneWithFrustum}) \cite{James1992}. 
-	Der Kegel, der definiert ist durch die Schnittfläche und die Spitze des ursprünglichen Kegels wird als Ergänzungskegel bezeichnet. 
+	Der Kegel, der definiert ist durch die Schnittfläche und die Spitze des ursprünglichen Kegels, wird als Ergänzungskegel bezeichnet. 
 	Der geometrische Körper zwischen Grundfläche und Schnittfläche wird als Kegelstumpf bezeichnet. 
 	Die Grundfläche des Kegelstumpfs wird Grundkreis, die Schnittfläche Deckkreis genannt.
 
@@ -112,7 +112,7 @@ Aus der $y$-Koordinate lässt sich direkt die Höhe $u$ ablesen und somit analog
 
 
 Da $R, r, \Delta H$  und nun auch die Höhe bekannt sind, kann der Winkel $\theta$ im Kegelstumpf ausgerechnet werden. Anschließend muss dieser noch mit  $\frac{R}{S}$ multipliziert werden, um ihn auf $[0, \alpha]$ zu skalieren (siehe Gleichung \ref{eq:paramLateral}).  In Gleichung \ref{eq:paramFrustum} wird nach $\cos\phi$, beziehungsweise nach $\sin\phi$ umgestellt und anschließend nach $\phi$ aufgelöst.
-Zunächst werden beide Gleichungen durch $r + \frac{y}{\Delta H} (R - r)$ geteilt. Zu beachten ist nun, dass hier nicht die Umkehrfunktionen $\text{acos}$ oder $\text{asin}$ benutzen werden kann, da $\sin$ und $\cos$ in einer Periode $[0, 2\pi)$ nicht injektiv sind. Die Wertebereiche der Umkehrfunktionen sind also eingeschränkt. Im Allgemeinen liefern die Umkehrfunktion nicht den erwünschten Winkel aus $[0, 2\pi)$.
+Zunächst werden beide Gleichungen durch $r + \frac{y}{\Delta H} (R - r)$ geteilt. Zu beachten ist nun, dass hier nicht die Umkehrfunktionen $\text{acos}$ oder $\text{asin}$ benutzt werden können, da $\sin$ und $\cos$ in einer Periode $[0, 2\pi)$ nicht injektiv sind. Die Wertebereiche der Umkehrfunktionen sind also eingeschränkt. Im Allgemeinen liefern sie nicht den erwünschten Winkel aus $[0, 2\pi)$.
 Das gleiche Problem zeigt sich bei $\tan\phi = \frac{\sin\phi}{\cos\phi}$ und der Umkehrfunktion $\atano$. Um dieses Problem zu beheben, wird eine Fallunterscheidung gemacht und es ergibt sich wie folgt die sogenannte $\atant$-Funktion
 \[
 \atant(y,x) = 	\begin{cases}
@@ -159,7 +159,7 @@ L(x,y) = (-(s + \frac{u}{\Delta H}(S-s)) ~sin \phi, (s + \frac{u}{\Delta H} (S-s
 
 für ein passendes $u\in [0, \Delta H]$ und $\phi \in [0, \alpha) \subseteq  [0, 2\pi)$.
 
-Da $L(x,y)$ in Polarkoordinaten gegeben ist, kann der Radius durch $\sqrt{x^2+y^2}$ bestimmt werden. Der Winkel $\phi$ mit inverser Skalierung $\frac{S}{R}$ kann analog zu oben durch folgende Hilfsfunktion bestimmt werden:
+Da $L(x,y)$ in Polarkoordinaten gegeben ist, kann der Radius durch $\sqrt{x^2+y^2}$ bestimmt werden. Der Winkel $\phi$ mit inverser Skalierung $\frac{S}{R}$ kann analog zur Gleichung \ref{eq:help1} durch folgende Hilfsfunktion bestimmt werden:
 
 \begin{equation}\label{eq:help3}
 \Theta(x,y) := \frac{S}{R} \left[\left(\atant\left(-\frac{x}{\sqrt{x^2+y^2}}, \frac{y}{\sqrt{x^2+y^2}}\right)\right) \bmod 2\pi \right].
@@ -202,7 +202,7 @@ Gesucht ist eine Lösung, welche die mittlere Abweichung
 
 minimiert \cite{Stoer2007}.
 
-Diese Problem wird als lineares Ausgleichsproblem oder als Methode der kleinsten Quadrate bezeichnet und lässt sich wie folgt formulieren:
+Dieses Problem wird als lineares Ausgleichsproblem oder als Methode der kleinsten Quadrate bezeichnet und lässt sich wie folgt formulieren:
 
 \[
 \min_{c\in\mathbb{R}^n} ||y - Ac||_2
@@ -248,7 +248,7 @@ Die Lösung des Ausgleichsproblems kann dann mittels SVD angeben werden als:
 \[
 c = V\Sigma^+U^Ty
 \]
-Zu beachten ist, dass dieses Vorgehen auch bei Matrizen $A$ mit $\text{rang}\left(A\right) = n$ funktioniert, also wenn $A^TA$ invertierbar ist und darüberhinaus numerisch stabil implementiert werden kann \cite{Stoer2011}.
+Zu beachten ist, dass dieses Vorgehen auch bei Matrizen $A$ mit $\text{rang}\left(A\right) = n$ funktioniert, also wenn $A^TA$ invertierbar ist und darüber hinaus numerisch stabil implementiert werden kann \cite{Stoer2011}.
 
 
 
@@ -268,7 +268,7 @@ Um die Parameter einer Kamera korrekt beschreiben zu können, ist ein Kameramode
 	\label{fig:pinhole}
 \end{figure}
 
-Das Bild das an der Rückseite der Kamera entsteht ist dabei um 180° gedreht. Damit man diese Rotation nicht betrachten muss, kann man die Bildebene virtuell vor die Lochblende setzen. Da sich der Abstand zur Blende nicht ändert, ändern sich auch die optischen Eigenschaften des Bildes nicht.
+Das Bild, das an der Rückseite der Kamera entsteht, ist dabei um 180° gedreht. Damit man diese Rotation nicht betrachten muss, kann man die Bildebene virtuell vor die Lochblende setzen. Da sich der Abstand zur Blende nicht ändert, ändern sich auch die optischen Eigenschaften des Bildes nicht.
 
 Eine Kamerakalibrierung wird benötigt, um eine Beziehung zwischen Punkten im dreidimensionalen Weltkoordinatensystem und den Punkten auf der zweidimensionalen Bildebene herstellen zu können. Konkret wird eine projektive Abbildung
 
@@ -288,7 +288,7 @@ Eine Kamerakalibrierung wird benötigt, um eine Beziehung zwischen Punkten im dr
 
 gesucht, die einen Punkt $P=(x,y,z)$ in homogenen Koordinaten $\tilde P = (x,y,z,1)$ auf einen Punkt $\tilde C = (wu,wv,w)$ beziehungsweise nach der perspektivischen Division $C = (u,v)$ auf die Bildebene abbildet, wobei die $a_{ij}$ von den intrinsischen und extrinsischen Parametern der Kamera abhängen \cite{Heikkila1997}.
 
-Als intrinsische Parameter einer Kamera, werden die optischen Eigenschaften, sowie die interne Kamerageometrie bezeichnet. Hierzu zählen beispielsweise Linsenverzerrungen, sowie die Brennweite.
+Als intrinsische Parameter einer Kamera werden die optischen Eigenschaften, sowie die interne Kamerageometrie bezeichnet. Hierzu zählen beispielsweise Linsenverzerrungen, sowie die Brennweite.
 Extrinsische Parameter beschreiben die dreidimensionale Position und Orientierung der Bildebene relativ zu einem Weltkoordinatensystem  \cite{Tsai1987}.
 
 %Man kann leicht zeigen, dass für $A$ gilt
@@ -359,7 +359,7 @@ Dieses Verfahren wird auch als Direct Linear Transformation (DLT) bezeichnet.
 Das beschriebene Verfahren vernachlässigt dabei Linsenverzerrungen. Solche Verzerrungen entstehen entweder als Produktionsfehler günstiger Linsen, oder werden durch spezielle Linsen, wie bei Weitwinkelkameras, begünstigt. Verzerrungen können in der Regel nicht linear modelliert werden. Der Ansatz über DLT funktioniert hier dementsprechend nicht.
 
 Es wird grundsätzlich zwischen zwei Typen von Verzerrungen unterschieden: radiale Verzerrung und tangentiale Verzerrung.
-Radiale Verzerrung entsteht durch eine Skalierung des Abstand eines Bildpunktes zum Fokus. Wird der Abstand vergrößert spricht man von einer tonnenförmigen Verzerrung (siehe Abbildung \ref{fig:barrel}), wird er verkleinert von einer kissenförmigen Verzerrung (siehe Abbildung \ref{fig:cushion}).
+Radiale Verzerrung entsteht durch eine Skalierung des Abstands eines Bildpunktes zum Fokus. Wird der Abstand vergrößert, spricht man von einer tonnenförmigen Verzerrung (siehe Abbildung \ref{fig:barrel}), wird er verkleinert von einer kissenförmigen Verzerrung (siehe Abbildung \ref{fig:cushion}).
 Radiale Verzerrung kann wie folgt modelliert werden:
 
 \[
@@ -387,7 +387,7 @@ wobei $(x,y)$ wieder ein verzerrter Bildpunkt, $(\hat{x}^{(t)}, \hat{y}^{(t)})$ 
 	\begin{subfigure}{.33\textwidth}
 		\centering
 		\includegraphics[width=0.9\textwidth]{images/undistorted.png}
-		\caption{keine Linsenverrung}
+		\caption{keine Linsenverzerrung}
 		\label{fig:undist}
 	\end{subfigure}%
 	\begin{subfigure}{.33\textwidth}
@@ -425,7 +425,7 @@ Ein Blob-Detektor ist ein Verfahren zum Detektieren solcher Blobs. Die gefundene
 
 \section{Hough-Transformation}
 \label{s:hough}
-Die Hough-Transformation ist ein Verfahren zur Detektion von beliebigen parametrisierbaren Konturen. In dieser Arbeit werden Hough-Transforamtionen benutzt um Geraden zu detektieren.
+Die Hough-Transformation ist ein Verfahren zur Detektion von beliebigen parametrisierbaren Konturen. In dieser Arbeit wird Hough-Transformation benutzt, um Geraden zu detektieren.
 
 Eine beliebige zweidimensionale Gerade kann in Polarkoordinaten folgendermaßen implizit ausgedrückt werden:
 
@@ -433,11 +433,11 @@ Eine beliebige zweidimensionale Gerade kann in Polarkoordinaten folgendermaßen 
 x\cos\phi + y\sin\phi = d,
 \end{equation}
 
-wobei $\phi \in [0,2\pi)$ der Winkel der Geraden mit der $x$-Achse und $d \geq 0$ der Radius, also der euklidische Abstand der Geraden zum Ursprung des Koordinatensystems ist.
+wobei $\phi \in [0,2\pi)$ der Winkel der Geraden mit der $x$-Achse und $d \geq 0$ der Radius, also den euklidischen Abstand der Geraden zum Ursprung des Koordinatensystems, ist.
 
 Eine Gerade wird somit als ein Punkt $(d,\phi)$ in den Parameterraum (auch Hough-Raum) abgebildet.
 
-Um eine Gerade eindeutig zu definieren benötigt man, wie auch bei der klassischen Defintionen $y = mx + b$, zwei Punkte. Beschränkt man sich auf einen Punkt, so lässt sich jedoch die Auswahl von $\phi$ und $d$ einschränken. Hat man beispielsweise einen Punkt $(x_k,y_k)$ gegeben, so ergibt die Gleichung \ref{eq:HoughLines} eine sinusförmige Funktion in Abhängigkeit von $\phi$.
+Um eine Gerade eindeutig zu definieren benötigt man, wie auch bei der klassischen Definition $y = mx + b$, zwei Punkte. Beschränkt man sich auf einen Punkt, so lässt sich jedoch die Auswahl von $\phi$ und $d$ einschränken. Hat man beispielsweise einen Punkt $(x_k,y_k)$ gegeben, so ergibt die Gleichung \ref{eq:HoughLines} eine sinusförmige Funktion in Abhängigkeit von $\phi$.
 
 Um nun beliebige Geraden detektieren zu können, werden $\phi$ und $d$ zunächst passend diskretisiert:
 \[
@@ -523,7 +523,7 @@ beschrieben werden.
 	\label{fig:ellipse}
 \end{figure}
 
-Befindet sich die Ellipse nicht im Ursprung so muss eine Verschiebung, beziehungsweise bei einer Rotation ein Drehwinkel (siehe Abbildung \ref{fig:ellipse}), ergänzt werden. Es gilt
+Befindet sich die Ellipse nicht im Ursprung, so muss eine Verschiebung, beziehungsweise bei einer Rotation ein Drehwinkel (siehe Abbildung \ref{fig:ellipse}), ergänzt werden. Es gilt
 
 \begin{equation} \label{eq:ellipseNoRotTrans}
 \frac{\left(x-x_0\right)^2}{a^2} + \frac{\left(y-y_0\right)^2}{b^2} = 1
@@ -544,7 +544,7 @@ In ihrer allgemeinsten Form lässt sich eine Ellipse durch ein implizites Polyno
 \begin{equation} \label{eq:ellipseQuadratic}
 ax^2 + by^2 + cxy + dx + ey + f = 0 \quad \text{mit}\quad c^2-4ab < 0,
 \end{equation}
-wobei $a,b,c,d,e,f \in \mathbb{R}$. Eine Ellipse lässt sich demnach durch sechs Punkte eindeutig beschrieben (fünf, wenn man $f$ auf eins skaliert).
+wobei $a,b,c,d,e,f \in \mathbb{R}$. Eine Ellipse lässt sich demnach durch sechs Punkte eindeutig beschreiben (fünf, wenn man $f$ auf eins skaliert).
 
 
 Die beiden Formen \ref{eq:ellipseRotTrans} und \ref{eq:ellipseQuadratic} sind äquivalent, falls die Ellipse nicht zu einem Punkt oder einer Linie degeneriert ist \cite{Lawrence1972}. Dies ist dann der Fall, wenn $a = b = 0$ (Punkt), oder $a = 0 \lor b = 0$ (Linie) gilt. Die Umformung von \ref{eq:ellipseRotTrans} nach \ref{eq:ellipseQuadratic} ist mit Hilfe einer Hauptachsentransformation möglich.
@@ -636,14 +636,14 @@ wobei $\sigma \neq 0$, wenn die Ellipse nicht zum Punkt entartet ist (folgt aus 
 \end{aligned}
 \end{equation}
 
-Das Ergebnis für die beiden Achsen ist reell, da $\frac{\sigma}{\lambda_i} > 0$ für nicht entartete reele\footnote{Man kann Ellipsen auch mit imaginären Achsen definieren \cite{Lawrence1972}.}  Ellipsen gilt (folgt aus dem Determinantenkriterium \cite{Lawrence1972}). Da die Transformation in das Koordinatensystem der Ellipse nur Rotationen enthält,  bleiben die Längen der Hauptachsen erhalten. Es gilt wie erwartet $a \geq b$, da $\lambda_1 \leq \lambda_2$.
+Das Ergebnis für die beiden Achsen ist reell, da $\frac{\sigma}{\lambda_i} > 0$ für nicht entartete reelle\footnote{Man kann Ellipsen auch mit imaginären Achsen definieren \cite{Lawrence1972}.}  Ellipsen gilt (folgt aus dem Determinantenkriterium \cite{Lawrence1972}). Da die Transformation in das Koordinatensystem der Ellipse nur Rotationen enthält,  bleiben die Längen der Hauptachsen erhalten. Es gilt wie erwartet $a \geq b$, da $\lambda_1 \leq \lambda_2$.
 
 
 \subsection{Abstand: Punkt zu Ellipse}
 \label{sc:distPointEllipse}
 Das hier beschriebene Verfahren zur Bestimmung der kürzesten euklidischen Distanz eines Punktes zu einer Ellipse stammt aus der Arbeit von David Eberly \cite{Eberly2013}.
 Es werden hierbei nur Ellipsen im Ursprung betrachtet, die achsenausgerichtet sind und darüber hinaus nur Punkte im ersten Quadranten. Ansonsten wird die Ellipse in den Ursprung verschoben und um ihren entgegengesetzten Drehwinkel rotiert.
-Der untersuchte Punkt wird anschließende analog zur Ellipse transformiert.
+Der untersuchte Punkt wird anschließend analog zur Ellipse transformiert.
 Da die Ellipse dann bezüglich der $x$- und $y$- Achse symmetrisch ist, kann der Punkt einfach durch Spiegelung in den richtigen Quadranten verschoben werden. Der Abstand zur Ellipse ändert sich dadurch nicht.
 
 Sei $Q = (x_1, y_1)$ ein Punkt, dessen Distanz zur Ellipse berechnet werden soll und $E = (x_0, y_0)$ derjenige eindeutige Punkt, welcher auf der Ellipse liegt und die kürzeste euklidische Distanz zum Punkt $Q$ hat.

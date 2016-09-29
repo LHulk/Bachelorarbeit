@@ -26,7 +26,7 @@ Im letzten Schritt kann zwischen beiden Entfaltungsverfahren gewählt werden. An
 
 Die Abbildungsmatrizen sind dabei wie folgt aufgebaut: als $dst$ wird das entfaltete Bild bezeichnet, $src$ entspricht dem Ursprungsbild.
 
-Bei der Vowärtsentfaltung gilt:
+Bei der Vorwärtsentfaltung gilt:
 \[
 dst(map_x(x,y), map_y(x,y)) = src(x,y),
 \]
@@ -37,6 +37,6 @@ Bei der Rückwärtsentfaltung gilt:
 \[
 dst(x,y) = src((map_x(x,y),map_y(x,y)),
 \]
-wobei $map_x$ und $map_y$ wieder die Abbildungsmatrizen sind, deren Aufbau analog zur Vorwärtsenfaltung ist. 
+wobei $map_x$ und $map_y$ wieder die Abbildungsmatrizen sind, deren Aufbau analog zur Vorwärtsentfaltung ist. 
 Der grundlegende Unterschied ist hier, dass von einem Punkt des entzerrten Bilds auf ein Pixel des Ursprungsbild geschlossen wird. 
-Die Abbildungsmatrizen haben die gleiche Größe wie das entfaltete Bild. Eine Kodierung wie bei der Vowärtsentfaltung ist nicht notwendig.
+Die Abbildungsmatrizen haben die gleiche Größe wie das entfaltete Bild. Eine Kodierung wie bei der Vorwärtsentfaltung ist nicht notwendig.
