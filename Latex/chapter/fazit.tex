@@ -3,17 +3,17 @@
 \label{ch:summary}
 In der vorliegenden Arbeit wurden zwei Verfahren vorgestellt, mit denen Kegeloberflächen anhand eines Kalibrierungsmusters entzerrt werden können, sodass die relative Vergleichbarkeit der Larven gewährleistet ist.
 
-Der Vorteil der Rückwärtsentfaltung gegenüber der Vorwärtsentfaltung ist die Abwesenheit von Defekten. Diese lieferte darüber hinaus auch bei starken Abweichungen der Kamera vom Lot gute Ergebnisse und bei einer Ausgabeauflösung der Seitenhöhe unter 850 Pixel sogar eine bessere Laufzeit.
+Der Vorteil der Rückwärtsentfaltung gegenüber der Vorwärtsentfaltung ist die Abwesenheit von Defekten. Diese lieferte darüber hinaus auch bei starken Abweichungen der Kamera vom Lot gute Ergebnisse und bei einer Ausgabeauflösung der Seitenhöhe bis zu 850 Pixel sogar eine bessere Laufzeit.
 
 An dieser Stelle soll ein Ausblick auf mögliche Verbesserungsvorschläge für die verwendeten Verfahren gegeben werden.
 
 \section{Parallelisierung}
-Da der Kalibrierungsprozess nur ein Mal vor der eigentlichen Entzerrung durchgeführt wird, bietet sich eine Parallelisierung hier deshalb nur bedingt an.
+Da der Kalibrierungsprozess nur ein Mal vor der eigentlichen Entzerrung durchgeführt wird, bietet sich eine Parallelisierung hier nur bedingt an.
 Dennoch könnte hier besonders bei den komplexeren Aufgaben, wie der Liniendetektion und anschließenden Schnittpunktberechnung, sowie der Ellipsendetektion auf parallele Methoden zurückgegriffen werden.
 Für eine parallele Implementierung der Hough-Transformation sei auf die Arbeit von Havel \cite{Havel2014} verwiesen.
-Bei der Ellipsendetektion mittels RANSAC werden für eine vorher definierte Anzahl an Iterationen, wiederholt Punkte ausgewählt mit denen anschließend eine Ellipse geschätzt wird. Es bietet sich hier an, mehrere Gruppen von Punkten parallel zu verarbeiten.
+Bei der Ellipsendetektion mittels RANSAC werden für eine vorher definierte Anzahl an Iterationen wiederholt Punkte ausgewählt, mit denen anschließend eine Ellipse geschätzt wird. Es bietet sich hier an, mehrere Gruppen von Punkten parallel zu verarbeiten.
 
-Von größerer Bedeutung ist eine Laufzeitverbesserung der Entzerrung. Nach der Bestimmung der Abbildungsmatrizen werden nach dem in Kapitel \ref{ch:implementation} beschriebenen Schema eine Reihe von Bildern entzerrt. Um die aufgenommenen Bilder nicht zwischenspeichern zu müssen, wäre eine echtzeitfähige Entfaltung wünschenswert. Die Bilder könnten somit direkt entzerrt gespeichert werden.  Um die Laufzeit der Entfaltung zu verbessern könnte beispielsweise parallel mehrere Blöcke von Pixeln gleichzeitig verarbeitet werden.
+Von größerer Bedeutung ist eine Laufzeitverbesserung der Entzerrung. Nach der Bestimmung der Abbildungsmatrizen werden nach dem in Kapitel \ref{ch:implementation} beschriebenen Schema eine Reihe von Bildern entzerrt. Um die aufgenommenen Bilder nicht zwischenspeichern zu müssen, wäre eine echtzeitfähige Entfaltung wünschenswert. Die Bilder könnten somit direkt entzerrt gespeichert werden.  Um die Laufzeit der Entfaltung zu verbessern, könnten beispielsweise parallel mehrere Blöcke von Pixeln gleichzeitig verarbeitet werden.
 
 
 \section{Verbesserung der Linien-Detektion}
@@ -21,8 +21,8 @@ Die Linien-Detektion basiert auf der Hough-Transformation und funktioniert nur m
 
 
 \section{Verbesserung der Vorwärtsentfaltung}
-Das Hauptproblem der Vorwärtsentfaltung sind die Defekte auf dem entfalteten Bild. Man könnte mit Hilfe einer Delaunay-Triangulierung versuchen, die Defekte zu beheben.
-Die auf die Mantelfläche abgebildeten Punkte werden bei diesem Verfahren nicht gerundet. Anschließend werden die Punkte trianguliert. Es entstehen Dreiecksnetze, wie beispielhaft in Abbildung \ref{fig:delaunayTriag} zu sehen sind. Zum Zwecke der Veranschaulichung wurde hierbei nur ein Teil der Daten benutzt. Mit Hilfe dieser Dreiecke wird nun das Ergebnisbild abgetastet, das heißt man untersucht für jedes Pixel auf dem entzerrten Bild in welchem Dreieck es sich befindet und bestimmt dann die Farbe des Pixels mittels baryzentrischer  Interpolation aus den drei umgebenden Punkten. Die Delaunay-Triangulierung ist jedoch relativ aufwendig mit einer Laufzeit von $\mathcal{O}(p\log p)$ für $p$ Punkte \cite{Su1997}. Sie richtet sich bei einer konstanten Eingabeauflösung also nach der Gesamtanzahl der Pixel im Kalibrierungskegel. Anschließend muss für jedes Pixel auf dem Ausgabebild eine Interpolation (pro Pixel konstanter Aufwand) durchgeführt werden. Die Laufzeit der Vorwärtsentfaltung wird somit quadratisch mit einer großen additiven Konstante bedingt durch die Triangulierung.
+Das Hauptproblem der Vorwärtsentfaltung sind die Defekte auf dem entfalteten Bild. Man könnte mit Hilfe einer Delaunay-Triangulierung versuchen die Defekte zu beheben.
+Die auf die Mantelfläche abgebildeten Punkte werden bei diesem Verfahren nicht gerundet. Anschließend werden die Punkte trianguliert. Es entstehen Dreiecksnetze, wie beispielhaft in Abbildung \ref{fig:delaunayTriag} zu sehen sind. Zum Zwecke der Veranschaulichung wurde hierbei nur ein Teil der Daten benutzt. Mit Hilfe dieser Dreiecke wird nun das Ergebnisbild abgetastet, das heißt für jedes Pixel auf dem entzerrten Bild wird untersucht in welchem Dreieck es sich befindet und dann die Farbe des Pixels mittels baryzentrischer Interpolation aus den drei umgebenden Punkten bestimmt. Die Delaunay-Triangulierung ist jedoch relativ aufwendig mit einer Laufzeit von $\mathcal{O}(p\log p)$ für $p$ Punkte \cite{Su1997}. Sie richtet sich bei einer konstanten Eingabeauflösung nach der Gesamtanzahl der Pixel im Kalibrierungskegel. Anschließend muss für jedes Pixel auf dem Ausgabebild eine Interpolation (pro Pixel konstanter Aufwand) durchgeführt werden. Die Laufzeit der Vorwärtsentfaltung wird somit quadratisch mit einer großen additiven Konstante bedingt durch die Triangulierung.
 
 \begin{figure}[!htb]
 	\centering
@@ -42,8 +42,8 @@ Die auf die Mantelfläche abgebildeten Punkte werden bei diesem Verfahren nicht 
 
 
 \section{Verbesserung der Rückwärtsentfaltung}
-Aktuell wird die Projektionsmatrix bei der Rückwärtsentfaltung durch Direct Linear Transformation bestimmt. Dieses Verfahren minimiert jedoch nicht den Reprojektionsfehler. Besser wäre hier deshalb ein iteratives Verfahren, wie der Levenberg–Marquardt-Algorithmus (konkret für Projektionsmatrizen beschrieben in \cite{Hartley2000}).
-Im Gegensatz dazu könnte auch ein RANSAC-Ansatz verwendet werden. Statt eine optimale Lösung für alle detektierte Samples zu bestimmen, berechnet man wiederholt für sechs Punkte\footnote{sechs Punkte sind mindestens notwendig um eine Projektionsmatrix bestimmen zu können, da es elf unbekannte gibt (siehe Kapitel \ref{s:calib}).} eine Projektionsmatrix, untersucht dann den Reprojektionsfehler für alle anderen Punkte und wählt schließlich die Projektionsmatrix mit dem größten Consensus Set aus.
+Aktuell wird die Projektionsmatrix bei der Rückwärtsentfaltung durch Direct Linear Transformation bestimmt. Dieses Verfahren minimiert jedoch nicht den Reprojektionsfehler. Besser wäre hier deshalb ein iteratives Verfahren, wie der Levenberg–Marquardt Algorithmus (konkret für Projektionsmatrizen beschrieben in \cite{Hartley2000}).
+Im Gegensatz dazu könnte auch ein RANSAC-Ansatz verwendet werden. Statt eine optimale Lösung für alle detektierte Samples zu bestimmen, berechnet man wiederholt für sechs Punkte\footnote{sechs Punkte sind mindestens notwendig um eine Projektionsmatrix bestimmen zu können, da es elf unbekannte gibt (siehe Kapitel \ref{s:calib}).} eine Projektionsmatrix. Es wird dann der Reprojektionsfehler für alle anderen Punkte untersucht und schließlich die Projektionsmatrix mit dem größten Consensus Set ausgewählt.
 
 
 \section{Verbesserung der Ellipsendetektion mittels Deformable Templates}
