@@ -257,7 +257,7 @@ Zu beachten ist, dass dieses Vorgehen auch bei Matrizen $A$ mit $\text{rang}\lef
 \label{s:calib}
 
 %\begin{definition}
-%	Kamerakalibrierung ist ein Verfahren, bei dem die interne Kamerageometrie und optischen Eigenschaften (intrinische Parameter)
+%	Kamerakalibrierung ist ein Verfahren, bei dem die interne Kamerageometrie und optischen Eigenschaften (intrinsische Parameter)
 %	und/oder die 3D-Position und Orientierung der Bildebene relativ zu einem Weltkoordinatensystem (extrinische Parameter) bestimmt werden \cite{Tsai1987}.
 %\end{definition}
 %\bigskip
@@ -456,7 +456,7 @@ Um nun beliebige Geraden detektieren zu können, werden $\phi$ und $d$ zunächst
 
 
 Es wird nun ein Akkumulator $\mathcal{H}(\phi, d)$ für alle $\phi_i$ und $d_j$ auf null gesetzt.
-Als Nächstes wird ein Kantentbild mittels Canny \cite{Canny1986} erzeugt. Die Kantenpixel werden mit $(x_k,y_k)$ für $k = 0,\dotsc,l$ identifiziert. Das eigentliche Verfahren funktioniert nach folgendem Schema:
+Als Nächstes wird ein Kantenbild mittels Canny \cite{Canny1986} erzeugt. Die Kantenpixel werden mit $(x_k,y_k)$ für $k = 0,\dotsc,l$ identifiziert. Das eigentliche Verfahren funktioniert nach folgendem Schema:
 
 \begin{algorithm}
 	\caption{Hough-Transformation}\label{euclid}
