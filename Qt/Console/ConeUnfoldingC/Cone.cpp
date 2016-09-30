@@ -94,16 +94,28 @@ cv::Point3f Cone::interPolateRadial(const cv::Point& pt, int val) const
 	Ellipse e2 = _ellipses[i + 1];
 	double dist2 = Ellipse::realDistTrans(e2, pt);
 
+	//cv::ellipse(img, e1.getEllipseAsRotatedRect(), cv::Scalar(255), 1);
+	//cv::ellipse(img, e2.getEllipseAsRotatedRect(), cv::Scalar(255), 1);
+
 	//define interpolating ellipse by distance to next two ellipses
 	Ellipse interEllipse = (dist1 / (dist1 + dist2) * e2) + (dist2 / (dist1 + dist2) * e1);
+	//cv::ellipse(img, interEllipse.getEllipseAsRotatedRect(), cv::Scalar(255), 1);
 
 	cv::Point2d int1 = Ellipse::ellipseLineIntersection(interEllipse, _lines[j]);
 	cv::Point2d int2 = Ellipse::ellipseLineIntersection(interEllipse, _lines[(j + 1) % Config::numLineSamples]);
+
+	//cv::circle(img, int1, 2, cv::Scalar(255), 1);
+	//cv::circle(img, int2, 2, cv::Scalar(255), 1);
 
 	cv::Point2d tl = _sampleImg[i + 1][j];
 	cv::Point2d bl = _sampleImg[i][j];
 	cv::Point2d tr = _sampleImg[i + 1][(j + 1) % Config::numLineSamples];
 	cv::Point2d br = _sampleImg[i][(j + 1) % Config::numLineSamples];
+
+	//cv::circle(img, tl, 2, cv::Scalar(255), 1);
+	//cv::circle(img, bl, 2, cv::Scalar(255), 1);
+	//cv::circle(img, tr, 2, cv::Scalar(255), 1);
+	//cv::circle(img, br, 2, cv::Scalar(255), 1);
 
 	//perform linear interpolation on line segments
 	double intD1 = (tl.y - bl.y != 0) ? (int1.y - bl.y) / (tl.y - bl.y) : (int1.x - bl.x) / (tl.x - bl.x);
